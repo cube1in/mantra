@@ -45,36 +45,38 @@
                 GroupName="gn_Language"
                 IsChecked="True" />
         </StackPanel>
-        <Grid Grid.Row="3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <TextBlock
-                Grid.Column="0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Text="Source Image" />
-            <TextBlock
-                Grid.Column="2"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Text="Target Image" />
-            <Image
-                Grid.Column="0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Source="{Binding ImgSource}"
-                Stretch="None" />
-            <Image
-                Grid.Column="2"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Source="{Binding ImgTarget}"
-                Stretch="None" />
-            <Canvas x:Name="canvas_1" Grid.Column="0" />
-            <Canvas x:Name="canvas_2" Grid.Column="2" />
-        </Grid>
+        <Viewbox Grid.Row="3">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Text="Source Image" />
+                <TextBlock
+                    Grid.Column="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Text="Target Image" />
+                <Image
+                    Grid.Column="0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Source="{Binding ImgSource}"
+                    Stretch="None" />
+                <Image
+                    Grid.Column="2"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Source="{Binding ImgTarget}"
+                    Stretch="None" />
+                <Canvas x:Name="canvas_1" Grid.Column="0" />
+                <Canvas x:Name="canvas_2" Grid.Column="2" />
+            </Grid>
+        </Viewbox>
     </Grid>
 </Window>
