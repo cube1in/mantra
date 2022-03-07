@@ -1,18 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWPF>true</UseWPF>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Refractored.MvvmHelpers" Version="1.6.2" />
-    <PackageReference Include="PropertyChanged.Fody" Version="3.4.0">
-		<PrivateAssets>All</PrivateAssets>
-	</PackageReference>
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="Refractored.MvvmHelpers" Version="1.6.2" />
+        <PackageReference Include="PropertyChanged.Fody" Version="3.4.0">
+            <PrivateAssets>All</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+        <PackageReference Include="Tesseract" Version="4.1.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="$(SolutionDir)\trained_data\**" CopyToOutputDirectory="PreserveNewest" LinkBase="trained_data\" />
+    </ItemGroup>
 
 </Project>

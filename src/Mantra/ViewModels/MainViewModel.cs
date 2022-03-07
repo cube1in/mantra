@@ -1,31 +1,48 @@
 ﻿using MvvmHelpers;
 using MvvmHelpers.Commands;
 using System;
+using System.Collections.ObjectModel;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
+// ReSharper disable once CheckNamespace
 namespace Mantra;
 
 internal class MainViewModel : BaseViewModel
 {
     #region Private Members
 
+    private static readonly HttpClient Client = new();
 
     #endregion
 
     #region Public Properties
 
-    public string ImgUrl { get; set; } = "https://bddhaec337xvm.xnvda7fch4zhr.mangadex.network/BtSoon9hY3za7r4lE-NDSYT29ek0_Sj4O_gNA1LzZHnV5IQbqvry-TcNVadrZngmgwigJuxOtu3PpOGEmZTnE4ZDSCN3tfGIpBtmNK4cZgOucsEM7BDQed12NoIhF7I5mwx54oTXZWQpYYOe20KqVeePrDQVtEmU7gPrfQraRjDZ29u9IXh_EICgJk8nI24y/data/e086fcedec23c63a6af7f766e2ac54b1/M5-60a4f587b56f77f5b72419b24e7d2f14693104a18e12fef7122eac1c84c8f776.png";
+    public string ImgUrl { get; set; } =
+        "http://5b0988e595225.cdn.sohucs.com/images/20180408/6c037f1f87ee4f95a1c2b9fefa490eb3.jpeg";
 
-    public string? ImgSource { get; set; }
+    public byte[]? ImgSource { get; set; }
 
-    public string? ImgTarget { get; set; }
+    public byte[]? ImgTarget { get; set; }
+
+    public int ImgPixelWidth { get; set; }
+
+    public int ImgPixelHeight { get; set; }
 
     public ICommand ShowCommand => new AsyncCommand(OnShowAsync);
 
+    // ReSharper disable once InconsistentNaming
     public ICommand OCRCommand => new AsyncCommand(OnOCRAsync);
 
     public ICommand TranslateCommand => new AsyncCommand(OnTranslateAsync);
+
+    public ObservableCollection<RectItem>? SourceRectItems { get; set; }
+
+    public ObservableCollection<RectItem>? TargetRectItems { get; set; }
 
     #endregion
 
@@ -39,25 +56,68 @@ internal class MainViewModel : BaseViewModel
             return;
         }
 
-        ImgSource = ImgTarget = ImgUrl;
-        await Task.CompletedTask;
+        var buffer = await GetBytesFromUrl(ImgUrl);
+        ImgSource = ImgTarget = buffer;
+
+        // Get image original size
+        var bitmap = new Bitmap(new MemoryStream(buffer));
+        ImgPixelHeight = bitmap.Height;
+        ImgPixelWidth = bitmap.Width;
     }
 
     private async Task OnOCRAsync()
     {
-        if (!Uri.IsWellFormedUriString(ImgSource, UriKind.Absolute))
+        if (ImgSource == null)
         {
             // show warning message
             return;
         }
 
-        await Baidu.DoOCRAsync(ImgSource);
+        // var ocrResponse = await Baidu.DoOCRAsync(Client, new MemoryStream(ImgSource));
+        //
+        // if (ocrResponse != null)
+        // {
+        //     SourceRectItems = new ObservableCollection<RectItem>(from context in ocrResponse.WordsResult
+        //         select new RectItem
+        //         {
+        //             Left = context.Location.Left, Top = context.Location.Top, Width = context.Location.Width,
+        //             Height = context.Location.Height
+        //         });
+        // }
+
+        // ReSharper disable once StringLiteralTypo
+        var regions = await Tesseact.DoOCRAsync(ImgSource, "eng");
+        SourceRectItems = new ObservableCollection<RectItem>(from region in regions
+            select new RectItem {Left = region.Left, Top = region.Top, Width = region.Width, Height = region.Height});
     }
 
     private async Task OnTranslateAsync()
     {
+        if (ImgSource == null)
+        {
+            // show warning message
+            return;
+        }
+
+        var transResponse = await Baidu.DoTranslateAsync(Client, new MemoryStream(ImgSource));
         await Task.CompletedTask;
     }
 
+    private static async Task<byte[]> GetBytesFromUrl(string url)
+    {
+        return await Client.GetByteArrayAsync(url);
+    }
+
     #endregion
+}
+
+internal class RectItem
+{
+    public int Left { get; set; }
+
+    public int Top { get; set; }
+
+    public int Width { get; set; }
+
+    public int Height { get; set; }
 }

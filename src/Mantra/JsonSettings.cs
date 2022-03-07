@@ -20,6 +20,6 @@ internal static class JsonSettings
         // 蛇形
         ContractResolver = new DefaultContractResolver { NamingStrategy = new SnakeCaseNamingStrategy() },
 
-        Converters = new[] { new StringEnumConverter() }
+        Converters = new JsonConverter[] { new StringEnumConverter() }
     };
 }

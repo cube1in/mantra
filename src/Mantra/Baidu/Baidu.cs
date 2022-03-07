@@ -1,9 +1,14 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
+// ReSharper disable InconsistentNaming
+
+// ReSharper disable once CheckNamespace
 namespace Mantra;
 
 internal static class Baidu
@@ -21,6 +26,11 @@ internal static class Baidu
     private const string OCRHost = "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate";
 
     /// <summary>
+    /// 图片翻译
+    /// </summary>
+    private const string PictureTransHost = "https://aip.baidubce.com/file/2.0/mt/pictrans/v1";
+
+    /// <summary>
     /// 调用getAccessToken()获取的 access_token建议根据expires_in 时间 设置缓存
     /// 返回token示例
     /// </summary>
@@ -36,14 +46,9 @@ internal static class Baidu
     /// </summary>
     private const string ClientSecret = "";
 
-    /// <summary>
-    /// HttpClient
-    /// </summary>
-    private static readonly HttpClient Client = new();
-
     #endregion
 
-    public static async Task<string?> GetTokenAsync()
+    private static async Task<string?> GetTokenAsync(HttpClient client)
     {
         var paraList = new List<KeyValuePair<string, string>>
         {
@@ -52,31 +57,53 @@ internal static class Baidu
             new("client_secret", ClientSecret)
         };
 
-        var response = await Client.PostAsync(AuthHost, new FormUrlEncodedContent(paraList));
+        var response = await client.PostAsync(AuthHost, new FormUrlEncodedContent(paraList));
         response.EnsureSuccessStatusCode();
 
         var result = await response.Content.ReadAsStringAsync();
         return JsonConvert.DeserializeObject<Token>(result, JsonSettings.SerializerSettings)?.AccessToken;
     }
 
-    public static async Task<OCRResponse?> DoOCRAsync(string imgUrl)
+    public static async Task<OCRResponse?> DoOCRAsync(HttpClient client, MemoryStream stream)
     {
-        var token = GetTokenAsync();
-        var base64 = Convert.ToBase64String(await Client.GetByteArrayAsync(imgUrl));
+        var token = GetTokenAsync(client);
+
         var paraList = new List<KeyValuePair<string, string>>
         {
-            new("image", base64),
+            new("image", Convert.ToBase64String(stream.ToArray())),
         };
 
-        var response = await Client.PostAsync($"{OCRHost}?access_token={await token}", new FormUrlEncodedContent(paraList));
+        var response =
+            await client.PostAsync($"{OCRHost}?access_token={await token}", new FormUrlEncodedContent(paraList));
         response.EnsureSuccessStatusCode();
 
         var jsonString = await response.Content.ReadAsStringAsync();
         return JsonConvert.DeserializeObject<OCRResponse>(jsonString, JsonSettings.SerializerSettings);
     }
 
-    public static async Task DoTranslateAsync(string text)
+    public static async Task<PictureTransResponse?> DoTranslateAsync(HttpClient client, Stream stream)
     {
-        await Task.CompletedTask;
+        var token = GetTokenAsync(client);
+
+        var bytesContent = new StreamContent(stream);
+        bytesContent.Headers.ContentType =  MediaTypeHeaderValue.Parse("mutipart/form-data");
+
+        var multiForm = new MultipartFormDataContent();
+        // 源语种方向
+        // multiForm.Add(new StringContent("en"), "from");
+        // 	译文语种方向
+        // multiForm.Add(new StringContent("zh"), "to");
+        // 	固定值：3
+        // multiForm.Add(new StringContent("3"), "v");
+        // 图片贴合类型：0 - 关闭文字贴合 1 - 返回整图贴合 2 - 返回块区贴合
+        // multiForm.Add(new StringContent("1"), "paste");
+        // 请求翻译的图片数据
+        multiForm.Add(bytesContent, "image");
+
+        var response = await client.PostAsync($"{PictureTransHost}?access_token={await token}&from=en&to=zh&v=3&paste=1", multiForm);
+        response.EnsureSuccessStatusCode();
+
+        var jsonString = await response.Content.ReadAsStringAsync();
+        return JsonConvert.DeserializeObject<PictureTransResponse>(jsonString);
     }
 }

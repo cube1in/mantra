@@ -1,4 +1,5 @@
-﻿namespace Mantra;
+﻿// ReSharper disable once CheckNamespace
+namespace Mantra;
 
 internal class Token
 {

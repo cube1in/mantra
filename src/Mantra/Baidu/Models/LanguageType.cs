@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
+// ReSharper disable once CheckNamespace
 namespace Mantra;
 
 internal enum LanguageType

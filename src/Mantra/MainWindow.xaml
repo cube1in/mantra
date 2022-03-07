@@ -18,9 +18,8 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <TextBlock Grid.Row="0" Text="Input URL:" />
+            <TextBlock Text="Input URL:" />
             <TextBox
-                Grid.Row="1"
                 Width="600"
                 Text="{Binding ImgUrl}" />
             <Button
@@ -45,38 +44,79 @@
                 GroupName="gn_Language"
                 IsChecked="True" />
         </StackPanel>
-        <Viewbox Grid.Row="3">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="40" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <TextBlock
-                    Grid.Column="0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Text="Source Image" />
-                <TextBlock
-                    Grid.Column="2"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Text="Target Image" />
-                <Image
-                    Grid.Column="0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Source="{Binding ImgSource}"
-                    Stretch="None" />
-                <Image
-                    Grid.Column="2"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Source="{Binding ImgTarget}"
-                    Stretch="None" />
-                <Canvas x:Name="canvas_1" Grid.Column="0" />
-                <Canvas x:Name="canvas_2" Grid.Column="2" />
-            </Grid>
-        </Viewbox>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Text="Source Image" />
+            <TextBlock
+                Grid.Column="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Text="Target Image" />
+            <Image
+                Grid.Column="0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Stretch="Uniform"
+                Source="{Binding ImgSource}"
+                Width="{Binding ImgPixelWidth}"
+                Height="{Binding ImgPixelHeight}"
+                SnapsToDevicePixels="True" />
+            <Image
+                Grid.Column="2"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Stretch="Uniform"
+                Source="{Binding ImgTarget}"
+                Width="{Binding ImgPixelWidth}"
+                Height="{Binding ImgPixelHeight}"
+                SnapsToDevicePixels="True" />
+
+            <ItemsControl Grid.Column="0" ItemsSource="{Binding SourceRectItems}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter" d:DataContext="{d:DesignInstance local:RectItem}">
+                        <Setter Property="Canvas.Left" Value="{Binding Left}" />
+                        <Setter Property="Canvas.Top" Value="{Binding Top}" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle local:EnableDrag.Value="True" Width="{Binding Width}" Height="{Binding Height}"
+                                   Stroke="Red" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <ItemsControl Grid.Column="2" ItemsSource="{Binding TargetRectItems}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter" d:DataContext="{d:DesignInstance local:RectItem}">
+                        <Setter Property="Canvas.Left" Value="{Binding Left}" />
+                        <Setter Property="Canvas.Top" Value="{Binding Top}" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle Width="{Binding Width}" Height="{Binding Height}" Stroke="Red" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
     </Grid>
 </Window>
