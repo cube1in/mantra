@@ -86,7 +86,7 @@ internal class MainViewModel : BaseViewModel
         // }
 
         // ReSharper disable once StringLiteralTypo
-        var regions = await Tesseact.DoOCRAsync(ImgSource, "eng");
+        var regions = await Tesseact.DoOCRAsync(ImgSource, "en");
         SourceRectItems = new ObservableCollection<RectItem>(from region in regions
             select new RectItem {Left = region.Left, Top = region.Top, Width = region.Width, Height = region.Height});
     }

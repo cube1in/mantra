@@ -79,6 +79,7 @@
                 Height="{Binding ImgPixelHeight}"
                 SnapsToDevicePixels="True" />
 
+            <!-- ImgSource Canvas -->
             <ItemsControl Grid.Column="0" ItemsSource="{Binding SourceRectItems}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -99,6 +100,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
+            <!-- ImgTarget Canvas -->
             <ItemsControl Grid.Column="2" ItemsSource="{Binding TargetRectItems}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
