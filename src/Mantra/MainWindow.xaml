@@ -83,7 +83,7 @@
             <ItemsControl Grid.Column="0" ItemsSource="{Binding SourceRectItems}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <Canvas />
+                        <Canvas SnapsToDevicePixels="True" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemContainerStyle>
@@ -94,8 +94,7 @@
                 </ItemsControl.ItemContainerStyle>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Rectangle local:EnableDrag.Value="True" Width="{Binding Width}" Height="{Binding Height}"
-                                   Stroke="Red" />
+                        <local:DesignerItemDecorator Resize="True" Size="True" Width="{Binding Width}" Height="{Binding Height}" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
@@ -104,7 +103,7 @@
             <ItemsControl Grid.Column="2" ItemsSource="{Binding TargetRectItems}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <Canvas />
+                        <Canvas SnapsToDevicePixels="True" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemContainerStyle>
@@ -115,7 +114,7 @@
                 </ItemsControl.ItemContainerStyle>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Rectangle Width="{Binding Width}" Height="{Binding Height}" Stroke="Red" />
+                        <local:DesignerItemDecorator Resize="True" Width="{Binding Width}" Height="{Binding Height}" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
