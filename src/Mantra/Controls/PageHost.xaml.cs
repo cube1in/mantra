@@ -1,17 +1,16 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 
 // ReSharper disable once CheckNamespace
 namespace Mantra;
 
-public partial class PageHost : UserControl
+internal partial class PageHost
 {
     #region Dependency Properties
 
     /// <summary>
     /// The current page to show in the page host
     /// </summary>
-    internal BasePage CurrentPage
+    public BasePage CurrentPage
     {
         get => (BasePage) GetValue(CurrentPageProperty);
         set => SetValue(CurrentPageProperty, value);
@@ -22,7 +21,23 @@ public partial class PageHost : UserControl
     /// </summary>
     public static readonly DependencyProperty CurrentPageProperty =
         DependencyProperty.Register(nameof(CurrentPage), typeof(BasePage), typeof(PageHost),
-            new UIPropertyMetadata(CurrentPagePropertyChanged));
+            new UIPropertyMetadata(null, CurrentPagePropertyChanged, CoerceCurrentPage));
+
+    /// <summary>
+    /// Push any data to new page
+    /// </summary>
+    public object PushValue
+    {
+        get => GetValue(PushValueProperty);
+        set => SetValue(PushValueProperty, value);
+    }
+
+    /// <summary>
+    /// Registers <see cref="PushValue"/> as a dependency property
+    /// </summary>
+    public static readonly DependencyProperty PushValueProperty =
+        DependencyProperty.Register(nameof(PushValue), typeof(object), typeof(PageHost),
+            new UIPropertyMetadata(PushValuePropertyChanged));
 
     #endregion
 
@@ -55,6 +70,32 @@ public partial class PageHost : UserControl
 
         // Set the new page content
         newPageFrame.Content = e.NewValue;
+    }
+
+    /// <summary>
+    /// Set push value to new page
+    /// </summary>
+    /// <param name="d"></param>
+    /// <param name="baseValue"></param>
+    /// <returns></returns>
+    private static object CoerceCurrentPage(DependencyObject d, object baseValue)
+    {
+        if (baseValue is BasePage newPage)
+        {
+            newPage.PushValue = ((PageHost) d).PushValue;
+        }
+
+        return baseValue;
+    }
+
+    /// <summary>
+    /// Called when the <see cref="PushValueProperty"/> value has changed
+    /// </summary>
+    /// <param name="d"></param>
+    /// <param name="e"></param>
+    private static void PushValuePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        ((PageHost) d).CoerceValue(CurrentPageProperty);
     }
 
     #endregion

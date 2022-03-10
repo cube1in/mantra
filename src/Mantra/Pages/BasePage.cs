@@ -32,6 +32,11 @@ internal class BasePage : Page
     /// Useful for when we are moving the page to another frame
     /// </summary>
     public bool ShouldAnimateOut { get; set; }
+    
+    /// <summary>
+    /// The value from other page
+    /// </summary>
+    public object? PushValue { get; set; }
 
     #endregion
 

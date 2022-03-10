@@ -6,7 +6,7 @@
                 xmlns:local="clr-namespace:Mantra"
                 mc:Ignorable="d"
                 Title="UploadPage" Height="450" Width="800" x:ClassModifier="internal">
-    <Grid>
-        <Button Background="Red" Content="上传" HorizontalAlignment="Center" VerticalAlignment="Center"></Button>
+    <Grid Drop="UIElement_OnDrop">
+        <Button CommandParameter="" Background="Red" Content="上传" HorizontalAlignment="Center" VerticalAlignment="Center"></Button>
     </Grid>
 </local:BasePage>

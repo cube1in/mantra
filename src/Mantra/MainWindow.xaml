@@ -8,12 +8,13 @@
         Width="800"
         Height="450"
         d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
-        mc:Ignorable="d">
+        mc:Ignorable="d" x:ClassModifier="internal">
     <Grid>
         <!-- Page Host -->
         <local:PageHost
-            DataContext="{Binding CurrentPage ,Source={x:Static local:ApplicationViewModel.Current}, Converter={local:ApplicationPageValueConverter}}"
-            CurrentPage="{Binding}">
+            DataContext="{x:Static local:ApplicationViewModel.Current}"
+            CurrentPage="{Binding CurrentPage, Converter={local:ApplicationPageValueConverter}}"
+            PushValue="{Binding PushValue}">
         </local:PageHost>
     </Grid>
 </Window>

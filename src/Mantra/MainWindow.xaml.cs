@@ -1,12 +1,9 @@
-﻿using System.Windows;
-using System.Windows.Input;
-
-namespace Mantra;
+﻿namespace Mantra;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class MainWindow : Window
+internal partial class MainWindow
 {
     public MainWindow()
     {
