@@ -3,7 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace Mantra.Extensions;
+// ReSharper disable once CheckNamespace
+namespace Mantra;
 
 // ReSharper disable once InconsistentNaming
 internal static class UIElementExtensions

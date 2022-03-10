@@ -2,7 +2,8 @@
 using System.Windows;
 using System.Windows.Media;
 
-namespace Mantra.Extensions;
+// ReSharper disable once CheckNamespace
+namespace Mantra;
 
 internal static class DependencyObjectExtensions
 {

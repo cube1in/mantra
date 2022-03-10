@@ -1,0 +1,121 @@
+﻿<local:BasePage x:Class="Mantra.ScanPage"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:local="clr-namespace:Mantra"
+                mc:Ignorable="d"
+                d:DataContext="{d:DesignInstance local:ScanViewModel}"
+                Title="ScanPage" Height="450" Width="800" x:ClassModifier="internal">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <TextBlock Text="Input URL:" />
+            <TextBox
+                Width="600"
+                Text="{Binding ImgUrl}" />
+            <Button
+                Width="100"
+                Command="{Binding ShowCommand}"
+                Content="Show" />
+            <Button
+                Width="100"
+                Command="{Binding OCRCommand}"
+                Content="OCR" />
+            <Button
+                Width="100"
+                Command="{Binding TranslateCommand}"
+                Content="Translate" />
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <TextBlock Margin="20 0" Text="Language:" />
+            <RadioButton Content="English" GroupName="gn_Language" />
+            <RadioButton
+                Margin="20,0"
+                Content="Japanese"
+                GroupName="gn_Language"
+                IsChecked="True" />
+        </StackPanel>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Text="Source Image" />
+            <TextBlock
+                Grid.Column="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Text="Target Image" />
+            <Image
+                Grid.Column="0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Stretch="Uniform"
+                Source="{Binding ImgSource}"
+                Width="{Binding ImgPixelWidth}"
+                Height="{Binding ImgPixelHeight}"
+                SnapsToDevicePixels="True" />
+            <Image
+                Grid.Column="2"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Stretch="Uniform"
+                Source="{Binding ImgTarget}"
+                Width="{Binding ImgPixelWidth}"
+                Height="{Binding ImgPixelHeight}"
+                SnapsToDevicePixels="True" />
+
+            <!-- ImgSource Canvas -->
+            <ItemsControl Grid.Column="0" ItemsSource="{Binding SourceRectItems}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas SnapsToDevicePixels="True" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter" d:DataContext="{d:DesignInstance local:RectItem}">
+                        <Setter Property="Canvas.Left" Value="{Binding Left}" />
+                        <Setter Property="Canvas.Top" Value="{Binding Top}" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <local:DesignerItemDecorator Resize="True" Size="True" Width="{Binding Width}"
+                                                     Height="{Binding Height}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- ImgTarget Canvas -->
+            <ItemsControl Grid.Column="2" ItemsSource="{Binding TargetRectItems}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas SnapsToDevicePixels="True" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter" d:DataContext="{d:DesignInstance local:RectItem}">
+                        <Setter Property="Canvas.Left" Value="{Binding Left}" />
+                        <Setter Property="Canvas.Top" Value="{Binding Top}" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <local:DesignerItemDecorator Resize="True" Width="{Binding Width}" Height="{Binding Height}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </Grid>
+</local:BasePage>

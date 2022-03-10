@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using Mantra.Extensions;
 
 // ReSharper disable once CheckNamespace
 namespace Mantra;
