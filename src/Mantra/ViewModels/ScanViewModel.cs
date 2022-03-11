@@ -14,7 +14,7 @@ namespace Mantra;
 /// <summary>
 /// 扫描页
 /// </summary>
-internal class ScanViewModel
+internal class ScanViewModel : BaseViewModel
 {
     #region Private Members
 
@@ -101,10 +101,7 @@ internal class ScanViewModel
         var buffer = await GetBytesFromUrl(ImgUrl);
         ImgSource = ImgTarget = buffer;
 
-        // Get image original size
-        var bitmap = new Bitmap(new MemoryStream(buffer));
-        ImgPixelHeight = bitmap.Height;
-        ImgPixelWidth = bitmap.Width;
+        SetOriginalSize();
     }
 
     /// <summary>
@@ -159,6 +156,36 @@ internal class ScanViewModel
     private static async Task<byte[]> GetBytesFromUrl(string url)
     {
         return await Client.GetByteArrayAsync(url);
+    }
+
+    /// <summary>
+    /// Set image original size
+    /// </summary>
+    private void SetOriginalSize()
+    {
+        if (ImgSource == null) return;
+
+        // Get image original size
+        var bitmap = new Bitmap(new MemoryStream(ImgSource));
+        ImgPixelHeight = bitmap.Height;
+        ImgPixelWidth = bitmap.Width;
+    }
+
+    #endregion
+
+    #region Public Methods
+
+    /// <summary>
+    /// 初始化
+    /// </summary>
+    /// <param name="pushValue"></param>
+    public void Initialize(object? pushValue)
+    {
+        if (pushValue is string path)
+        {
+            ImgSource = File.ReadAllBytes(path);
+            SetOriginalSize();
+        }
     }
 
     #endregion

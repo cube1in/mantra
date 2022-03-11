@@ -10,7 +10,8 @@ namespace Mantra;
 [SuppressMessage("ReSharper", "IdentifierTypo")]
 internal static class Tesseact
 {
-    public static async Task<IEnumerable<Rectangle>> DoOCRAsync(byte[] bytes, string language,PageIteratorLevel pageIteratorLevel = PageIteratorLevel.Para)
+    public static async Task<IEnumerable<Rectangle>> DoOCRAsync(byte[] bytes, string language,
+        PageIteratorLevel pageIteratorLevel = PageIteratorLevel.Para)
     {
         return await Task.Run(() =>
         {

@@ -14,6 +14,6 @@ internal partial class ImageListPage
     public override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
-        ViewModel.Initialized(PushValue);
+        ViewModel.Initialize(PushValue);
     }
 }

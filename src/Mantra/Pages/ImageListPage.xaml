@@ -8,17 +8,75 @@
                 d:DataContext="{d:DesignInstance Type=local:ImageListViewModel}"
                 mc:Ignorable="d"
                 Title="ImageListPage"
-                d:DesignHeight="450" 
+                d:DesignHeight="450"
                 d:DesignWidth="800">
-    <Grid>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Grid>
 
-                <!-- Add Image Item -->
+    <ScrollViewer SnapsToDevicePixels="True "
+                  HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto"
+                  Margin="30">
+        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <!-- Image Items -->
+            <ItemsControl ItemsSource="{Binding ImageList}">
+
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid SnapsToDevicePixels="True " Width="100" Height="100">
+
+                            <!-- Preview Image -->
+                            <Border BorderBrush="Gray" Width="80" Height="80" BorderThickness="1">
+                                <Border.InputBindings>
+                                    <MouseBinding Gesture="LeftClick"
+                                                  Command="{Binding Path=DataContext.GoToCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                  CommandParameter="{Binding}"/>
+                                </Border.InputBindings>
+
+                                <Image Source="{Binding}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                            </Border>
+
+                            <!-- Close Button -->
+                            <Image Source="{Binding Source=media/close_small.png, Converter={local:FilepathConverter}}"
+                                   Width="23"
+                                   Height="23"
+                                   VerticalAlignment="Top"
+                                   HorizontalAlignment="Right"
+                                   Margin="0 2 2 0">
+                                <Image.InputBindings>
+                                    <MouseBinding Gesture="LeftClick"
+                                                  Command="{Binding DataContext.RemoveCommand ,RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                  CommandParameter="{Binding}" />
+                                </Image.InputBindings>
+
+                                <!-- <Image.Triggers> -->
+                                <!--     <Trigger Property="Image.IsMouseOver" Value="true"> -->
+                                <!--         <Setter Property="Image.Effect"> -->
+                                <!--             <Setter.Value> -->
+                                <!--                 <DropShadowEffect ShadowDepth="0" -->
+                                <!--                                   Color="Red" -->
+                                <!--                                   BlurRadius="5" /> -->
+                                <!--             </Setter.Value> -->
+                                <!--         </Setter> -->
+                                <!--     </Trigger> -->
+                                <!-- </Image.Triggers> -->
+                            </Image>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- Add Image Icon -->
+            <Border SnapsToDevicePixels="True" Width="100" Height="100">
                 <Rectangle Stroke="Gray"
-                           Width="50"
-                           Height="50"
-                           SnapsToDevicePixels="True"
+                           Width="80"
+                           Height="80"
                            StrokeDashArray="3"
                            StrokeThickness="1"
                            Margin="5 0">
@@ -28,7 +86,7 @@
 
                     <Rectangle.Fill>
                         <ImageBrush
-                            ImageSource="{Binding Source=/media/add_img.png, Converter={local:FilepathConverter}}"
+                            ImageSource="{Binding Source=media/add_img.png, Converter={local:FilepathConverter}}"
                             Opacity="0.3"
                             Stretch="Fill"
                             Viewport="0.25 0.25 0.5 0.5" />
@@ -39,60 +97,7 @@
                     <!--     </Trigger> -->
                     <!-- </Rectangle.Triggers> -->
                 </Rectangle>
-            </Grid>
-
-            <!-- Image Items -->
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden" Width="360">
-                <ItemsControl ItemsSource="{Binding ImageList}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid SnapsToDevicePixels="True " Width="60" Height="60">
-
-                                <!-- Preview Image -->
-                                <Border BorderBrush="Gray" Width="40" Height="40" BorderThickness="1">
-                                    <Image Source="{Binding}"
-                                           Width="40"
-                                           Height="40"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center" />
-                                </Border>
-
-                                <!-- Close Button -->
-                                <Image Source="{Binding Source=/media/close.png, Converter={local:FilepathConverter}}"
-                                       Width="16"
-                                       Height="16"
-                                       VerticalAlignment="Top"
-                                       HorizontalAlignment="Right"
-                                       Margin="0 2 0 0">
-                                    <Image.InputBindings>
-                                        <MouseBinding Gesture="LeftClick"
-                                                      Command="{Binding DataContext.RemoveCommand ,RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
-                                                      CommandParameter="{Binding}" />
-                                    </Image.InputBindings>
-
-                                    <!-- <Image.Triggers> -->
-                                    <!--     <Trigger Property="Image.IsMouseOver" Value="true"> -->
-                                    <!--         <Setter Property="Image.Effect"> -->
-                                    <!--             <Setter.Value> -->
-                                    <!--                 <DropShadowEffect ShadowDepth="0" -->
-                                    <!--                                   Color="Red" -->
-                                    <!--                                   BlurRadius="5" /> -->
-                                    <!--             </Setter.Value> -->
-                                    <!--         </Setter> -->
-                                    <!--     </Trigger> -->
-                                    <!-- </Image.Triggers> -->
-                                </Image>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
-        </StackPanel>
-    </Grid>
+            </Border>
+        </WrapPanel>
+    </ScrollViewer>
 </local:BasePage>

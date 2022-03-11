@@ -13,7 +13,7 @@ internal partial class UploadPage : BasePage
         DataContext = new UploadViewModel();
     }
 
-    private void UIElement_OnDrop(object sender, DragEventArgs e)
+    private void Grid_OnDrop(object sender, DragEventArgs e)
     {
         ViewModel.HandleDrop(sender, e);
     }
