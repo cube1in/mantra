@@ -31,7 +31,7 @@ internal class ImageListViewModel : BaseViewModel
     public ICommand RemoveCommand => new AsyncCommand<string>(OnRemoveAsync);
 
     #endregion
-    
+
     #region Private Methods
 
     /// <summary>
@@ -58,6 +58,25 @@ internal class ImageListViewModel : BaseViewModel
     private async Task OnRemoveAsync(string item)
     {
         await Task.Run(() => ImageList.Remove(item));
+    }
+
+    #endregion
+
+    #region Public Methods
+
+    /// <summary>
+    /// 初始化
+    /// </summary>
+    /// <param name="pushValue"></param>
+    public void Initialized(object? pushValue)
+    {
+        if (pushValue is string[] paths)
+        {
+            foreach (var path in paths)
+            {
+                ImageList.Add(path);
+            }
+        }
     }
 
     #endregion
