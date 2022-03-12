@@ -12,8 +12,8 @@
     </ControlTemplate>
 
     <Style TargetType="{x:Type local:DesignerItemDecorator}" x:Key="DesignerItemStyle">
-        <Setter Property="MinHeight" Value="2" />
-        <Setter Property="MinWidth" Value="2" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="MinWidth" Value="0" />
         <Setter Property="RenderTransformOrigin" Value="0.5, 0.5" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">

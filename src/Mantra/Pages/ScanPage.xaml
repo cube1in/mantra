@@ -10,115 +10,81 @@
                 Title="ScanPage"
                 d:DesignHeight="450"
                 d:DesignWidth="800">
+
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <TextBlock Text="Input URL:" />
-            <TextBox
-                Width="600"
-                Text="{Binding ImgUrl}" />
-            <Button
-                Width="100"
-                Command="{Binding ShowCommand}"
-                Content="Show" />
-            <Button
-                Width="100"
-                Command="{Binding OCRCommand}"
-                Content="OCR" />
-            <Button
-                Width="100"
-                Command="{Binding TranslateCommand}"
-                Content="Translate" />
-        </StackPanel>
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <TextBlock Margin="20 0" Text="Language:" />
-            <RadioButton Content="English" GroupName="gn_Language" />
-            <RadioButton
-                Margin="20,0"
-                Content="Japanese"
-                GroupName="gn_Language"
-                IsChecked="True" />
-        </StackPanel>
-        <Grid Grid.Row="3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <TextBlock
-                Grid.Column="0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Text="Source Image" />
-            <TextBlock
-                Grid.Column="2"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Text="Target Image" />
-            <Image
-                Grid.Column="0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Stretch="Uniform"
-                Source="{Binding ImgSource}"
-                Width="{Binding ImgPixelWidth}"
-                Height="{Binding ImgPixelHeight}"
-                SnapsToDevicePixels="True" />
-            <Image
-                Grid.Column="2"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Stretch="Uniform"
-                Source="{Binding ImgTarget}"
-                Width="{Binding ImgPixelWidth}"
-                Height="{Binding ImgPixelHeight}"
-                SnapsToDevicePixels="True" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-            <!-- ImgSource Canvas -->
-            <ItemsControl Grid.Column="0" ItemsSource="{Binding SourceRectItems}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Canvas SnapsToDevicePixels="True" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemContainerStyle>
-                    <Style TargetType="ContentPresenter" d:DataContext="{d:DesignInstance local:RectItem}">
-                        <Setter Property="Canvas.Left" Value="{Binding Left}" />
-                        <Setter Property="Canvas.Top" Value="{Binding Top}" />
-                    </Style>
-                </ItemsControl.ItemContainerStyle>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <local:DesignerItemDecorator Resize="True" Size="True" Width="{Binding Width}"
-                                                     Height="{Binding Height}" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+        <!-- Image Column -->
+        <ScrollViewer Grid.Column="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                      Margin="30">
+            <Grid>
+                <Image
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Stretch="Uniform"
+                    Source="{Binding ImgSource}"
+                    Width="{Binding ImgPixelWidth}"
+                    Height="{Binding ImgPixelHeight}"
+                    SnapsToDevicePixels="True" />
 
-            <!-- ImgTarget Canvas -->
-            <ItemsControl Grid.Column="2" ItemsSource="{Binding TargetRectItems}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Canvas SnapsToDevicePixels="True" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemContainerStyle>
-                    <Style TargetType="ContentPresenter" d:DataContext="{d:DesignInstance local:RectItem}">
-                        <Setter Property="Canvas.Left" Value="{Binding Left}" />
-                        <Setter Property="Canvas.Top" Value="{Binding Top}" />
-                    </Style>
-                </ItemsControl.ItemContainerStyle>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <local:DesignerItemDecorator Resize="True" Width="{Binding Width}" Height="{Binding Height}" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </Grid>
+                <!-- ImgSource Canvas -->
+                <ItemsControl ItemsSource="{Binding SourceRectItems}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <!-- Must set background -->
+                            <!-- It turns out that if you do not set a background on a UIElement, the element background will not participate in hit-testing -->
+                            <Canvas SnapsToDevicePixels="True"
+                                    Background="Transparent"
+                                    MouseLeftButtonDown="Canvas_OnMouseDown"
+                                    MouseLeftButtonUp="Canvas_OnMouseUp"
+                                    MouseMove="Canvas_OnMouseMove" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter" d:DataContext="{d:DesignInstance local:Rect}">
+                            <Setter Property="Canvas.Left" Value="{Binding Left}" />
+                            <Setter Property="Canvas.Top" Value="{Binding Top}" />
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <local:DesignerItemDecorator Resize="True"
+                                                         Width="{Binding Width}"
+                                                         Height="{Binding Height}"
+                                                         Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                                <local:DesignerItemDecorator.ContextMenu>
+                                    <ContextMenu>
+                                        <!-- 通过Tag中转的方式绑定Command -->
+                                        <!-- https://stackoverflow.com/questions/47202690/wpf-command-binding-of-contextmenu-item-inside-itemscontrol -->
+                                        <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                                        <MenuItem Header="移除"
+                                                  Command="{Binding PlacementTarget.Tag.RemoveCommand, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"
+                                                  CommandParameter="{Binding}" />
+                                    </ContextMenu>
+                                </local:DesignerItemDecorator.ContextMenu>
+                            </local:DesignerItemDecorator>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </ScrollViewer>
+
+        <!-- Tool Column -->
+        <ScrollViewer Grid.Column="1"
+                      Margin="0 30"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto"
+                      VerticalAlignment="Top">
+            <TabControl>
+                <TabItem Header="文字识别">
+                    <Button Content="自动识别" Command="{Binding OCRCommand}" />
+                </TabItem>
+                <TabItem Header="对话分组">
+                </TabItem>
+            </TabControl>
+        </ScrollViewer>
     </Grid>
 </local:BasePage>

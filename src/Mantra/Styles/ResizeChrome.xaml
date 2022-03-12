@@ -2,21 +2,13 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Mantra">
 
-    <Style TargetType="{x:Type Shape}" x:Key="ThumbCorner">
+    <Style TargetType="{x:Type Rectangle}" x:Key="ThumbCorner">
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="Stroke" Value="#FFC8C8C8" />
-        <Setter Property="StrokeThickness" Value="0.5" />
-        <Setter Property="Width" Value="7" />
-        <Setter Property="Height" Value="7" />
-        <Setter Property="Margin" Value="-2" />
-        <Setter Property="Fill">
-            <Setter.Value>
-                <RadialGradientBrush Center="0.2, 0.2" GradientOrigin="0.2, 0.2" RadiusX="0.8" RadiusY="0.8">
-                    <GradientStop Color="White" Offset="0.0" />
-                    <GradientStop Color="Gray" Offset="0.8" />
-                </RadialGradientBrush>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Stroke" Value="PaleVioletRed" />
+        <Setter Property="StrokeThickness" Value="1.5" />
+        <Setter Property="Width" Value="10" />
+        <Setter Property="Height" Value="10" />
+        <Setter Property="Margin" Value="-4" />
     </Style>
 
     <Style TargetType="{x:Type local:ResizeChrome}" x:Key="ResizeChromeStyle">
@@ -68,18 +60,36 @@
                         </Grid>
                         <Grid IsHitTestVisible="False" Opacity="1" Margin="-3">
                             <Rectangle SnapsToDevicePixels="True"
-                                       StrokeThickness="2"
-                                       Margin="2"
+                                       StrokeThickness="1.5"
+                                       Margin="0"
                                        StrokeDashArray="3"
-                                       Stroke="Red" />
-                            <!-- <Ellipse Style="{StaticResource ThumbCorner}" HorizontalAlignment="Left" -->
-                            <!--          VerticalAlignment="Top" /> -->
-                            <!-- <Ellipse Style="{StaticResource ThumbCorner}" HorizontalAlignment="Right" -->
-                            <!--          VerticalAlignment="Top" /> -->
-                            <!-- <Ellipse Style="{StaticResource ThumbCorner}" HorizontalAlignment="Left" -->
-                            <!--          VerticalAlignment="Bottom" /> -->
-                            <!-- <Ellipse Style="{StaticResource ThumbCorner}" HorizontalAlignment="Right" -->
-                            <!--          VerticalAlignment="Bottom" /> -->
+                                       Stroke="PaleVioletRed" />
+                            <Rectangle Style="{StaticResource ThumbCorner}"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Top" />
+                            <Rectangle Style="{StaticResource ThumbCorner}"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Top" />
+                            <Rectangle Style="{StaticResource ThumbCorner}"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Bottom" />
+                            <Rectangle Style="{StaticResource ThumbCorner}"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Bottom" />
+
+
+                            <!--<Rectangle Style="{StaticResource ThumbCorner}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Top" />
+                            <Rectangle Style="{StaticResource ThumbCorner}"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center" />
+                            <Rectangle Style="{StaticResource ThumbCorner}"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center" />
+                            <Rectangle Style="{StaticResource ThumbCorner}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Bottom" />-->
                         </Grid>
                     </Grid>
                 </ControlTemplate>

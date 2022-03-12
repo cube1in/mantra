@@ -1,12 +1,13 @@
-﻿using System;
+﻿using MvvmHelpers.Commands;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
-using MvvmHelpers.Commands;
+using Point = System.Windows.Point;
 
 // ReSharper disable once CheckNamespace
 namespace Mantra;
@@ -28,20 +29,9 @@ internal class ScanViewModel : BaseViewModel
     #region Public Properties
 
     /// <summary>
-    /// 图片网络地址
-    /// </summary>
-    public string ImgUrl { get; set; } =
-        "http://5b0988e595225.cdn.sohucs.com/images/20180408/6c037f1f87ee4f95a1c2b9fefa490eb3.jpeg";
-
-    /// <summary>
     /// 原图片缓存
     /// </summary>
     public byte[]? ImgSource { get; set; }
-
-    /// <summary>
-    /// 目标图片缓存
-    /// </summary>
-    public byte[]? ImgTarget { get; set; }
 
     /// <summary>
     /// 图片实际宽度
@@ -53,14 +43,14 @@ internal class ScanViewModel : BaseViewModel
     /// </summary>
     public int ImgPixelHeight { get; set; }
 
+    /// <summary>
+    /// 原文字区域
+    /// </summary>
+    public ObservableCollection<Rect> SourceRectItems { get; set; } = new();
+
     #endregion
 
     #region Commands
-
-    /// <summary>
-    /// 显示命令
-    /// </summary>
-    public ICommand ShowCommand => new AsyncCommand(OnShowAsync);
 
     /// <summary>
     /// 光学识别命令
@@ -69,40 +59,14 @@ internal class ScanViewModel : BaseViewModel
     public ICommand OCRCommand => new AsyncCommand(OnOCRAsync);
 
     /// <summary>
-    /// 翻译命令
+    /// 移除框命令
     /// </summary>
-    public ICommand TranslateCommand => new AsyncCommand(OnTranslateAsync);
-
-    /// <summary>
-    /// 原文字区域
-    /// </summary>
-    public ObservableCollection<RectItem>? SourceRectItems { get; set; }
-
-    /// <summary>
-    /// 目标文字区域
-    /// </summary>
-    public ObservableCollection<RectItem>? TargetRectItems { get; set; }
+    // ReSharper disable once UnusedMember.Global
+    public ICommand RemoveCommand => new AsyncCommand<Rect>(OnRemoveAsync);
 
     #endregion
 
     #region Private Methods
-
-    /// <summary>
-    /// 显示命令时触发
-    /// </summary>
-    private async Task OnShowAsync()
-    {
-        if (!Uri.IsWellFormedUriString(ImgUrl, UriKind.Absolute))
-        {
-            // show warning message
-            return;
-        }
-
-        var buffer = await GetBytesFromUrl(ImgUrl);
-        ImgSource = ImgTarget = buffer;
-
-        SetOriginalSize();
-    }
 
     /// <summary>
     /// 光学扫描时触发
@@ -127,35 +91,33 @@ internal class ScanViewModel : BaseViewModel
         //         });
         // }
 
+        // var blocks = Tesseact.DoOCR1(ImgSource);
+        // SourceRectItems = new();
+        //
+        // if (blocks.Any())
+        // {
+        //     foreach (var block in blocks)
+        //     {
+        //         var rect = block.BoundingBox;
+        //         if (rect != null)
+        //         {
+        //             SourceRectItems.Add(new Rect
+        //                 {Left = rect.Value.X1, Top = rect.Value.Y1, Height = rect.Value.Height, Width = rect.Value.Width});
+        //         }
+        //     }
+        // }
+
+        // await Task.CompletedTask;
         // ReSharper disable once StringLiteralTypo
-        var regions = await Tesseact.DoOCRAsync(ImgSource, "en");
-        SourceRectItems = new ObservableCollection<RectItem>(from region in regions
-            select new RectItem {Left = region.Left, Top = region.Top, Width = region.Width, Height = region.Height});
+        var regions = await Tesseact.DoOCRAsync(ImgSource, "eng_best");
+        SourceRectItems = new ObservableCollection<Rect>(from region in regions
+            select new Rect {Left = region.Left, Top = region.Top, Width = region.Width, Height = region.Height});
     }
 
-    /// <summary>
-    /// 翻译时触发
-    /// </summary>
-    private async Task OnTranslateAsync()
+    private async Task OnRemoveAsync(Rect rect)
     {
-        if (ImgSource == null)
-        {
-            // show warning message
-            return;
-        }
-
-        var transResponse = await Baidu.DoTranslateAsync(Client, new MemoryStream(ImgSource));
+        SourceRectItems.Remove(rect);
         await Task.CompletedTask;
-    }
-
-    /// <summary>
-    /// 获取 Url 图片
-    /// </summary>
-    /// <param name="url"></param>
-    /// <returns></returns>
-    private static async Task<byte[]> GetBytesFromUrl(string url)
-    {
-        return await Client.GetByteArrayAsync(url);
     }
 
     /// <summary>
@@ -179,13 +141,54 @@ internal class ScanViewModel : BaseViewModel
     /// 初始化
     /// </summary>
     /// <param name="pushValue"></param>
-    public void Initialize(object? pushValue)
+    public async Task InitializeAsync(object? pushValue)
     {
         if (pushValue is string path)
         {
-            ImgSource = File.ReadAllBytes(path);
+            ImgSource = await File.ReadAllBytesAsync(path);
             SetOriginalSize();
         }
+    }
+
+    private bool _dragInProgress;
+    private Rect? _createdRect;
+    private Point _lastPoint;
+
+    public void HandleMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        var point = Mouse.GetPosition((Canvas) sender);
+        _createdRect = new Rect {Left = point.X, Top = point.Y};
+        _dragInProgress = true;
+        SourceRectItems.Add(_createdRect);
+        
+        // 加上一个值，否则鼠标将会永远在 Rectangle 上，导致 MouseUp 永远无法触发
+        _lastPoint = new Point(point.X + 10, point.Y + 10);
+    }
+
+    public void HandleMouseMove(object sender, MouseEventArgs e)
+    {
+        if (_dragInProgress && _createdRect != null)
+        {
+            // 查看鼠标移动了多少
+            var point = Mouse.GetPosition((Canvas) sender);
+            var offsetX = point.X - _lastPoint.X;
+            var offsetY = point.Y - _lastPoint.Y;
+
+            // 更新位置
+            _createdRect.Width += offsetX;
+            _createdRect.Height += offsetY;
+            SourceRectItems.Remove(_createdRect);
+            SourceRectItems.Add(_createdRect);
+
+            // 保存鼠标位置
+            _lastPoint = point;
+        }
+    }
+
+    public void HandleMouseUp(object sender, MouseButtonEventArgs e)
+    {
+        _dragInProgress = false;
+        _createdRect = null;
     }
 
     #endregion

@@ -9,6 +9,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/DesignerItemDecorator.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/ScrollViewer.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/TabControl.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Button.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

@@ -1,8 +1,9 @@
-﻿// ReSharper disable once CheckNamespace
+﻿using System.Windows.Input;
 
+// ReSharper disable once CheckNamespace
 namespace Mantra;
 
-internal partial class ScanPage : BasePage
+internal partial class ScanPage
 {
     private ScanViewModel ViewModel => (DataContext as ScanViewModel)!;
 
@@ -12,9 +13,24 @@ internal partial class ScanPage : BasePage
         DataContext = new ScanViewModel();
     }
 
-    public override void OnApplyTemplate()
+    public override async void OnApplyTemplate()
     {
         base.OnApplyTemplate();
-        ViewModel.Initialize(PushValue);
+        await ViewModel.InitializeAsync(PushValue);
+    }
+
+    private void Canvas_OnMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        ViewModel.HandleMouseDown(sender, e);
+    }
+
+    private void Canvas_OnMouseUp(object sender, MouseButtonEventArgs e)
+    {
+        ViewModel.HandleMouseUp(sender, e);
+    }
+
+    private void Canvas_OnMouseMove(object sender, MouseEventArgs e)
+    {
+        ViewModel.HandleMouseMove(sender,  e);
     }
 }

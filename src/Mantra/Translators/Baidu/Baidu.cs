@@ -39,12 +39,12 @@ internal static class Baidu
     /// <summary>
     /// 百度云中开通对应服务应用的 API Key 建议开通应用的时候多选服务
     /// </summary>
-    private const string ClientId = "";
+    private const string ClientId = "lVFrnWlZxyUKcy2G7VTrsB7b";
 
     /// <summary>
     /// 百度云中开通对应服务应用的 Secret Key
     /// </summary>
-    private const string ClientSecret = "";
+    private const string ClientSecret = "M2ecWrkp7G65PNZQT4sRb5HAECKL3k2p";
 
     #endregion
 
@@ -71,6 +71,7 @@ internal static class Baidu
         var paraList = new List<KeyValuePair<string, string>>
         {
             new("image", Convert.ToBase64String(stream.ToArray())),
+            new("language_type", "JAP")
         };
 
         var response =
@@ -86,7 +87,7 @@ internal static class Baidu
         var token = GetTokenAsync(client);
 
         var bytesContent = new StreamContent(stream);
-        bytesContent.Headers.ContentType =  MediaTypeHeaderValue.Parse("mutipart/form-data");
+        bytesContent.Headers.ContentType =  MediaTypeHeaderValue.Parse("multipart/form-data");
 
         var multiForm = new MultipartFormDataContent();
         // 源语种方向
