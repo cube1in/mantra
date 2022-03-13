@@ -1,6 +1,8 @@
 ﻿using MvvmHelpers.Commands;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
@@ -44,7 +46,7 @@ internal class ScanViewModel : BaseViewModel
     /// <summary>
     /// 原文字区域
     /// </summary>
-    public ObservableCollection<Rect> SourceRectItems { get; set; } = new();
+    public ObservableCollection<Rect> RectItems { get; set; } = new();
 
     #endregion
 
@@ -69,7 +71,7 @@ internal class ScanViewModel : BaseViewModel
     /// <summary>
     /// 光学扫描时触发
     /// </summary>
-    private void OnOCR()
+    private async void OnOCR()
     {
         if (ImgSource == null)
         {
@@ -77,17 +79,32 @@ internal class ScanViewModel : BaseViewModel
             return;
         }
 
-        var blocks = Tesseact.GetBlocks(ImgSource);
-        foreach (var block in blocks)
+        // var blocks = Tesseact.GetBlocks(ImgSource);
+        // foreach (var block in blocks)
+        // {
+        //     if (block.BoundingBox != null)
+        //     {
+        //         var boundingBox = block.BoundingBox.Value;
+        //         RectItems.Add(new Rect
+        //         {
+        //             Left = boundingBox.X1, Top = boundingBox.Y1, Height = boundingBox.Height, Width = boundingBox.Width
+        //         });
+        //     }
+        // }
+
+        var ocrResponse = await Baidu.DoOCRAsync(Client, new MemoryStream(await File.ReadAllBytesAsync(ImgSource)));
+
+        if (ocrResponse != null)
         {
-            if (block.BoundingBox != null)
-            {
-                var boundingBox = block.BoundingBox.Value;
-                SourceRectItems.Add(new Rect
-                {
-                    Left = boundingBox.X1, Top = boundingBox.Y1, Height = boundingBox.Height, Width = boundingBox.Width
-                });
-            }
+            RectItems = new ObservableCollection<Rect>(from context in ocrResponse.WordsResult
+                                                       select new Rect
+                                                       {
+                                                           Left = context.Location.Left,
+                                                           Top = context.Location.Top,
+                                                           Width = context.Location.Width,
+                                                           Height = context.Location.Height,
+                                                           OriginalText = context.Words
+                                                       });
         }
     }
 
@@ -97,7 +114,7 @@ internal class ScanViewModel : BaseViewModel
     /// <param name="rect"></param>
     private void OnRemove(Rect rect)
     {
-        SourceRectItems.Remove(rect);
+        RectItems.Remove(rect);
     }
 
     /// <summary>
@@ -151,17 +168,23 @@ internal class ScanViewModel : BaseViewModel
     private Point _lastPoint;
 
     /// <summary>
+    /// 创建矩形边的最小值
+    /// 创建时小于此值将会被移除
+    /// </summary>
+    private const double MinSize = 25;
+
+    /// <summary>
     /// 鼠标左键按下时触发
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     public void MouseDownHandler(object sender, MouseButtonEventArgs e)
     {
-        var el = (UIElement) sender;
+        var el = (UIElement)sender;
         var point = Mouse.GetPosition(el);
-        _createdRect = new Rect {Left = point.X, Top = point.Y};
+        _createdRect = new Rect { Left = point.X, Top = point.Y };
         _dragInProgress = true;
-        SourceRectItems.Add(_createdRect);
+        RectItems.Add(_createdRect);
 
         _lastPoint = point;
 
@@ -182,15 +205,15 @@ internal class ScanViewModel : BaseViewModel
         if (_dragInProgress && _createdRect != null)
         {
             // 查看鼠标移动了多少
-            var point = Mouse.GetPosition((Canvas) sender);
+            var point = Mouse.GetPosition((Canvas)sender);
             var offsetX = point.X - _lastPoint.X;
             var offsetY = point.Y - _lastPoint.Y;
 
             // 更新位置
             _createdRect.Width += offsetX;
             _createdRect.Height += offsetY;
-            SourceRectItems.Remove(_createdRect);
-            SourceRectItems.Add(_createdRect);
+            RectItems.Remove(_createdRect);
+            RectItems.Add(_createdRect);
 
             // 保存鼠标位置
             _lastPoint = point;
@@ -204,17 +227,17 @@ internal class ScanViewModel : BaseViewModel
     /// <param name="e"></param>
     public void MouseUpHandler(object sender, MouseButtonEventArgs e)
     {
-        // 如果小于 10 将不会被创建
-        if (_createdRect != null && (_createdRect.Width <= 10 || _createdRect.Height <= 10))
+        // 如果小于 MinSize 将不会被创建
+        if (_createdRect != null && (_createdRect.Width <= MinSize || _createdRect.Height <= MinSize))
         {
-            SourceRectItems.Remove(_createdRect);
+            RectItems.Remove(_createdRect);
         }
 
         _dragInProgress = false;
         _createdRect = null;
 
 
-        var el = (UIElement) sender;
+        var el = (UIElement)sender;
         // 释放强制捕获的鼠标
         el.ReleaseMouseCapture();
     }

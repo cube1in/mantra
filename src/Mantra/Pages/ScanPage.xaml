@@ -5,6 +5,7 @@
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                 xmlns:local="clr-namespace:Mantra"
+                xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
                 mc:Ignorable="d"
                 d:DataContext="{d:DesignInstance local:ScanViewModel}"
                 Title="ScanPage"
@@ -13,14 +14,16 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="5*" />
+            <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
 
         <!-- Image Column -->
-        <ScrollViewer Grid.Column="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
-                      Margin="30">
-            <Grid>
+        <ScrollViewer Grid.Column="0"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto"
+                      Margin="10 30">
+            <Grid SnapsToDevicePixels="True" Margin="10 0">
                 <Image
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
@@ -31,7 +34,7 @@
                     SnapsToDevicePixels="True" />
 
                 <!-- ImgSource Canvas -->
-                <ItemsControl ItemsSource="{Binding SourceRectItems}">
+                <ItemsControl ItemsSource="{Binding RectItems}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <!-- Must set background -->
@@ -76,15 +79,122 @@
 
         <!-- Tool Column -->
         <ScrollViewer Grid.Column="1"
-                      Margin="0 30"
+                      Margin="0 30 10 30"
                       HorizontalScrollBarVisibility="Disabled"
                       VerticalScrollBarVisibility="Auto"
                       VerticalAlignment="Top">
-            <TabControl>
+            <TabControl Margin="10 0">
                 <TabItem Header="文字识别">
                     <Button Content="自动识别" Command="{Binding OCRCommand}" />
                 </TabItem>
                 <TabItem Header="对话分组">
+
+                    <TabItem.Resources>
+                        <!-- Group RectItems -->
+                        <CollectionViewSource IsLiveFilteringRequested="True" x:Key="CollectionViewSource" Source="{Binding Path=RectItems}">
+                            <CollectionViewSource.GroupDescriptions>
+                                <PropertyGroupDescription PropertyName="Group" />
+                            </CollectionViewSource.GroupDescriptions>
+                            <CollectionViewSource.SortDescriptions>
+                                <componentModel:SortDescription PropertyName="Group" />
+                            </CollectionViewSource.SortDescriptions>
+                        </CollectionViewSource>
+                    </TabItem.Resources>
+
+                    <ItemsControl Margin="5" ItemsSource="{Binding Source={StaticResource CollectionViewSource}}">
+                        <!-- ItemsControl Resources -->
+                        <ItemsControl.Resources>
+                            <Style TargetType="{x:Type GroupItem}" x:Key="GroupContainerStyle">
+                                <Setter Property="SnapsToDevicePixels" Value="True" />
+                                <Setter Property="BorderThickness" Value="0" />
+                                <Setter Property="Margin" Value="0 0 0 20" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type GroupItem}">
+                                            <Border x:Name="Border"
+                                                    SnapsToDevicePixels="True"
+                                                    Background="{StaticResource BackgroundLightBrush}"
+                                                    CornerRadius="2">
+                                                <StackPanel SnapsToDevicePixels="True" Margin="5">
+                                                    <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                                                    <TextBlock VerticalAlignment="Center"
+                                                               HorizontalAlignment="Left"
+                                                               FontSize="13"
+                                                               Text="{Binding Name, StringFormat='# {0}'}"
+                                                               Foreground="DarkRed" />
+                                                    <ItemsPresenter />
+                                                </StackPanel>
+                                            </Border>
+
+                                            <!-- <ControlTemplate.Triggers> -->
+                                            <!--     <EventTrigger RoutedEvent="Mouse.MouseDown"> -->
+                                            <!--         <EventTrigger.Actions> -->
+                                            <!--             <BeginStoryboard> -->
+                                            <!--                 <Storyboard> -->
+                                            <!--                     <ColorAnimation -->
+                                            <!--                         Duration="0:0:0.2" -->
+                                            <!--                         Storyboard.TargetName="Border" -->
+                                            <!--                         Storyboard.TargetProperty="BorderBrush.Color" -->
+                                            <!--                         To="CornflowerBlue"  /> -->
+                                            <!--                 </Storyboard> -->
+                                            <!--             </BeginStoryboard> -->
+                                            <!--         </EventTrigger.Actions> -->
+                                            <!--     </EventTrigger> -->
+                                            <!--     <EventTrigger RoutedEvent="Mouse.MouseLeave"> -->
+                                            <!--         <EventTrigger.Actions> -->
+                                            <!--             <BeginStoryboard> -->
+                                            <!--                 <Storyboard> -->
+                                            <!--                     <ColorAnimation -->
+                                            <!--                         Duration="0:0:1" -->
+                                            <!--                         Storyboard.TargetName="Border" -->
+                                            <!--                         Storyboard.TargetProperty="BorderBrush.Color" /> -->
+                                            <!--                 </Storyboard> -->
+                                            <!--             </BeginStoryboard> -->
+                                            <!--         </EventTrigger.Actions> -->
+                                            <!--     </EventTrigger> -->
+                                            <!-- </ControlTemplate.Triggers> -->
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ItemsControl.Resources>
+
+                        <!-- Group Style -->
+                        <ItemsControl.GroupStyle>
+                            <GroupStyle ContainerStyle="{StaticResource GroupContainerStyle}" />
+                        </ItemsControl.GroupStyle>
+
+                        <!-- Item Panel -->
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <!-- Item Template -->
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid SnapsToDevicePixels="True" Margin="0 8" Background="White">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="10" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    
+                                    <StackPanel Grid.Row="0" Margin="5 5 5 0">
+                                        <TextBlock Text="源词" Margin="0 0 0 5" FontSize="13" />
+                                        <TextBlock Text="{Binding OriginalText}" Margin="0 0 0 5" FontSize="13" />
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Row="2" Margin="5 0 5 5">
+                                        <TextBlock Text="翻译" Margin="0 0 0 5" FontSize="13" />
+                                        <TextBlock Text="{Binding TranslatedText}" Margin="0 0 0 5" FontSize="13" />
+                                    </StackPanel>
+
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </TabItem>
             </TabControl>
         </ScrollViewer>

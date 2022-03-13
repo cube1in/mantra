@@ -1,5 +1,6 @@
-﻿// ReSharper disable once CheckNamespace
+﻿using System;
 
+// ReSharper disable once CheckNamespace
 namespace Mantra;
 
 /// <summary>
@@ -31,10 +32,20 @@ internal class Rect
     /// 所属的组
     /// 默认为 1
     /// </summary>
-    public int Group { get; set; } = 1;
+    public int Group { get; set; } = new Random().Next(1, 10);
 
     /// <summary>
     /// 颜色
     /// </summary>
     public string Color { get; set; } = "#FFDB7093";
+
+    /// <summary>
+    /// 矩形内的源词
+    /// </summary>
+    public string OriginalText { get; set; } = "没有识别结果";
+
+    /// <summary>
+    /// 矩形内的翻译
+    /// </summary>
+    public string TranslatedText { get; set; } = "没有翻译结果";
 }

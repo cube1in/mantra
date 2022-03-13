@@ -77,7 +77,7 @@
 
                             <!-- 所属组 -->
                             <Grid SnapsToDevicePixels="True"
-                                  Margin="0,-25,0,0"
+                                  Margin="-1,-25,0,0"
                                   HorizontalAlignment="Center"
                                   VerticalAlignment="Top">
 
