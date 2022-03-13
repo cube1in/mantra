@@ -13,24 +13,24 @@ internal partial class ScanPage
         DataContext = new ScanViewModel();
     }
 
-    public override async void OnApplyTemplate()
+    public override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
-        await ViewModel.InitializeAsync(PushValue);
+        ViewModel.Initialize(PushValue);
     }
 
     private void Canvas_OnMouseDown(object sender, MouseButtonEventArgs e)
     {
-        ViewModel.HandleMouseDown(sender, e);
+        ViewModel.MouseDownHandler(sender, e);
     }
 
     private void Canvas_OnMouseUp(object sender, MouseButtonEventArgs e)
     {
-        ViewModel.HandleMouseUp(sender, e);
+        ViewModel.MouseUpHandler(sender, e);
     }
 
     private void Canvas_OnMouseMove(object sender, MouseEventArgs e)
     {
-        ViewModel.HandleMouseMove(sender,  e);
+        ViewModel.MouseMoveHandler(sender,  e);
     }
 }

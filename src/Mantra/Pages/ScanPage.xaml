@@ -53,6 +53,7 @@
                         <DataTemplate>
                             <local:DesignerItemDecorator Resize="True"
                                                          Width="{Binding Width}"
+                                                         MouseLeftButtonUp="Canvas_OnMouseUp"
                                                          Height="{Binding Height}"
                                                          Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
                                 <local:DesignerItemDecorator.ContextMenu>

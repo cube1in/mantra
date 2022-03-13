@@ -11,7 +11,7 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         <PackageReference Include="Refractored.MvvmHelpers" Version="1.6.2" />
         <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
-        <PackageReference Include="Tesseract" Version="4.1.1" />
+        <PackageReference Include="TesseractOCR" Version="5.1.0" />
         <PackageReference Include="PropertyChanged.Fody" Version="3.4.0">
             <PrivateAssets>All</PrivateAssets>
         </PackageReference>
@@ -20,6 +20,8 @@
     <ItemGroup>
         <None Include="$(SolutionDir)\trained_data\**" CopyToOutputDirectory="PreserveNewest" LinkBase="trained_data\" />
         <None Include="$(SolutionDir)\media\**" CopyToOutputDirectory="PreserveNewest" LinkBase="media\" />
+        <None Include="$(SolutionDir)\x64\**" CopyToOutputDirectory="PreserveNewest" LinkBase="x64\" />
+        <None Include="$(SolutionDir)\x86\**" CopyToOutputDirectory="PreserveNewest" LinkBase="x86\" />
     </ItemGroup>
 
 </Project>
