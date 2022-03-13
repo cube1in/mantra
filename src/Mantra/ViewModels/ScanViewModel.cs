@@ -159,7 +159,7 @@ internal class ScanViewModel : BaseViewModel
         _createdRect = new Rect {Left = point.X, Top = point.Y};
         _dragInProgress = true;
         SourceRectItems.Add(_createdRect);
-        
+
         _lastPoint = point;
 
         // https://docs.microsoft.com/zh-cn/previous-versions/ms771301(v=vs.100)?redirectedfrom=MSDN
@@ -188,7 +188,7 @@ internal class ScanViewModel : BaseViewModel
             _createdRect.Height += offsetY;
             SourceRectItems.Remove(_createdRect);
             SourceRectItems.Add(_createdRect);
-            
+
             // 保存鼠标位置
             _lastPoint = point;
         }
@@ -201,11 +201,17 @@ internal class ScanViewModel : BaseViewModel
     /// <param name="e"></param>
     public void MouseUpHandler(object sender, MouseButtonEventArgs e)
     {
+        // 如果小于 10 将不会被创建
+        if (_createdRect != null && (_createdRect.Width <= 10 || _createdRect.Height <= 10))
+        {
+            SourceRectItems.Remove(_createdRect);
+        }
+
         _dragInProgress = false;
         _createdRect = null;
 
+
         var el = (UIElement) sender;
-        
         // 释放强制捕获的鼠标
         el.ReleaseMouseCapture();
     }

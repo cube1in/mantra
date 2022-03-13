@@ -147,7 +147,7 @@ internal class DesignerItemDecorator : ContentControl
             var adornerLayer = AdornerLayer.GetAdornerLayer(this);
             if (adornerLayer != null)
             {
-                if (this.HasParent<Canvas>())
+                if (this.GetVisualAncestor<Canvas>() != null)
                 {
                     _resizeAdorner = new ResizeAdorner(this);
                     adornerLayer.Add(_resizeAdorner);
@@ -179,7 +179,7 @@ internal class DesignerItemDecorator : ContentControl
             var adornerLayer = AdornerLayer.GetAdornerLayer(this);
             if (adornerLayer != null)
             {
-                if (this.HasParent<Canvas>())
+                if (this.GetVisualAncestor<Canvas>() != null)
                 {
                     _sizeAdorner = new SizeAdorner(this);
                     adornerLayer.Add(_sizeAdorner);
