@@ -11,14 +11,14 @@
         <Rectangle Fill="Transparent" />
     </ControlTemplate>
 
-    <Style TargetType="{x:Type local:DesignerItemDecorator}" x:Key="DesignerItemStyle">
+    <Style TargetType="{x:Type local:DesignerContainer}" x:Key="DesignerContainerStyle">
         <Setter Property="MinHeight" Value="10" />
         <Setter Property="MinWidth" Value="10" />
         <Setter Property="RenderTransformOrigin" Value="0.5, 0.5" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:DesignerItemDecorator}">
+                <ControlTemplate TargetType="{x:Type local:DesignerContainer}">
                     <Grid DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
                         <local:MoveThumb Template="{StaticResource MoveThumbTemplate}" Cursor="SizeAll" />
                         <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
@@ -28,5 +28,5 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type local:DesignerItemDecorator}" BasedOn="{StaticResource DesignerItemStyle}" />
+    <Style TargetType="{x:Type local:DesignerContainer}" BasedOn="{StaticResource DesignerContainerStyle}" />
 </ResourceDictionary>

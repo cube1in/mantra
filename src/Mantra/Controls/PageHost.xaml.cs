@@ -5,7 +5,7 @@ namespace Mantra;
 
 internal partial class PageHost
 {
-    #region Dependency Properties
+    #region Dependency Properties Definitions
 
     /// <summary>
     /// The current page to show in the page host

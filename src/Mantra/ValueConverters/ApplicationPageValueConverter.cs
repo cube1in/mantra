@@ -7,10 +7,10 @@ namespace Mantra;
 
 internal class ApplicationPageValueConverter : BaseValueConverter<ApplicationPageValueConverter>
 {
-    public override object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public override object? Convert(object? value, Type targetType, object parameter, CultureInfo culture)
     {
         // Find the appropriate page
-        switch ((ApplicationPage) value)
+        switch ((ApplicationPage) value!)
         {
             case ApplicationPage.Upload:
                 return new UploadPage();
@@ -33,7 +33,7 @@ internal class ApplicationPageValueConverter : BaseValueConverter<ApplicationPag
         }
     }
 
-    public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public override object ConvertBack(object? value, Type targetType, object parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }

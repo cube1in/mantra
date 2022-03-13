@@ -7,7 +7,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/DesignerItemDecorator.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/DesignerContainer.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/ScrollViewer.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/TabControl.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Button.xaml" />

@@ -123,6 +123,9 @@ internal class ScanViewModel : BaseViewModel
     /// <param name="pushValue"></param>
     public void Initialize(object? pushValue)
     {
+#if DEBUG
+        pushValue ??= @"C:\Users\sou1m\Desktop\Mantra\test.png";
+#endif
         if (pushValue is string path)
         {
             ImgSource = path;

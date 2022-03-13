@@ -7,9 +7,19 @@ namespace Mantra;
 /// </summary>
 internal class ApplicationViewModel : BaseViewModel
 {
+    /// <summary>
+    /// 创建锁
+    /// </summary>
     private static readonly object CreateLock = new();
+    
+    /// <summary>
+    /// 单例实例
+    /// </summary>
     private static ApplicationViewModel? _instance;
 
+    /// <summary>
+    /// 当前单例
+    /// </summary>
     public static ApplicationViewModel Current
     {
         get
@@ -30,7 +40,7 @@ internal class ApplicationViewModel : BaseViewModel
     /// <summary>
     /// The current page of the application
     /// </summary>
-    public ApplicationPage CurrentPage { get; private set; } = ApplicationPage.Upload;
+    public ApplicationPage CurrentPage { get; private set; } = ApplicationPage.Scanlation;
 
     /// <summary>
     /// Push value to go to page

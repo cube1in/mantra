@@ -2,15 +2,16 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Media;
 
 // ReSharper disable once CheckNamespace
 namespace Mantra;
 
 /// <summary>
-/// DesignerItem 装饰器
+/// Designer容器
 /// </summary>
 [SuppressMessage("ReSharper", "IdentifierTypo")]
-internal class DesignerItemDecorator : ContentControl
+internal class DesignerContainer : ContentControl
 {
     #region Private Members
 
@@ -31,8 +32,9 @@ internal class DesignerItemDecorator : ContentControl
     /// <summary>
     /// 显示调整大小装饰器
     /// </summary>
-    public static readonly DependencyProperty ResizeProperty = DependencyProperty.Register(nameof(Resize),
-        typeof(bool), typeof(DesignerItemDecorator), new FrameworkPropertyMetadata(false, ResizePropertyChanged));
+    public static readonly DependencyProperty ResizeProperty =
+        DependencyProperty.Register(nameof(Resize), typeof(bool), typeof(DesignerContainer),
+            new FrameworkPropertyMetadata(false, ResizePropertyChanged));
 
     /// <summary>
     /// 显示调整大小装饰器
@@ -44,13 +46,13 @@ internal class DesignerItemDecorator : ContentControl
     }
 
     /// <summary>
-    /// ResizePropertyChanged Callback
+    /// 当 <see cref="ResizeProperty"/> 改变后触发
     /// </summary>
     /// <param name="d">DependencyObject</param>
     /// <param name="e">DependencyPropertyChangedEventArgs</param>
     private static void ResizePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var decorator = (DesignerItemDecorator) d;
+        var decorator = (DesignerContainer) d;
         var showDecorator = (bool) e.NewValue;
 
         if (showDecorator) decorator.ShowResizeAdorner();
@@ -61,7 +63,7 @@ internal class DesignerItemDecorator : ContentControl
     /// 显示大小装饰器
     /// </summary>
     public static readonly DependencyProperty SizeProperty = DependencyProperty.Register(nameof(Size),
-        typeof(bool), typeof(DesignerItemDecorator), new FrameworkPropertyMetadata(false, SizePropertyChanged));
+        typeof(bool), typeof(DesignerContainer), new FrameworkPropertyMetadata(false, SizePropertyChanged));
 
     /// <summary>
     /// 显示大小装饰器
@@ -73,17 +75,61 @@ internal class DesignerItemDecorator : ContentControl
     }
 
     /// <summary>
-    /// SizePropertyChanged Callback
+    /// 当 <see cref="SizeProperty"/> 改变后触发
     /// </summary>
     /// <param name="d">DependencyObject</param>
     /// <param name="e">DependencyPropertyChangedEventArgs</param>
     private static void SizePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var decorator = (DesignerItemDecorator) d;
+        var decorator = (DesignerContainer) d;
         var showDecorator = (bool) e.NewValue;
 
         if (showDecorator) decorator.ShowSizeAdorner();
         else decorator.HideSizeAdorner();
+    }
+
+    /// <summary>
+    /// 外边框颜色
+    /// </summary>
+    public static readonly DependencyProperty StrokeColorProperty =
+        DependencyProperty.Register(nameof(StrokeColor), typeof(string), typeof(DesignerContainer),
+            new PropertyMetadata("#FFDB7093", null, CoerceStrokeColor));
+
+    /// <summary>
+    /// 外边框颜色
+    /// </summary>
+    public string StrokeColor
+    {
+        get => (string) GetValue(StrokeColorProperty);
+        set => SetValue(StrokeColorProperty, value);
+    }
+
+    /// <summary>
+    /// 验证
+    /// </summary>
+    /// <param name="d"></param>
+    /// <param name="baseValue"></param>
+    /// <returns></returns>
+    private static object CoerceStrokeColor(DependencyObject d, object baseValue)
+    {
+        // 验证颜色值是否正常
+        ColorConverter.ConvertFromString((string) baseValue);
+        return baseValue;
+    }
+
+    /// <summary>
+    /// 所属组
+    /// </summary>
+    public static readonly DependencyProperty GroupProperty =
+        DependencyProperty.Register(nameof(Group), typeof(int), typeof(DesignerContainer), new PropertyMetadata(1));
+
+    /// <summary>
+    /// 所属组
+    /// </summary>
+    public int Group
+    {
+        get => (int) GetValue(GroupProperty);
+        set => SetValue(GroupProperty, value);
     }
 
     #endregion
@@ -93,7 +139,7 @@ internal class DesignerItemDecorator : ContentControl
     /// <summary>
     /// 默认构造函数
     /// </summary>
-    public DesignerItemDecorator()
+    public DesignerContainer()
     {
         Unloaded += HandleUnloaded;
     }

@@ -32,4 +32,9 @@ internal class Rect
     /// 默认为 1
     /// </summary>
     public int Group { get; set; } = 1;
+
+    /// <summary>
+    /// 颜色
+    /// </summary>
+    public string Color { get; set; } = "#FFDB7093";
 }

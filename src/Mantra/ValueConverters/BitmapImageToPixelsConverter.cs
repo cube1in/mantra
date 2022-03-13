@@ -7,7 +7,7 @@ namespace Mantra;
 
 internal class BitmapImageToPixelsConverter : BaseValueConverter<BitmapImageToPixelsConverter>
 {
-    public override object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public override object? Convert(object? value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value is string str && Uri.TryCreate(str, UriKind.Absolute, out var uir))
         {
@@ -22,7 +22,7 @@ internal class BitmapImageToPixelsConverter : BaseValueConverter<BitmapImageToPi
         return null;
     }
 
-    public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public override object ConvertBack(object? value, Type targetType, object parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }
