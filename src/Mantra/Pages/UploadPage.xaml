@@ -23,7 +23,7 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
             <Image Height="200" Width="250"
-                   Source="{Binding Source=media/upload.png, Converter={local:FilepathConverter}}" />
+                   Source="{Binding Source=media/upload.png, Converter={local:FilepathBytesConverter}}" />
 
 
             <TextBlock Text="点击上传"

@@ -43,7 +43,7 @@
                             </Border>
 
                             <!-- Close Button -->
-                            <Image Source="{Binding Source=media/close_small.png, Converter={local:FilepathConverter}}"
+                            <Image Source="{Binding Source=media/close_small.png, Converter={local:FilepathBytesConverter}}"
                                    Width="23"
                                    Height="23"
                                    VerticalAlignment="Top"
@@ -86,7 +86,7 @@
 
                     <Rectangle.Fill>
                         <ImageBrush
-                            ImageSource="{Binding Source=media/add_img.png, Converter={local:FilepathConverter}}"
+                            ImageSource="{Binding Source=media/add_img.png, Converter={local:FilepathBytesConverter}}"
                             Opacity="0.3"
                             Stretch="Fill"
                             Viewport="0.25 0.25 0.5 0.5" />

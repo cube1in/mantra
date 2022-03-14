@@ -5,7 +5,7 @@ using System.IO;
 // ReSharper disable once CheckNamespace
 namespace Mantra;
 
-internal class FilepathConverter:BaseValueConverter<FilepathConverter>
+internal class FilepathBytesConverter:BaseValueConverter<FilepathBytesConverter>
 {
     public override object? Convert(object? value, Type targetType, object parameter, CultureInfo culture)
     {

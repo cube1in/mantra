@@ -1,12 +1,13 @@
-﻿using System;
+﻿// ReSharper disable once CheckNamespace
 
-// ReSharper disable once CheckNamespace
+using System;
+
 namespace Mantra;
 
 /// <summary>
 /// 矩形
 /// </summary>
-internal class Rect
+internal class Rect : BaseViewModel
 {
     /// <summary>
     /// 左边位置
@@ -32,7 +33,7 @@ internal class Rect
     /// 所属的组
     /// 默认为 1
     /// </summary>
-    public int Group { get; set; } = new Random().Next(1, 10);
+    public int Group { get; set; } = new Random().Next(1, 5);
 
     /// <summary>
     /// 颜色

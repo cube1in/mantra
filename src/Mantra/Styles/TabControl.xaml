@@ -9,7 +9,7 @@
     <!-- Start: TabItem-->
     <Style TargetType="{x:Type TabItem}" x:Key="TabItem">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{StaticResource ForegroundMainBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource ForegroundGrayBrush}" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="Margin" Value="5 0" />

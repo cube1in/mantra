@@ -9,10 +9,12 @@
             <ResourceDictionary.MergedDictionaries>
                 <!-- Order is important -->
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Color.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Text.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Button.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/DesignerContainer.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/ScrollViewer.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/TabControl.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Menu.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

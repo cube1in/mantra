@@ -26,7 +26,7 @@ internal class UploadViewModel : BaseViewModel
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public void HandleDrop(object sender, DragEventArgs e)
+    public void DropHandler(object sender, DragEventArgs e)
     {
         if (e.Data.GetDataPresent(DataFormats.FileDrop))
         {

@@ -15,6 +15,6 @@ internal partial class UploadPage : BasePage
 
     private void Grid_OnDrop(object sender, DragEventArgs e)
     {
-        ViewModel.HandleDrop(sender, e);
+        ViewModel.DropHandler(sender, e);
     }
 }

@@ -1,16 +1,17 @@
-﻿using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Input;
 
 // ReSharper disable once CheckNamespace
 namespace Mantra;
 
-internal partial class ScanPage
+internal partial class HandlePage
 {
-    private ScanViewModel ViewModel => (DataContext as ScanViewModel)!;
+    private HandleViewModel ViewModel => (DataContext as HandleViewModel)!;
 
-    public ScanPage()
+    public HandlePage()
     {
         InitializeComponent();
-        DataContext = new ScanViewModel();
+        DataContext = new HandleViewModel();
     }
 
     public override void OnApplyTemplate()
@@ -31,6 +32,11 @@ internal partial class ScanPage
 
     private void Canvas_OnMouseMove(object sender, MouseEventArgs e)
     {
-        ViewModel.MouseMoveHandler(sender,  e);
+        ViewModel.MouseMoveHandler(sender, e);
+    }
+
+    private void Grid_OnDrop(object sender, DragEventArgs e)
+    {
+        ViewModel.DropHandler(sender, e);
     }
 }

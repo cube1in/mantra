@@ -14,12 +14,6 @@
         <Setter Property="Margin" Value="-4" />
     </Style>
 
-    <Style TargetType="{x:Type Ellipse}" x:Key="GroupCorner">
-        <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="Width" Value="20" />
-        <Setter Property="Height" Value="20" />
-    </Style>
-
     <Style TargetType="{x:Type local:ResizeChrome}" x:Key="ResizeChromeStyle">
         <Setter Property="Template">
             <Setter.Value>
@@ -74,21 +68,6 @@
                                        Stroke="{Binding StrokeColor}"
                                        StrokeDashArray="3">
                             </Rectangle>
-
-                            <!-- 所属组 -->
-                            <Grid SnapsToDevicePixels="True"
-                                  Margin="-1,-25,0,0"
-                                  HorizontalAlignment="Center"
-                                  VerticalAlignment="Top">
-
-                                <Ellipse Fill="{Binding StrokeColor}"
-                                         Style="{StaticResource GroupCorner}" />
-
-                                <TextBlock Foreground="White"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"
-                                           Text="{Binding Group}" />
-                            </Grid>
 
                             <!-- 左上 -->
                             <Rectangle Style="{StaticResource ThumbCorner}"

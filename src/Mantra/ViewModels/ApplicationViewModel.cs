@@ -40,7 +40,7 @@ internal class ApplicationViewModel : BaseViewModel
     /// <summary>
     /// The current page of the application
     /// </summary>
-    public ApplicationPage CurrentPage { get; private set; } = ApplicationPage.Scanlation;
+    public ApplicationPage CurrentPage { get; private set; } = ApplicationPage.Handle;
 
     /// <summary>
     /// Push value to go to page
@@ -66,6 +66,6 @@ internal class ApplicationViewModel : BaseViewModel
         PushValue = pushValue;
 
         // Show side menu or not?
-        SideMenuVisible = page == ApplicationPage.Scanlation;
+        SideMenuVisible = page == ApplicationPage.Handle;
     }
 }

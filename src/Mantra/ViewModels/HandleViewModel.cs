@@ -13,9 +13,9 @@ using Point = System.Windows.Point;
 namespace Mantra;
 
 /// <summary>
-/// 扫描页
+/// 处理页视图模型
 /// </summary>
-internal class ScanViewModel : BaseViewModel
+internal class HandleViewModel : BaseViewModel
 {
     #region Private Members
 
@@ -53,10 +53,16 @@ internal class ScanViewModel : BaseViewModel
     #region Commands
 
     /// <summary>
-    /// 光学识别命令
+    /// 批量光学识别命令
     /// </summary>
     // ReSharper disable once InconsistentNaming
-    public ICommand OCRCommand => new Command(OnOCR);
+    public ICommand BatchOCRCommand => new Command(OnBatchOCR);
+
+    /// <summary>
+    /// 单个光学识别命令
+    /// </summary>
+    // ReSharper disable once InconsistentNaming
+    public ICommand SingleOCRCommand => new Command<Rect>(OnSingleOCR);
 
     /// <summary>
     /// 移除框命令
@@ -69,9 +75,9 @@ internal class ScanViewModel : BaseViewModel
     #region Private Methods
 
     /// <summary>
-    /// 光学扫描时触发
+    /// <see cref="BatchOCRCommand"/> 时触发
     /// </summary>
-    private async void OnOCR()
+    private async void OnBatchOCR()
     {
         if (ImgSource == null)
         {
@@ -97,15 +103,45 @@ internal class ScanViewModel : BaseViewModel
         if (ocrResponse != null)
         {
             RectItems = new ObservableCollection<Rect>(from context in ocrResponse.WordsResult
-                                                       select new Rect
-                                                       {
-                                                           Left = context.Location.Left,
-                                                           Top = context.Location.Top,
-                                                           Width = context.Location.Width,
-                                                           Height = context.Location.Height,
-                                                           OriginalText = context.Words
-                                                       });
+                select new Rect
+                {
+                    Left = context.Location.Left,
+                    Top = context.Location.Top,
+                    Width = context.Location.Width,
+                    Height = context.Location.Height,
+                    OriginalText = context.Words
+                });
         }
+    }
+
+    /// <summary>
+    /// <see cref="SingleOCRCommand"/> 时触发
+    /// </summary>
+    /// <param name="item"></param>
+    private void OnSingleOCR(Rect item)
+    {
+        var bitmap = CropImage(ImgSource!,
+            new Rectangle
+            {
+                X = (int) item.Left,
+                Y = (int) item.Top,
+                Width = (int) item.Width,
+                Height = (int) item.Height
+            });
+
+        var converter = new ImageConverter();
+        var bytes = (byte[]) converter.ConvertTo(bitmap, typeof(byte[]))!;
+
+        var text = Tesseact.GetText(bytes);
+        item.OriginalText = text;
+
+        // var ocrResponse = await Baidu.DoOCRAsync(Client, new MemoryStream(bytes));
+        //
+        // if (ocrResponse != null)
+        // {
+        //     item.OriginalText = string.Join(Environment.NewLine,
+        //         from context in ocrResponse.WordsResult select context.Words);
+        // }
     }
 
     /// <summary>
@@ -130,6 +166,12 @@ internal class ScanViewModel : BaseViewModel
         ImgPixelWidth = bitmap.Width;
     }
 
+    private static Bitmap CropImage(string path, Rectangle cropArea)
+    {
+        var bitmap = new Bitmap(path);
+        return bitmap.Clone(cropArea, bitmap.PixelFormat);
+    }
+
     #endregion
 
     #region Public Methods
@@ -147,6 +189,27 @@ internal class ScanViewModel : BaseViewModel
         {
             ImgSource = path;
             SetOriginalSize();
+        }
+    }
+
+    /// <summary>
+    /// 处理拖拽进入的
+    /// </summary>
+    /// <param name="sender">object</param>
+    /// <param name="e">DragEventArgs</param>
+    public void DropHandler(object sender, DragEventArgs e)
+    {
+        if (e.Data.GetDataPresent(DataFormats.Text))
+        {
+            if (e.Data.GetData(DataFormats.Text) is not string[] files) return;
+
+            // if (files.Any(file => !_validExtensions.Contains(Path.GetExtension(file))))
+            // {
+            //     MessageBox.Show("存在非图片格式的文件", "错误", MessageBoxButton.OK, MessageBoxImage.Warning);
+            //     return;
+            // }
+            //
+            // ApplicationViewModel.Current.GoToPage(ApplicationPage.ImageList, files);
         }
     }
 
@@ -180,9 +243,9 @@ internal class ScanViewModel : BaseViewModel
     /// <param name="e"></param>
     public void MouseDownHandler(object sender, MouseButtonEventArgs e)
     {
-        var el = (UIElement)sender;
+        var el = (UIElement) sender;
         var point = Mouse.GetPosition(el);
-        _createdRect = new Rect { Left = point.X, Top = point.Y };
+        _createdRect = new Rect {Left = point.X, Top = point.Y};
         _dragInProgress = true;
         RectItems.Add(_createdRect);
 
@@ -205,15 +268,13 @@ internal class ScanViewModel : BaseViewModel
         if (_dragInProgress && _createdRect != null)
         {
             // 查看鼠标移动了多少
-            var point = Mouse.GetPosition((Canvas)sender);
+            var point = Mouse.GetPosition((Canvas) sender);
             var offsetX = point.X - _lastPoint.X;
             var offsetY = point.Y - _lastPoint.Y;
 
             // 更新位置
             _createdRect.Width += offsetX;
             _createdRect.Height += offsetY;
-            RectItems.Remove(_createdRect);
-            RectItems.Add(_createdRect);
 
             // 保存鼠标位置
             _lastPoint = point;
@@ -236,8 +297,7 @@ internal class ScanViewModel : BaseViewModel
         _dragInProgress = false;
         _createdRect = null;
 
-
-        var el = (UIElement)sender;
+        var el = (UIElement) sender;
         // 释放强制捕获的鼠标
         el.ReleaseMouseCapture();
     }

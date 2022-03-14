@@ -85,7 +85,7 @@ internal class ImageListViewModel : BaseViewModel
     /// <param name="item"></param>
     private async Task OnGoToAsync(string item)
     {
-        ApplicationViewModel.Current.GoToPage(ApplicationPage.Scanlation, item);
+        ApplicationViewModel.Current.GoToPage(ApplicationPage.Handle, item);
         await Task.CompletedTask;
     }
 

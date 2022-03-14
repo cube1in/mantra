@@ -17,17 +17,7 @@ internal enum ApplicationPage
     ImageList = 1,
 
     /// <summary>
-    /// The main scanlation page
+    /// The main handel page
     /// </summary>
-    Scanlation = 2,
-
-    /// <summary>
-    /// The revise page
-    /// </summary>
-    Revise = 3,
-    
-    /// <summary>
-    /// The stuff page
-    /// </summary>
-    Stuff = 4,
+    Handle = 2,
 }
