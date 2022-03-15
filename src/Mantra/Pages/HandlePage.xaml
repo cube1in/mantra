@@ -158,12 +158,13 @@
                                             CornerRadius="5">
                                         <StackPanel SnapsToDevicePixels="True" Margin="10">
                                             <Grid SnapsToDevicePixels="True" Margin="0 0 0 10">
-                                                <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                                                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                                                 <TextBlock VerticalAlignment="Center"
                                                            HorizontalAlignment="Left"
                                                            FontSize="14"
                                                            Text="{Binding Name, Converter={local:GroupFormatConverter}}"
-                                                           Foreground="{StaticResource DarkRedBrush}" />
+                                                           Foreground="{Binding Items[0].Color}" />
+                                                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
 
                                                 <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
                                                 <Button VerticalAlignment="Center"

@@ -17,6 +17,15 @@ internal static class Colors
     }
 
     /// <summary>
+    /// 获取暗色的十六进制值
+    /// </summary>
+    /// <returns></returns>
+    public static string MakeDarkColorAsString()
+    {
+        return ColorTranslator.ToHtml(MakeDarkColor());
+    }
+
+    /// <summary>
     /// 获取亮色
     /// </summary>
     /// <param name="borderLine">默认高于180</param>
@@ -24,6 +33,15 @@ internal static class Colors
     public static Color MakeLightColor(int borderLine = 180)
     {
         return MakeColorByDefine(180, 255);
+    }
+
+    /// <summary>
+    /// 获取亮色的十六进制值
+    /// </summary>
+    /// <returns></returns>
+    public static string MakeLightColorAsString()
+    {
+        return ColorTranslator.ToHtml(MakeLightColor());
     }
 
     /// <summary>
@@ -74,5 +92,16 @@ internal static class Colors
         } while (!result);
 
         return Color.FromArgb(r, g, b);
+    }
+
+    /// <summary>
+    /// 根据范围获取颜色的十六进制值
+    /// </summary>
+    /// <param name="start">起始数值 0-255</param>
+    /// <param name="end">结束数值 0-255</param>
+    /// <returns></returns>
+    public static string MakeColorByDefineAsString(int start, int end)
+    {
+        return ColorTranslator.ToHtml(MakeColorByDefine(start, end));
     }
 }

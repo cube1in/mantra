@@ -367,7 +367,7 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
             {
                 var index = (from item in RectItems select item.Group).Max() + 1;
                 rect.Group = index;
-                rect.Color = Colors.MakeAllColorAsString();
+                rect.Color = Colors.MakeDarkColorAsString();
             }
             // Insert to none group
             else if (grid.Name == "NoneGroup")
