@@ -21,6 +21,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+
     <Style x:Key="HorizontalScrollBarPageButton" TargetType="{x:Type RepeatButton}">
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="Background" Value="Transparent" />
@@ -36,6 +37,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+
     <Style x:Key="VerticalScrollBarPageButton" TargetType="{x:Type RepeatButton}">
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="Background" Value="Transparent" />
@@ -71,7 +73,7 @@
     <!-- End: 滚动条上下按钮 -->
 
     <!-- Start: ScrollBar -->
-    <Style x:Key="ScrollBar" TargetType="{x:Type ScrollBar}">
+    <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
         <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false" />
         <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
         <Setter Property="Background" Value="Transparent" />
@@ -145,7 +147,7 @@
     <!-- End: ScrollBar -->
 
     <!-- Start: ScrollViewer -->
-    <Style x:Key="ScrollViewer" TargetType="{x:Type ScrollViewer}">
+    <Style x:Key="{x:Type ScrollViewer}" TargetType="{x:Type ScrollViewer}">
         <Setter Property="BorderBrush" Value="LightGray" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Template">
@@ -161,14 +163,14 @@
                                        HorizontalAlignment="Right"
                                        Maximum="{TemplateBinding ScrollableHeight}"
                                        Orientation="Vertical"
-                                       Style="{StaticResource ScrollBar}"
+                                       Style="{StaticResource {x:Type ScrollBar}}"
                                        ViewportSize="{TemplateBinding ViewportHeight}"
                                        Value="{TemplateBinding VerticalOffset}"
                                        Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" />
                             <ScrollBar x:Name="PART_HorizontalScrollBar"
                                        Maximum="{TemplateBinding ScrollableWidth}"
                                        Orientation="Horizontal"
-                                       Style="{StaticResource ScrollBar}"
+                                       Style="{StaticResource {x:Type ScrollBar}}"
                                        VerticalAlignment="Bottom"
                                        Value="{TemplateBinding HorizontalOffset}"
                                        ViewportSize="{TemplateBinding ViewportWidth}"
@@ -258,10 +260,4 @@
         </Setter>
     </Style>
     <!-- End: ScrollViewer -->
-
-    <!-- 默认ScrollBar -->
-    <Style TargetType="ScrollBar" BasedOn="{StaticResource ScrollBar}" />
-
-    <!-- 默认ScrollView -->
-    <Style TargetType="ScrollViewer" BasedOn="{StaticResource ScrollViewer}" />
 </ResourceDictionary>

@@ -6,7 +6,7 @@ namespace Mantra;
 
 internal class ApplicationPageConverter : BaseValueConverter<ApplicationPageConverter>
 {
-    public override object Convert(object? value, Type targetType, object parameter, CultureInfo culture)
+    public override object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         // Find the appropriate page
         return value switch
@@ -18,7 +18,7 @@ internal class ApplicationPageConverter : BaseValueConverter<ApplicationPageConv
         };
     }
 
-    public override object ConvertBack(object? value, Type targetType, object parameter, CultureInfo culture)
+    public override object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }

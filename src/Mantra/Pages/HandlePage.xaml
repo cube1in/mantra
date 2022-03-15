@@ -6,6 +6,8 @@
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                 xmlns:local="clr-namespace:Mantra"
                 xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+                xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.WPF.DragDrop"
+                xmlns:system="clr-namespace:System;assembly=System.Runtime"
                 mc:Ignorable="d"
                 d:DataContext="{d:DesignInstance local:HandleViewModel}"
                 Title="HandlePage"
@@ -22,7 +24,8 @@
         <ScrollViewer Grid.Column="0"
                       HorizontalScrollBarVisibility="Auto"
                       VerticalScrollBarVisibility="Auto"
-                      Margin="10 30">
+                      Margin="10 30"
+                      CanContentScroll="True">
             <Grid SnapsToDevicePixels="True" Margin="10 0">
                 <Image
                     HorizontalAlignment="Left"
@@ -60,7 +63,6 @@
                                 <!-- Must set mode is two way, otherwise not update -->
                                 <local:DesignerContainer Resize="True"
                                                          StrokeColor="{Binding Color, Mode=TwoWay}"
-                                                         Group="{Binding Group, Mode=TwoWay}"
                                                          Width="{Binding Width, Mode=TwoWay}"
                                                          Height="{Binding Height, Mode=TwoWay}">
                                     <!-- Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ItemsControl}}"> -->
@@ -119,21 +121,27 @@
 
         <!-- Tool Column -->
         <ScrollViewer Grid.Column="1"
+                      x:Name="ToolScrollViewer"
                       Margin="0 30 10 30"
                       HorizontalScrollBarVisibility="Disabled"
                       VerticalScrollBarVisibility="Auto"
-                      VerticalAlignment="Top">
+                      VerticalAlignment="Top"
+                      CanContentScroll="True">
 
             <TabControl Margin="10 0">
 
                 <TabControl.Resources>
-                    <CollectionViewSource x:Key="CollectionViewSource" Source="{Binding RectItems}">
+                    <CollectionViewSource IsLiveGroupingRequested="True" x:Key="CollectionViewSource"
+                                          Source="{Binding RectItems}">
                         <CollectionViewSource.GroupDescriptions>
                             <PropertyGroupDescription PropertyName="Group" />
                         </CollectionViewSource.GroupDescriptions>
                         <CollectionViewSource.SortDescriptions>
                             <componentModel:SortDescription PropertyName="Group" />
                         </CollectionViewSource.SortDescriptions>
+                        <CollectionViewSource.LiveGroupingProperties>
+                            <system:String>Group</system:String>
+                        </CollectionViewSource.LiveGroupingProperties>
                     </CollectionViewSource>
 
                     <Style TargetType="{x:Type GroupItem}" x:Key="GroupContainerStyle">
@@ -148,13 +156,29 @@
                                             Background="{StaticResource BackgroundLightBrush}"
                                             CornerRadius="5">
                                         <StackPanel SnapsToDevicePixels="True" Margin="10">
-                                            <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-                                            <TextBlock VerticalAlignment="Center"
-                                                       HorizontalAlignment="Left"
-                                                       Margin="0 0 0 10"
-                                                       FontSize="14"
-                                                       Text="{Binding Name, Converter={local:GroupFormatConverter}}"
-                                                       Foreground="DarkRed" />
+                                            <Grid SnapsToDevicePixels="True" Margin="0 0 0 10">
+                                                <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                                                <TextBlock VerticalAlignment="Center"
+                                                           HorizontalAlignment="Left"
+                                                           FontSize="14"
+                                                           Text="{Binding Name, Converter={local:GroupFormatConverter}}"
+                                                           Foreground="DarkRed" />
+
+                                                <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+                                                <Button VerticalAlignment="Center"
+                                                        HorizontalAlignment="Right"
+                                                        Background="Transparent"
+                                                        BorderBrush="Transparent"
+                                                        BorderThickness="0"
+                                                        Command="{Binding  DataContext.RemoveGroupCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                        CommandParameter="{Binding Name}"
+                                                        ToolTip="删除整个分组">
+                                                    <Image Stretch="Fill"
+                                                           Width="20"
+                                                           Height="20"
+                                                           Source="{Binding Source=media/red_trash.png, Converter={local:FilepathBytesConverter}}" />
+                                                </Button>
+                                            </Grid>
                                             <ItemsPresenter />
                                         </StackPanel>
                                     </Border>
@@ -184,7 +208,15 @@
                         </Border>
 
                         <!-- Groups ItemsControl -->
-                        <ItemsControl ItemsSource="{Binding Source={StaticResource CollectionViewSource}}">
+                        <ItemsControl ItemsSource="{Binding Source={StaticResource CollectionViewSource}}"
+                                      dd:DragDrop.IsDragSource="True"
+                                      dd:DragDrop.UseDefaultDragAdorner="True"
+                                      dd:DragDrop.UseDefaultEffectDataTemplate="True"
+                                      dd:DragDrop.DragDirectlySelectedOnly="True"
+                                      dd:DragDrop.DropTargetScrollViewer="{Binding ElementName=ToolScrollViewer}"
+
+                                      dd:DragDrop.IsDropTarget="True"
+                                      dd:DragDrop.DropHandler="{Binding}">
                             <!-- Group Style -->
                             <ItemsControl.GroupStyle>
                                 <GroupStyle ContainerStyle="{StaticResource GroupContainerStyle}" />
@@ -200,29 +232,54 @@
                             <!-- Item Template -->
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border CornerRadius="3"
-                                            Background="White"
-                                            Padding="0"
-                                            Margin="0 0 0 20">
+                                    <StackPanel SnapsToDevicePixels="True" Margin="0 0 0 25">
+                                        <Border CornerRadius="3" Background="White" Margin="0 0 0 5">
 
-                                        <TextBox AcceptsReturn="True"
-                                                 BorderThickness="1"
-                                                 TextWrapping="Wrap"
-                                                 Tag="请填写原文内容"
-                                                 Text="{Binding OriginalText}"
-                                                 FontSize="14"
-                                                 IsEnabled="False" />
-                                    </Border>
+                                            <Grid>
+                                                <TextBox AcceptsReturn="True"
+                                                         BorderThickness="1"
+                                                         TextWrapping="Wrap"
+                                                         Tag="请填写原文内容"
+                                                         Text="{Binding OriginalText}"
+                                                         FontSize="14"
+                                                         Visibility="{Binding IsChecked, ElementName=EditToggleButton, Converter={local:BooleanVisibilityConverter}}" />
+
+                                                <TextBlock HorizontalAlignment="Left"
+                                                           VerticalAlignment="Center"
+                                                           Margin="15 3"
+                                                           TextWrapping="Wrap"
+                                                           Text="{Binding OriginalText}"
+                                                           FontSize="14"
+                                                           Visibility="{Binding IsChecked, ElementName=EditToggleButton, Converter={local:BooleanVisibilityConverter}, ConverterParameter=true}" />
+                                            </Grid>
+                                        </Border>
+
+                                        <ToggleButton x:Name="EditToggleButton"
+                                                      SnapsToDevicePixels="True"
+                                                      Background="Transparent"
+                                                      BorderThickness="0"
+                                                      VerticalAlignment="Center"
+                                                      HorizontalAlignment="Left">
+                                            <Image Stretch="Fill"
+                                                   Width="20"
+                                                   Height="20"
+                                                   ToolTip="编辑"
+                                                   Source="{Binding Source=media/edit.png, Converter={local:FilepathBytesConverter}}" />
+                                        </ToggleButton>
+                                    </StackPanel>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
 
-                        <!-- Add Group -->
+                        <!-- Add New Group -->
                         <!-- Must set background -->
-                        <Grid SnapsToDevicePixels="True"
+                        <!-- ReSharper disable once UnusedMember.Global -->
+                        <Grid x:Name="NewGroup"
+                              SnapsToDevicePixels="True"
                               Background="Transparent"
-                              AllowDrop="True"
-                              Drop="Grid_OnDrop">
+                              Margin="0 0 0 20"
+                              dd:DragDrop.IsDropTarget="True"
+                              dd:DragDrop.DropHandler="{Binding}">
                             <Rectangle RadiusX="3"
                                        RadiusY="3"
                                        Stroke="Gray"
@@ -232,6 +289,29 @@
                                        Height="100" />
 
                             <TextBlock Text="+ 拖动至此处以新建分组"
+                                       FontSize="20"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Foreground="DimGray" />
+                        </Grid>
+
+                        <!-- Return to none Group -->
+                        <!-- Must set background -->
+                        <!-- ReSharper disable once UnusedMember.Global -->
+                        <Grid Name="NoneGroup"
+                              Visibility="{Binding NoneGroupVisibility, Converter={local:BooleanVisibilityConverter}}"
+                              SnapsToDevicePixels="True"
+                              Background="Transparent"
+                              dd:DragDrop.IsDropTarget="True"
+                              dd:DragDrop.DropHandler="{Binding}">
+                            <Rectangle RadiusX="3"
+                                       RadiusY="3"
+                                       Stroke="Gray"
+                                       StrokeThickness="2"
+                                       Fill="LightBlue"
+                                       Height="100" />
+
+                            <TextBlock Text="+ 拖动至此处消除分组"
                                        FontSize="20"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center"

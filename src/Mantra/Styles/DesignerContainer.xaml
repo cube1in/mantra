@@ -11,7 +11,7 @@
         <Rectangle Fill="Transparent" />
     </ControlTemplate>
 
-    <Style TargetType="{x:Type local:DesignerContainer}" x:Key="DesignerContainerStyle">
+    <Style x:Key="{x:Type local:DesignerContainer}" TargetType="{x:Type local:DesignerContainer}">
         <Setter Property="MinHeight" Value="10" />
         <Setter Property="MinWidth" Value="10" />
         <Setter Property="RenderTransformOrigin" Value="0.5, 0.5" />
@@ -27,6 +27,4 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-    <Style TargetType="{x:Type local:DesignerContainer}" BasedOn="{StaticResource DesignerContainerStyle}" />
 </ResourceDictionary>

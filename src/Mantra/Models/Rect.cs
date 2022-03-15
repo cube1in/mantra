@@ -33,7 +33,7 @@ internal class Rect : BaseViewModel
     /// 所属的组
     /// 默认为 1
     /// </summary>
-    public int Group { get; set; } = new Random().Next(1, 5);
+    public int Group { get; set; }
 
     /// <summary>
     /// 颜色

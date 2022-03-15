@@ -46,7 +46,7 @@ internal abstract class BaseValueConverter<T> : MarkupExtension, IValueConverter
     /// <param name="parameter"></param>
     /// <param name="culture"></param>
     /// <returns></returns>
-    public abstract object? Convert(object? value, Type targetType, object parameter, CultureInfo culture);
+    public abstract object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture);
 
     /// <summary>
     /// The method to convert a value back to it's source type
@@ -56,7 +56,7 @@ internal abstract class BaseValueConverter<T> : MarkupExtension, IValueConverter
     /// <param name="parameter"></param>
     /// <param name="culture"></param>
     /// <returns></returns>
-    public abstract object? ConvertBack(object? value, Type targetType, object parameter, CultureInfo culture);
+    public abstract object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture);
 
     #endregion
 }

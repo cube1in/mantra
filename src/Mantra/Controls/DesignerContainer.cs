@@ -117,21 +117,6 @@ internal class DesignerContainer : ContentControl
         return baseValue;
     }
 
-    /// <summary>
-    /// 所属组
-    /// </summary>
-    public static readonly DependencyProperty GroupProperty =
-        DependencyProperty.Register(nameof(Group), typeof(int), typeof(DesignerContainer), new PropertyMetadata(1));
-
-    /// <summary>
-    /// 所属组
-    /// </summary>
-    public int Group
-    {
-        get => (int) GetValue(GroupProperty);
-        set => SetValue(GroupProperty, value);
-    }
-
     #endregion
 
     #region Construction

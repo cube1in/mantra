@@ -7,7 +7,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <!-- Start: TabItem-->
-    <Style TargetType="{x:Type TabItem}" x:Key="TabItem">
+    <Style x:Key="{x:Type TabItem}" TargetType="{x:Type TabItem}">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{StaticResource ForegroundGrayBrush}" />
         <Setter Property="BorderThickness" Value="0" />
@@ -52,14 +52,11 @@
     <!-- End: TabItem-->
 
     <!-- Start: TabControl-->
-    <Style TargetType="{x:Type TabControl}" x:Key="TabControl">
+    <Style x:Key="{x:Type TabControl}" TargetType="{x:Type TabControl}">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Padding" Value="0" />
-        <!-- <Setter Property="VerticalAlignment" Value="Center" /> -->
-        <!-- <Setter Property="HorizontalAlignment" Value="Center" /> -->
-
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TabControl}">
@@ -90,8 +87,5 @@
         </Setter>
     </Style>
     <!-- End: TabControl-->
-
-    <Style TargetType="{x:Type TabControl}" BasedOn="{StaticResource TabControl}" />
-    <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource TabItem}" />
 
 </ResourceDictionary>

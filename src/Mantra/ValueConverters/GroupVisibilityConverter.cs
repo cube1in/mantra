@@ -2,16 +2,17 @@
 using System.Globalization;
 using System.Windows;
 
+// ReSharper disable once CheckNamespace
 namespace Mantra;
 
 internal class GroupVisibilityConverter : BaseValueConverter<GroupVisibilityConverter>
 {
-    public override object Convert(object? value, Type targetType, object parameter, CultureInfo culture)
+    public override object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         return value is 0 ? Visibility.Hidden : Visibility.Visible;
     }
 
-    public override object ConvertBack(object? value, Type targetType, object parameter, CultureInfo culture)
+    public override object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }

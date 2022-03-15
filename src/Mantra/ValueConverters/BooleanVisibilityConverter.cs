@@ -1,16 +1,23 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows;
 
 // ReSharper disable once CheckNamespace
 namespace Mantra;
 
-internal class DoubleFormatConverter : BaseValueConverter<DoubleFormatConverter>
+internal class BooleanVisibilityConverter : BaseValueConverter<BooleanVisibilityConverter>
 {
     public override object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is double nb)
+        if (value is bool boolean)
         {
-            return Math.Round(nb);
+            if (parameter != null) boolean = !boolean;
+
+            return boolean switch
+            {
+                true => Visibility.Visible,
+                _ => Visibility.Hidden
+            };
         }
 
         throw new NotSupportedException();

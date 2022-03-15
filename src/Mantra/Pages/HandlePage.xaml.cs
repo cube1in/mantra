@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 
 // ReSharper disable once CheckNamespace
 namespace Mantra;
@@ -33,10 +32,5 @@ internal partial class HandlePage
     private void Canvas_OnMouseMove(object sender, MouseEventArgs e)
     {
         ViewModel.MouseMoveHandler(sender, e);
-    }
-
-    private void Grid_OnDrop(object sender, DragEventArgs e)
-    {
-        ViewModel.DropHandler(sender, e);
     }
 }

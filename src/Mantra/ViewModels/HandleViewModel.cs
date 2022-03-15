@@ -1,4 +1,5 @@
-﻿using MvvmHelpers.Commands;
+﻿using System;
+using MvvmHelpers.Commands;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
@@ -7,6 +8,7 @@ using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using GongSolutions.Wpf.DragDrop;
 using Point = System.Windows.Point;
 
 // ReSharper disable once CheckNamespace
@@ -15,7 +17,7 @@ namespace Mantra;
 /// <summary>
 /// 处理页视图模型
 /// </summary>
-internal class HandleViewModel : BaseViewModel
+internal class HandleViewModel : BaseViewModel, IDropTarget
 {
     #region Private Members
 
@@ -69,6 +71,11 @@ internal class HandleViewModel : BaseViewModel
     /// </summary>
     // ReSharper disable once UnusedMember.Global
     public ICommand RemoveCommand => new Command<Rect>(OnRemove);
+
+    /// <summary>
+    /// 移除组命令
+    /// </summary>
+    public ICommand RemoveGroupCommand => new Command<int>(OnRemoveGroup);
 
     #endregion
 
@@ -154,6 +161,19 @@ internal class HandleViewModel : BaseViewModel
     }
 
     /// <summary>
+    /// <see cref="RemoveGroupCommand"/> 时触发
+    /// </summary>
+    /// <param name="group"></param>
+    private void OnRemoveGroup(int group)
+    {
+        var itemToRemove = RectItems.Where(r => r.Group == group).ToList();
+        foreach (var item in itemToRemove)
+        {
+            RectItems.Remove(item);
+        }
+    }
+
+    /// <summary>
     /// Set image original size
     /// </summary>
     private void SetOriginalSize()
@@ -189,27 +209,6 @@ internal class HandleViewModel : BaseViewModel
         {
             ImgSource = path;
             SetOriginalSize();
-        }
-    }
-
-    /// <summary>
-    /// 处理拖拽进入的
-    /// </summary>
-    /// <param name="sender">object</param>
-    /// <param name="e">DragEventArgs</param>
-    public void DropHandler(object sender, DragEventArgs e)
-    {
-        if (e.Data.GetDataPresent(DataFormats.Text))
-        {
-            if (e.Data.GetData(DataFormats.Text) is not string[] files) return;
-
-            // if (files.Any(file => !_validExtensions.Contains(Path.GetExtension(file))))
-            // {
-            //     MessageBox.Show("存在非图片格式的文件", "错误", MessageBoxButton.OK, MessageBoxImage.Warning);
-            //     return;
-            // }
-            //
-            // ApplicationViewModel.Current.GoToPage(ApplicationPage.ImageList, files);
         }
     }
 
@@ -303,6 +302,61 @@ internal class HandleViewModel : BaseViewModel
     }
 
     #endregion
+
+    #endregion
+
+    #region IDropTarget
+
+    /// <summary>
+    /// 无分组块是否可见
+    /// </summary>
+    public bool NoneGroupVisibility { get; set; }
+
+    /// <summary>
+    /// 拖动
+    /// 用于验证
+    /// </summary>
+    /// <param name="dropInfo"></param>
+    void IDropTarget.DragOver(IDropInfo dropInfo)
+    {
+        // Add to existed group                                     
+        if (dropInfo.Data is Rect && dropInfo.TargetItem is Rect ||
+            // Add to new / none group
+            dropInfo.VisualTarget is Grid {Name: "NewGroup" or "NoneGroup"})
+        {
+            dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
+            dropInfo.Effects = DragDropEffects.Move;
+        }
+
+        if (RectItems.Any() && RectItems.All(r => r.Group != 0))
+        {
+            NoneGroupVisibility = true;
+        }
+    }
+
+    /// <summary>
+    /// 放下
+    /// </summary>
+    /// <param name="dropInfo"></param>
+    void IDropTarget.Drop(IDropInfo dropInfo)
+    {
+        var rect = (Rect) dropInfo.Data;
+        rect.Group = dropInfo.VisualTarget switch
+        {
+            Grid grid => grid.Name switch
+            {
+                // Add to new group
+                "NewGroup" => (from item in RectItems select item.Group).Max() + 1,
+                // Add to none group
+                "NoneGroup" => 0,
+                _ => throw new NotSupportedException()
+            },
+            // Add to existed group
+            _ => ((Rect) dropInfo.TargetItem).Group
+        };
+
+        NoneGroupVisibility = false;
+    }
 
     #endregion
 }

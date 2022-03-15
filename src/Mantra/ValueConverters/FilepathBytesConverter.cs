@@ -7,7 +7,7 @@ namespace Mantra;
 
 internal class FilepathBytesConverter:BaseValueConverter<FilepathBytesConverter>
 {
-    public override object? Convert(object? value, Type targetType, object parameter, CultureInfo culture)
+    public override object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is string path && File.Exists(path))
         {
@@ -17,7 +17,7 @@ internal class FilepathBytesConverter:BaseValueConverter<FilepathBytesConverter>
         return null;
     }
 
-    public override object ConvertBack(object? value, Type targetType, object parameter, CultureInfo culture)
+    public override object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }
