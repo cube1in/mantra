@@ -22,4 +22,9 @@ internal static class JsonSettings
 
         Converters = new JsonConverter[] { new StringEnumConverter() }
     };
+
+    /// <summary>
+    /// 用于分割组内各段文字的分隔符
+    /// </summary>
+    public const char SpecialDelimiter = 'Θ';
 }

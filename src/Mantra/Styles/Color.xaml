@@ -28,6 +28,7 @@
     <SolidColorBrush x:Key="ForegroundDarkBrush" Color="#000000" />
     <SolidColorBrush x:Key="DisabledBackgroundBrush" Color="#EEE" />
     <SolidColorBrush x:Key="PowderBlueBrush" Color="PowderBlue" />
+    <SolidColorBrush x:Key="DarkRedBrush" Color="DarkRed" />
 
     <!-- Border Brushes -->
     <LinearGradientBrush x:Key="NormalBorderBrush" StartPoint="0,0" EndPoint="0,1">

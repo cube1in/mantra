@@ -1,7 +1,4 @@
 ﻿// ReSharper disable once CheckNamespace
-
-using System;
-
 namespace Mantra;
 
 /// <summary>
@@ -37,16 +34,19 @@ internal class Rect : BaseViewModel
 
     /// <summary>
     /// 颜色
+    /// #FFDB7093
     /// </summary>
     public string Color { get; set; } = "#FFDB7093";
 
     /// <summary>
     /// 矩形内的源词
+    /// 必须具有默认值，否则在传到翻译 api 时会导致插入值错误
     /// </summary>
     public string OriginalText { get; set; } = "没有识别结果";
 
     /// <summary>
     /// 矩形内的翻译
+    /// 必须具有默认值，否则在传到翻译 api 时会导致插入值错误
     /// </summary>
     public string TranslatedText { get; set; } = "没有翻译结果";
 }

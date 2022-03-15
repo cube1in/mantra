@@ -1,14 +1,13 @@
-﻿using System;
-using MvvmHelpers.Commands;
+﻿using MvvmHelpers.Commands;
 using System.Collections.ObjectModel;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using GongSolutions.Wpf.DragDrop;
+using Mantra.Translators.Baidu;
 using Point = System.Windows.Point;
 
 // ReSharper disable once CheckNamespace
@@ -22,9 +21,9 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
     #region Private Members
 
     /// <summary>
-    /// HttpClient
+    /// 翻译器
     /// </summary>
-    private static readonly HttpClient Client = new();
+    private readonly ITranslator _translator = new Baidu();
 
     #endregion
 
@@ -58,13 +57,13 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
     /// 批量光学识别命令
     /// </summary>
     // ReSharper disable once InconsistentNaming
-    public ICommand BatchOCRCommand => new Command(OnBatchOCR);
+    public ICommand BatchOCRCommand => new AsyncCommand(OnBatchOCRAsync);
 
     /// <summary>
     /// 单个光学识别命令
     /// </summary>
     // ReSharper disable once InconsistentNaming
-    public ICommand SingleOCRCommand => new Command<Rect>(OnSingleOCR);
+    public ICommand SingleOCRCommand => new AsyncCommand<Rect>(OnSingleOCRAsync);
 
     /// <summary>
     /// 移除框命令
@@ -77,6 +76,16 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
     /// </summary>
     public ICommand RemoveGroupCommand => new Command<int>(OnRemoveGroup);
 
+    /// <summary>
+    /// 翻译命令
+    /// </summary>
+    public ICommand TranslateCommand => new AsyncCommand(OnTranslateAsync);
+
+    /// <summary>
+    /// 消除换行
+    /// </summary>
+    public ICommand RemoveNewLineCommand => new Command<Rect>(OnRemoveNewLine);
+
     #endregion
 
     #region Private Methods
@@ -84,7 +93,7 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
     /// <summary>
     /// <see cref="BatchOCRCommand"/> 时触发
     /// </summary>
-    private async void OnBatchOCR()
+    private async Task OnBatchOCRAsync()
     {
         if (ImgSource == null)
         {
@@ -92,32 +101,17 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
             return;
         }
 
-        // var blocks = Tesseact.GetBlocks(ImgSource);
-        // foreach (var block in blocks)
-        // {
-        //     if (block.BoundingBox != null)
-        //     {
-        //         var boundingBox = block.BoundingBox.Value;
-        //         RectItems.Add(new Rect
-        //         {
-        //             Left = boundingBox.X1, Top = boundingBox.Y1, Height = boundingBox.Height, Width = boundingBox.Width
-        //         });
-        //     }
-        // }
-
-        var ocrResponse = await Baidu.DoOCRAsync(Client, new MemoryStream(await File.ReadAllBytesAsync(ImgSource)));
-
-        if (ocrResponse != null)
+        var blocks = await Task.Run(() => Tesseact.GetBlocks(ImgSource));
+        foreach (var block in blocks)
         {
-            RectItems = new ObservableCollection<Rect>(from context in ocrResponse.WordsResult
-                select new Rect
+            if (block.BoundingBox != null)
+            {
+                var boundingBox = block.BoundingBox.Value;
+                RectItems.Add(new Rect
                 {
-                    Left = context.Location.Left,
-                    Top = context.Location.Top,
-                    Width = context.Location.Width,
-                    Height = context.Location.Height,
-                    OriginalText = context.Words
+                    Left = boundingBox.X1, Top = boundingBox.Y1, Height = boundingBox.Height, Width = boundingBox.Width
                 });
+            }
         }
     }
 
@@ -125,7 +119,7 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
     /// <see cref="SingleOCRCommand"/> 时触发
     /// </summary>
     /// <param name="item"></param>
-    private void OnSingleOCR(Rect item)
+    private async Task OnSingleOCRAsync(Rect item)
     {
         var bitmap = CropImage(ImgSource!,
             new Rectangle
@@ -139,16 +133,8 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
         var converter = new ImageConverter();
         var bytes = (byte[]) converter.ConvertTo(bitmap, typeof(byte[]))!;
 
-        var text = Tesseact.GetText(bytes);
+        var text = await Task.Run(() => Tesseact.GetText(bytes));
         item.OriginalText = text;
-
-        // var ocrResponse = await Baidu.DoOCRAsync(Client, new MemoryStream(bytes));
-        //
-        // if (ocrResponse != null)
-        // {
-        //     item.OriginalText = string.Join(Environment.NewLine,
-        //         from context in ocrResponse.WordsResult select context.Words);
-        // }
     }
 
     /// <summary>
@@ -171,6 +157,38 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
         {
             RectItems.Remove(item);
         }
+    }
+
+    /// <summary>
+    /// <see cref="TranslateCommand"/> 时触发
+    /// </summary>
+    private async Task OnTranslateAsync()
+    {
+        if (RectItems.Any())
+        {
+            foreach (var grouping in RectItems.GroupBy(r => r.Group))
+            {
+                var groupInput = from item in grouping select item.OriginalText;
+                var texts = (await _translator.TranslateGroupAsync(groupInput, "en", "zh")).ToList();
+
+                var index = 0;
+                foreach (var item in grouping)
+                {
+                    // Check for out of range
+                    item.TranslatedText = texts.Count > index ? texts[index] : string.Empty;
+                    index++;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// <see cref="RemoveNewLineCommand"/> 时触发
+    /// </summary>
+    /// <param name="item"></param>
+    private void OnRemoveNewLine(Rect item)
+    {
+        item.OriginalText = item.OriginalText.Replace("\n", " ").Replace("\r", " ");
     }
 
     /// <summary>
@@ -341,19 +359,30 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
     void IDropTarget.Drop(IDropInfo dropInfo)
     {
         var rect = (Rect) dropInfo.Data;
-        rect.Group = dropInfo.VisualTarget switch
+
+        if (dropInfo.VisualTarget is Grid grid)
         {
-            Grid grid => grid.Name switch
+            // Insert to a new group
+            if (grid.Name == "NewGroup")
             {
-                // Add to new group
-                "NewGroup" => (from item in RectItems select item.Group).Max() + 1,
-                // Add to none group
-                "NoneGroup" => 0,
-                _ => throw new NotSupportedException()
-            },
-            // Add to existed group
-            _ => ((Rect) dropInfo.TargetItem).Group
-        };
+                var index = (from item in RectItems select item.Group).Max() + 1;
+                rect.Group = index;
+                rect.Color = Colors.MakeAllColorAsString();
+            }
+            // Insert to none group
+            else if (grid.Name == "NoneGroup")
+            {
+                rect.Group = 0;
+                rect.Color = "#FFDB7093";
+            }
+        }
+        else
+        {
+            // Insert to a existed group
+            var group = (Rect) dropInfo.TargetItem;
+            rect.Group = group.Group;
+            rect.Color = group.Color;
+        }
 
         NoneGroupVisibility = false;
     }

@@ -1,5 +1,5 @@
 ﻿// ReSharper disable once CheckNamespace
-namespace Mantra;
+namespace Mantra.Translators.Baidu;
 
 internal class Token
 {

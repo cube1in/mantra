@@ -102,6 +102,7 @@
                                             HorizontalAlignment="Right"
                                             VerticalAlignment="Bottom">
                                     <Button Content="X"
+                                            Background="Red"
                                             Command="{Binding DataContext.RemoveCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                                             CommandParameter="{Binding}">
                                         <Button.LayoutTransform>
@@ -162,7 +163,7 @@
                                                            HorizontalAlignment="Left"
                                                            FontSize="14"
                                                            Text="{Binding Name, Converter={local:GroupFormatConverter}}"
-                                                           Foreground="DarkRed" />
+                                                           Foreground="{StaticResource DarkRedBrush}" />
 
                                                 <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
                                                 <Button VerticalAlignment="Center"
@@ -188,8 +189,8 @@
                     </Style>
                 </TabControl.Resources>
 
-                <!-- Group -->
-                <TabItem Header="文字识别">
+                <!-- OCR TabItem -->
+                <TabItem Header="文字识别" FontSize="16">
                     <StackPanel SnapsToDevicePixels="True">
                         <Border CornerRadius="3"
                                 Background="{StaticResource PowderBlueBrush}"
@@ -254,18 +255,35 @@
                                             </Grid>
                                         </Border>
 
-                                        <ToggleButton x:Name="EditToggleButton"
-                                                      SnapsToDevicePixels="True"
-                                                      Background="Transparent"
-                                                      BorderThickness="0"
-                                                      VerticalAlignment="Center"
-                                                      HorizontalAlignment="Left">
-                                            <Image Stretch="Fill"
-                                                   Width="20"
-                                                   Height="20"
-                                                   ToolTip="编辑"
-                                                   Source="{Binding Source=media/edit.png, Converter={local:FilepathBytesConverter}}" />
-                                        </ToggleButton>
+                                        <StackPanel Orientation="Horizontal">
+                                            <ToggleButton x:Name="EditToggleButton"
+                                                          SnapsToDevicePixels="True"
+                                                          Background="Transparent"
+                                                          BorderThickness="0"
+                                                          VerticalAlignment="Center"
+                                                          HorizontalAlignment="Left">
+                                                <Image Stretch="Fill"
+                                                       Width="20"
+                                                       Height="20"
+                                                       ToolTip="编辑"
+                                                       Source="{Binding Source=media/edit.png, Converter={local:FilepathBytesConverter}}" />
+                                            </ToggleButton>
+
+                                            <Button SnapsToDevicePixels="True"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Left"
+                                                    Margin="5 0 0 0 "
+                                                    Command="{Binding DataContext.RemoveNewLineCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                    CommandParameter="{Binding}">
+                                                <Image Stretch="Fill"
+                                                       Width="20"
+                                                       Height="20"
+                                                       ToolTip="清除换行"
+                                                       Source="{Binding Source=media/remove_newline.png, Converter={local:FilepathBytesConverter}}" />
+                                            </Button>
+                                        </StackPanel>
                                     </StackPanel>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
@@ -320,43 +338,53 @@
                     </StackPanel>
                 </TabItem>
 
-                <TabItem Header="翻译文字">
+                <!-- Translate TabItem -->
+                <TabItem Header="翻译文字" FontSize="16">
+                    <StackPanel SnapsToDevicePixels="True">
+                        <!-- Translate Button -->
+                        <Button Style="{StaticResource FlatButtonStyle}"
+                                FontSize="15"
+                                Margin="20 0 20 20"
+                                Content="翻译文字"
+                                Command="{Binding TranslateCommand}" />
 
-                    <!-- Groups ItemsControl -->
-                    <ItemsControl ItemsSource="{Binding Source={StaticResource CollectionViewSource}}">
-                        <!-- Group Style -->
-                        <ItemsControl.GroupStyle>
-                            <GroupStyle ContainerStyle="{StaticResource GroupContainerStyle}" />
-                        </ItemsControl.GroupStyle>
+                        <!-- Groups ItemsControl -->
+                        <ItemsControl ItemsSource="{Binding Source={StaticResource CollectionViewSource}}">
+                            <!-- Group Style -->
+                            <ItemsControl.GroupStyle>
+                                <GroupStyle ContainerStyle="{StaticResource GroupContainerStyle}" />
+                            </ItemsControl.GroupStyle>
 
-                        <!-- Item Panel -->
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
+                            <!-- Item Panel -->
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
 
-                        <!-- Item Template -->
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border CornerRadius="3" Background="White" Margin="0 0 0 20">
+                            <!-- Item Template -->
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border CornerRadius="3" Background="White" Margin="0 0 0 20">
 
-                                    <TextBox AcceptsReturn="True"
-                                             BorderThickness="1"
-                                             TextWrapping="Wrap"
-                                             Tag="请填写翻译结果"
-                                             Text="{Binding TranslatedText}"
-                                             FontSize="14"
-                                             IsEnabled="False"
-                                             VerticalAlignment="Center" />
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                                        <TextBox AcceptsReturn="True"
+                                                 BorderThickness="1"
+                                                 TextWrapping="Wrap"
+                                                 Tag="请填写翻译结果"
+                                                 Text="{Binding TranslatedText}"
+                                                 FontSize="14"
+                                                 IsEnabled="False"
+                                                 VerticalAlignment="Center" />
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
                 </TabItem>
 
-                <TabItem Header="填充">
-                    <Button Content="自动识别" Command="{Binding BatchOCRCommand}" />
+                <!-- Fill TabItem -->
+                <TabItem Header="文字填充" FontSize="16">
+                    <Button Style="{StaticResource FlatButtonStyle}" Content="自动识别" Command="{Binding BatchOCRCommand}" />
                 </TabItem>
             </TabControl>
         </ScrollViewer>
