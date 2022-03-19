@@ -12,7 +12,7 @@
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
         <Setter Property="BorderThickness" Value="2" />
-        <Setter Property="BorderBrush" Value="{StaticResource ForegroundGrayBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource DimGrayBrush}" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="MinWidth" Value="120" />
         <Setter Property="MinHeight" Value="20" />
@@ -23,8 +23,8 @@
         <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Background" Value="{StaticResource WindowBackgroundBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource ForegroundDarkBrush}" />
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource BlackBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBoxBase}">
@@ -48,7 +48,7 @@
                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                    Visibility="Collapsed"
-                                   Foreground="{StaticResource ForegroundGrayBrush}"
+                                   Foreground="{StaticResource DimGrayBrush}"
                                    Padding="{TemplateBinding Padding}" />
                         </Grid>
                     </Border>
@@ -60,19 +60,19 @@
                             <Setter Property="Visibility" TargetName="WaterMarkerLabel" Value="Visible" />
                         </MultiTrigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}"></Setter>
+                            <Setter Property="BorderBrush" Value="{StaticResource UltramarineBlueBrush}" />
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter Property="BorderBrush" Value="{StaticResource NormalBlueBrush}"></Setter>
+                            <Setter Property="BorderBrush" Value="{StaticResource BlueBrush}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <!-- <Setter TargetName="Border" Property="Background" -->
-                            <!--         Value="{StaticResource DisabledBackgroundBrush}" /> -->
+                            <!--         Value="{StaticResource BrightGrayBrush}" /> -->
                             <Setter TargetName="Border" Property="BorderThickness"
                                     Value="0" />
                             <Setter TargetName="Border" Property="BorderBrush"
                                     Value="Transparent" />
-                            <Setter Property="Foreground" Value="{StaticResource DisabledForegroundBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource TaupeGrayBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -105,15 +105,15 @@
         <Setter Property="MinHeight" Value="20" />
         <Setter Property="AllowDrop" Value="true" />
         <Setter Property="BorderThickness" Value="2" />
-        <Setter Property="BorderBrush" Value="{StaticResource ForegroundGrayBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource DimGrayBrush}" />
         <Setter Property="Padding" Value="6 3" />
         <Setter Property="Cursor" Value="IBeam" />
         <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst" />
         <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Background" Value="{StaticResource WindowBackgroundBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource ForegroundDarkBrush}" />
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource BlackBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type PasswordBox}">
@@ -137,7 +137,7 @@
                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                    Visibility="Collapsed"
-                                   Foreground="{StaticResource ForegroundGrayBrush}"
+                                   Foreground="{StaticResource DimGrayBrush}"
                                    Padding="{TemplateBinding Padding}" />
                         </Grid>
                     </Border>
@@ -149,17 +149,17 @@
                             <Setter Property="Visibility" TargetName="WaterMarkerLabel" Value="Visible" />
                         </MultiTrigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}"></Setter>
+                            <Setter Property="BorderBrush" Value="{StaticResource UltramarineBlueBrush}"></Setter>
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter Property="BorderBrush" Value="{StaticResource NormalBlueBrush}"></Setter>
+                            <Setter Property="BorderBrush" Value="{StaticResource BlueBrush}"></Setter>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="Border" Property="Background"
-                                    Value="{StaticResource DisabledBackgroundBrush}" />
+                                    Value="{StaticResource BrightGrayBrush}" />
                             <Setter TargetName="Border" Property="BorderBrush"
-                                    Value="{StaticResource DisabledBackgroundBrush}" />
-                            <Setter Property="Foreground" Value="{StaticResource DisabledForegroundBrush}" />
+                                    Value="{StaticResource BrightGrayBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource TaupeGrayBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

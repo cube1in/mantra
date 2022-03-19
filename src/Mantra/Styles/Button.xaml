@@ -8,8 +8,8 @@
 
     <Style x:Key="FlatButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="Foreground" Value="{StaticResource WindowBackgroundBrush}" />
-        <Setter Property="Background" Value="{StaticResource NormalBlueBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="Background" Value="#00a1d6" />
         <Setter Property="FontWeight" Value="Regular" />
         <Setter Property="Padding" Value="12 6" />
         <Setter Property="BorderThickness" Value="0" />
@@ -40,12 +40,7 @@
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="Border" 
                                     Property="Background" 
-                                    Value="{StaticResource LightBlueBrush}" />
-                        </Trigger>
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="Border" 
-                                    Property="Background" 
-                                    Value="{StaticResource PowderBlueBrush}" />
+                                    Value="#2db7f5" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

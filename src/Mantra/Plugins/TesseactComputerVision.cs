@@ -1,11 +1,73 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Mantra.Core.Abstractions;
+using Mantra.Core.Models;
 using TesseractOCR;
 using TesseractOCR.Enums;
 using TesseractOCR.Layout;
 
-namespace Mantra;
+namespace Mantra.Plugins;
+
+[SuppressMessage("ReSharper", "IdentifierTypo")]
+public class TesseactComputerVision : IComputerVision
+{
+    private static readonly HttpClient Client = new();
+
+    public async Task<IEnumerable<BoundingBox>> ReadFileLocalAsync(string localFile, string language)
+    {
+        var blocks = await Task.Run(() => Tesseact.GetBlocks(localFile));
+
+        return from block in blocks
+            where block.BoundingBox != null
+            let box = block.BoundingBox!.Value
+            select new BoundingBox
+            {
+                Left = box.X1,
+                Top = box.Y1,
+                Height = box.Height,
+                Width = box.Width,
+                OriginalText = block.Text
+            };
+    }
+
+    public async Task<IEnumerable<BoundingBox>> ReadFileUrlAsync(string urlFile, string language)
+    {
+        var bytes = await Client.GetByteArrayAsync(urlFile);
+        var blocks = await Task.Run(() => Tesseact.GetBlocks(bytes));
+
+        return from block in blocks
+            where block.BoundingBox != null
+            let box = block.BoundingBox!.Value
+            select new BoundingBox
+            {
+                Left = box.X1,
+                Top = box.Y1,
+                Height = box.Height,
+                Width = box.Width,
+                OriginalText = block.Text
+            };
+    }
+
+    public async Task<IEnumerable<BoundingBox>> ReadFileStreamAsync(byte[] bytes, string language)
+    {
+        var blocks = await Task.Run(() => Tesseact.GetBlocks(bytes));
+
+        return from block in blocks
+            where block.BoundingBox != null
+            let box = block.BoundingBox!.Value
+            select new BoundingBox
+            {
+                Left = box.X1,
+                Top = box.Y1,
+                Height = box.Height,
+                Width = box.Width,
+                OriginalText = block.Text
+            };
+    }
+}
 
 [SuppressMessage("ReSharper", "InconsistentNaming")]
 [SuppressMessage("ReSharper", "IdentifierTypo")]

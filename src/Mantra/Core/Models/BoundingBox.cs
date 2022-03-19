@@ -1,11 +1,18 @@
-﻿// ReSharper disable once CheckNamespace
-namespace Mantra;
+﻿using PropertyChanged;
+
+namespace Mantra.Core.Models;
 
 /// <summary>
-/// 矩形
+/// 边界框
 /// </summary>
-internal class Rect : BaseViewModel
+[AddINotifyPropertyChangedInterface]
+public class BoundingBox
 {
+    /// <summary>
+    /// 排序
+    /// </summary>
+    public int Sort { get; set; }
+
     /// <summary>
     /// 左边位置
     /// </summary>
@@ -49,4 +56,29 @@ internal class Rect : BaseViewModel
     /// 必须具有默认值，否则在传到翻译 api 时会导致插入值错误
     /// </summary>
     public string TranslatedText { get; set; } = "没有翻译结果";
+
+    #region Private Members
+
+    /// <summary>
+    /// 创建锁
+    /// </summary>
+    private static readonly object CreateLock = new();
+
+    /// <summary>
+    /// 自增数
+    /// </summary>
+    private static int _index;
+
+    #endregion
+
+    /// <summary>
+    /// 默认构造函数
+    /// </summary>
+    public BoundingBox()
+    {
+        lock (CreateLock)
+        {
+            Sort = _index++;
+        }
+    }
 }

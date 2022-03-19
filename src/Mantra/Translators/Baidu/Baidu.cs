@@ -4,13 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Mantra.Core.Abstractions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 // ReSharper disable InconsistentNaming
 namespace Mantra.Translators.Baidu;
 
-internal class Baidu : ITranslator
+internal class Baidu : ITranslatorText
 {
     #region Private Members
 
@@ -97,8 +98,26 @@ internal class Baidu : ITranslator
     {
         var input = string.Join(JsonSettings.SpecialDelimiter, groupInput);
         var text = await TranslateAsync(input, from, to);
+
         return text.Split(JsonSettings.SpecialDelimiter);
     }
+
+    // private static IEnumerable<string> Separator(IEnumerable<string> template, string value)
+    // {
+    //     var chars = (from str in template select str[0]).ToList();
+    //     chars.RemoveAt(0);
+    //
+    //     var list = new List<string>();
+    //     foreach (var index in chars.Select(item => value.IndexOf(item)))
+    //     {
+    //         list.Add(value[..index]);
+    //         value = value[index..];
+    //     }
+    //
+    //     list.Add(value);
+    //
+    //     return list;
+    // }
 
     #endregion
 }

@@ -7,6 +7,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using GongSolutions.Wpf.DragDrop;
+using Mantra.Core.Abstractions;
+using Mantra.Core.Models;
+using Mantra.Plugins;
 using Mantra.Translators.Baidu;
 using Point = System.Windows.Point;
 
@@ -21,9 +24,14 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
     #region Private Members
 
     /// <summary>
+    /// 计算机视觉
+    /// </summary>
+    private readonly IComputerVision _computerVision = new TesseactComputerVision();
+
+    /// <summary>
     /// 翻译器
     /// </summary>
-    private readonly ITranslator _translator = new Baidu();
+    private readonly ITranslatorText _translator = new Baidu();
 
     #endregion
 
@@ -47,7 +55,7 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
     /// <summary>
     /// 原文字区域
     /// </summary>
-    public ObservableCollection<Rect> RectItems { get; set; } = new();
+    public ObservableCollection<BoundingBox> RectItems { get; set; } = new();
 
     #endregion
 
@@ -63,13 +71,13 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
     /// 单个光学识别命令
     /// </summary>
     // ReSharper disable once InconsistentNaming
-    public ICommand SingleOCRCommand => new AsyncCommand<Rect>(OnSingleOCRAsync);
+    public ICommand SingleOCRCommand => new AsyncCommand<BoundingBox>(OnSingleOCRAsync);
 
     /// <summary>
     /// 移除框命令
     /// </summary>
     // ReSharper disable once UnusedMember.Global
-    public ICommand RemoveCommand => new Command<Rect>(OnRemove);
+    public ICommand RemoveCommand => new Command<BoundingBox>(OnRemove);
 
     /// <summary>
     /// 移除组命令
@@ -77,14 +85,19 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
     public ICommand RemoveGroupCommand => new Command<int>(OnRemoveGroup);
 
     /// <summary>
-    /// 翻译命令
+    /// 批量翻译命令
     /// </summary>
-    public ICommand TranslateCommand => new AsyncCommand(OnTranslateAsync);
+    public ICommand BatchTranslateCommand => new AsyncCommand<int>(OnBatchTranslateAsync);
+
+    /// <summary>
+    /// 单个翻译命令
+    /// </summary>
+    public ICommand SingleTranslateCommand => new AsyncCommand<BoundingBox>(OnSingleTranslateAsync);
 
     /// <summary>
     /// 消除换行
     /// </summary>
-    public ICommand RemoveNewLineCommand => new Command<Rect>(OnRemoveNewLine);
+    public ICommand RemoveNewLineCommand => new Command<BoundingBox>(OnRemoveNewLine);
 
     #endregion
 
@@ -101,25 +114,15 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
             return;
         }
 
-        var blocks = await Task.Run(() => Tesseact.GetBlocks(ImgSource));
-        foreach (var block in blocks)
-        {
-            if (block.BoundingBox != null)
-            {
-                var boundingBox = block.BoundingBox.Value;
-                RectItems.Add(new Rect
-                {
-                    Left = boundingBox.X1, Top = boundingBox.Y1, Height = boundingBox.Height, Width = boundingBox.Width
-                });
-            }
-        }
+        var boxes = await _computerVision.ReadFileLocalAsync(ImgSource, "eng");
+        RectItems = new ObservableCollection<BoundingBox>(boxes);
     }
 
     /// <summary>
     /// <see cref="SingleOCRCommand"/> 时触发
     /// </summary>
     /// <param name="item"></param>
-    private async Task OnSingleOCRAsync(Rect item)
+    private async Task OnSingleOCRAsync(BoundingBox item)
     {
         var bitmap = CropImage(ImgSource!,
             new Rectangle
@@ -133,15 +136,18 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
         var converter = new ImageConverter();
         var bytes = (byte[]) converter.ConvertTo(bitmap, typeof(byte[]))!;
 
-        var text = await Task.Run(() => Tesseact.GetText(bytes));
-        item.OriginalText = text;
+        var boxes = await _computerVision.ReadFileStreamAsync(bytes, "eng");
+        item.OriginalText = string.Join(string.Empty, from box in boxes select box.OriginalText);
+
+        // Translate text
+        await OnSingleTranslateAsync(item);
     }
 
     /// <summary>
     /// 移除时触发
     /// </summary>
     /// <param name="rect"></param>
-    private void OnRemove(Rect rect)
+    private void OnRemove(BoundingBox rect)
     {
         RectItems.Remove(rect);
     }
@@ -160,33 +166,41 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
     }
 
     /// <summary>
-    /// <see cref="TranslateCommand"/> 时触发
+    /// <see cref="BatchTranslateCommand"/> 时触发
     /// </summary>
-    private async Task OnTranslateAsync()
+    /// <param name="group"></param>
+    private async Task OnBatchTranslateAsync(int group)
     {
         if (RectItems.Any())
         {
-            foreach (var grouping in RectItems.GroupBy(r => r.Group))
-            {
-                var groupInput = from item in grouping select item.OriginalText;
-                var texts = (await _translator.TranslateGroupAsync(groupInput, "en", "zh")).ToList();
+            var itemGroup = (from item in RectItems where item.Group == @group select item).ToList();
+            var groupInput = from item in itemGroup select item.OriginalText;
+            var texts = (await _translator.TranslateGroupAsync(groupInput, "en", "zh")).ToList();
 
-                var index = 0;
-                foreach (var item in grouping)
-                {
-                    // Check for out of range
-                    item.TranslatedText = texts.Count > index ? texts[index] : string.Empty;
-                    index++;
-                }
+            var index = 0;
+            foreach (var item in itemGroup)
+            {
+                // Check for out of range
+                item.TranslatedText = texts.Count > index ? texts[index] : string.Empty;
+                index++;
             }
         }
+    }
+
+    /// <summary>
+    /// <see cref="SingleTranslateCommand"/> 时触发
+    /// </summary>
+    /// <param name="item"></param>
+    private async Task OnSingleTranslateAsync(BoundingBox item)
+    {
+        item.TranslatedText = await _translator.TranslateAsync(item.OriginalText, "en", "zh");
     }
 
     /// <summary>
     /// <see cref="RemoveNewLineCommand"/> 时触发
     /// </summary>
     /// <param name="item"></param>
-    private void OnRemoveNewLine(Rect item)
+    private void OnRemoveNewLine(BoundingBox item)
     {
         item.OriginalText = item.OriginalText.Replace("\n", " ").Replace("\r", " ");
     }
@@ -204,6 +218,12 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
         ImgPixelWidth = bitmap.Width;
     }
 
+    /// <summary>
+    /// 截图
+    /// </summary>
+    /// <param name="path"></param>
+    /// <param name="cropArea"></param>
+    /// <returns></returns>
     private static Bitmap CropImage(string path, Rectangle cropArea)
     {
         var bitmap = new Bitmap(path);
@@ -240,7 +260,7 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
     /// <summary>
     /// 创建的 Rect
     /// </summary>
-    private Rect? _createdRect;
+    private BoundingBox? _createdRect;
 
     /// <summary>
     /// 鼠标拖动过程中最后记录的位置
@@ -262,7 +282,7 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
     {
         var el = (UIElement) sender;
         var point = Mouse.GetPosition(el);
-        _createdRect = new Rect {Left = point.X, Top = point.Y};
+        _createdRect = new BoundingBox {Left = point.X, Top = point.Y};
         _dragInProgress = true;
         RectItems.Add(_createdRect);
 
@@ -338,7 +358,7 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
     void IDropTarget.DragOver(IDropInfo dropInfo)
     {
         // Add to existed group                                     
-        if (dropInfo.Data is Rect && dropInfo.TargetItem is Rect ||
+        if (dropInfo.Data is BoundingBox && dropInfo.TargetItem is BoundingBox ||
             // Add to new / none group
             dropInfo.VisualTarget is Grid {Name: "NewGroup" or "NoneGroup"})
         {
@@ -358,7 +378,7 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
     /// <param name="dropInfo"></param>
     void IDropTarget.Drop(IDropInfo dropInfo)
     {
-        var rect = (Rect) dropInfo.Data;
+        var source = (BoundingBox) dropInfo.Data;
 
         if (dropInfo.VisualTarget is Grid grid)
         {
@@ -366,22 +386,31 @@ internal class HandleViewModel : BaseViewModel, IDropTarget
             if (grid.Name == "NewGroup")
             {
                 var index = (from item in RectItems select item.Group).Max() + 1;
-                rect.Group = index;
-                rect.Color = Colors.MakeDarkColorAsString();
+                source.Group = index;
+                source.Color = Colors.MakeDarkColorAsString();
             }
             // Insert to none group
             else if (grid.Name == "NoneGroup")
             {
-                rect.Group = 0;
-                rect.Color = "#FFDB7093";
+                source.Group = 0;
+                source.Color = "#FFDB7093";
             }
         }
         else
         {
             // Insert to a existed group
-            var group = (Rect) dropInfo.TargetItem;
-            rect.Group = group.Group;
-            rect.Color = group.Color;
+            var target = (BoundingBox) dropInfo.TargetItem;
+            if (target.Group == source.Group)
+            {
+                // Change Order
+                (source.Sort, target.Sort) = (target.Sort, source.Sort);
+            }
+            else
+            {
+                // Change Group
+                source.Group = target.Group;
+                source.Color = target.Color;
+            }
         }
 
         NoneGroupVisibility = false;

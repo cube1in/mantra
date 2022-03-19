@@ -10,6 +10,14 @@
         d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         mc:Ignorable="d" x:ClassModifier="internal">
     <Grid>
+        <!-- Blue background image -->
+        <Grid.Background>
+            <ImageBrush TileMode="Tile"
+                        ViewportUnits="Absolute"
+                        Viewport="0 0 500 500"
+                        ImageSource="{Binding Source=media/emoji-background.png, Converter={local:FilepathBytesConverter}}" />
+        </Grid.Background>
+
         <!-- Page Host -->
         <local:PageHost
             DataContext="{x:Static local:ApplicationViewModel.Current}"

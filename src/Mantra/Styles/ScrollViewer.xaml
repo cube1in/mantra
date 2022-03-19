@@ -15,7 +15,7 @@
                 <ControlTemplate TargetType="{x:Type Thumb}">
                     <Grid>
                         <!-- 滚动条颜色 -->
-                        <Border Background="{StaticResource ForegroundGrayBrush}" CornerRadius="3" />
+                        <Border Background="{StaticResource DimGrayBrush}" CornerRadius="3" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -65,7 +65,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type RepeatButton}">
-                    <Rectangle Fill="{StaticResource ForegroundDarkBrush}" Width="0" Height="0" />
+                    <Rectangle Fill="{StaticResource BlackBrush}" Width="0" Height="0" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

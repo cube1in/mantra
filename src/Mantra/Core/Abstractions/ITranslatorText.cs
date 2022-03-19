@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-// ReSharper disable once CheckNamespace
-namespace Mantra;
+namespace Mantra.Core.Abstractions;
 
 /// <summary>
 /// 翻译接口
 /// </summary>
-internal interface ITranslator
+public interface ITranslatorText
 {
     /// <summary>
     /// 单个翻译
