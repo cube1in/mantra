@@ -8,7 +8,7 @@ using MvvmHelpers.Commands;
 // ReSharper disable once CheckNamespace
 namespace Mantra;
 
-internal class ImageListViewModel : BaseViewModel
+internal class CollectionViewModel : BaseViewModel
 {
     #region Public Properties
 

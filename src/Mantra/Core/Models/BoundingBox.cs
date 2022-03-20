@@ -6,13 +6,8 @@ namespace Mantra.Core.Models;
 /// 边界框
 /// </summary>
 [AddINotifyPropertyChangedInterface]
-public class BoundingBox
+internal class BoundingBox : BaseViewModel
 {
-    /// <summary>
-    /// 排序
-    /// </summary>
-    public int Sort { get; set; }
-
     /// <summary>
     /// 左边位置
     /// </summary>
@@ -34,12 +29,6 @@ public class BoundingBox
     public double Height { get; set; }
 
     /// <summary>
-    /// 所属的组
-    /// 默认为 1
-    /// </summary>
-    public int Group { get; set; }
-
-    /// <summary>
     /// 颜色
     /// #FFDB7093
     /// </summary>
@@ -56,29 +45,4 @@ public class BoundingBox
     /// 必须具有默认值，否则在传到翻译 api 时会导致插入值错误
     /// </summary>
     public string TranslatedText { get; set; } = "没有翻译结果";
-
-    #region Private Members
-
-    /// <summary>
-    /// 创建锁
-    /// </summary>
-    private static readonly object CreateLock = new();
-
-    /// <summary>
-    /// 自增数
-    /// </summary>
-    private static int _index;
-
-    #endregion
-
-    /// <summary>
-    /// 默认构造函数
-    /// </summary>
-    public BoundingBox()
-    {
-        lock (CreateLock)
-        {
-            Sort = _index++;
-        }
-    }
 }

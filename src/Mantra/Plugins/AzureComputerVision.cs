@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Mantra.Plugins;
 
-public class AzureComputerVision : IComputerVision
+internal class AzureComputerVision : IComputerVision
 {
     private static readonly ComputerVisionClient Client;
 

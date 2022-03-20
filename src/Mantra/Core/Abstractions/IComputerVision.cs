@@ -7,7 +7,7 @@ namespace Mantra.Core.Abstractions;
 /// <summary>
 /// 计算机视觉
 /// </summary>
-public interface IComputerVision
+internal interface IComputerVision
 {
     /// <summary>
     /// 读取本地文件

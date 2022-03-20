@@ -8,6 +8,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <!-- Order is important -->
+                <!-- primary，secondary，tertiary，quaternary，quinary，senary，septenary，octonary，nonary，denary -->
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Color.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Text.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Button.xaml" />
@@ -16,6 +17,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/TabControl.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Menu.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/ToolTip.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Combobox.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

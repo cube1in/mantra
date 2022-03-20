@@ -12,7 +12,7 @@ using TesseractOCR.Layout;
 namespace Mantra.Plugins;
 
 [SuppressMessage("ReSharper", "IdentifierTypo")]
-public class TesseactComputerVision : IComputerVision
+internal class TesseactComputerVision : IComputerVision
 {
     private static readonly HttpClient Client = new();
 

@@ -12,7 +12,7 @@ internal class ApplicationPageConverter : BaseValueConverter<ApplicationPageConv
         return value switch
         {
             ApplicationPage.Upload => new UploadPage(),
-            ApplicationPage.ImageList => new ImageListPage(),
+            ApplicationPage.Collection => new CollectionPage(),
             ApplicationPage.Handle => new HandlePage(),
             _ => throw new NotSupportedException()
         };

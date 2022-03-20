@@ -38,11 +38,11 @@
 
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{StaticResource BrightGrayBrush}" />
+                            <Setter Property="Background" Value="{StaticResource WhiteSmokeBrush}" />
                         </Trigger>
 
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="{StaticResource BrightGrayBrush}" />
+                            <Setter Property="Background" Value="{StaticResource WhiteSmokeBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

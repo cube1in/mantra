@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <!-- Menu Brushes -->
     <LinearGradientBrush x:Key="NormaLinearBrush" StartPoint="0 0" EndPoint="0 1">
         <GradientBrush.GradientStops>
             <GradientStopCollection>
@@ -19,7 +20,7 @@
         </GradientBrush.GradientStops>
     </LinearGradientBrush>
 
-    <LinearGradientBrush x:Key="BrightLinearBrush" StartPoint="0 0" EndPoint="0 1">
+    <LinearGradientBrush x:Key="LightLinearBrush" StartPoint="0 0" EndPoint="0 1">
         <GradientBrush.GradientStops>
             <GradientStopCollection>
                 <GradientStop Color="#FFFFFF" Offset="0.0" />
@@ -28,16 +29,28 @@
         </GradientBrush.GradientStops>
     </LinearGradientBrush>
 
-    <SolidColorBrush x:Key="WhiteBrush" Color="#FFFFFF" />
+    <!-- Text &　Button Brushes -->
+    <SolidColorBrush x:Key="BrightLightBlueBrush" Color="AliceBlue" />
+    <SolidColorBrush x:Key="LightBlueBrush" Color="#929CD6" />
+    <SolidColorBrush x:Key="NormalBlueBrush" Color="#6A75CA" />
+    <SolidColorBrush x:Key="DarkBlueBrush" Color="#4D54A3" />
+
+    <!-- Miscellaneous Brushes -->
+    <!-- 255 255 255 -->
+    <SolidColorBrush x:Key="PerfectWhiteBrush" Color="#FFFFFF" />
+    <!-- 245 245 245 -->
+    <SolidColorBrush x:Key="WhiteSmokeBrush" Color="WhiteSmoke" />
+    <!-- 242 242 242 -->
+    <SolidColorBrush x:Key="AntiFlashWhiteBrush" Color="#F2F2F2" />
+    <!-- 217 217 217 -->
+    <SolidColorBrush x:Key="LightSilverBrush" Color="#D9D9D9" />
+    <!-- 136 136 136 -->
     <SolidColorBrush x:Key="TaupeGrayBrush" Color="#888888" />
-    <SolidColorBrush x:Key="GainsboroBrush" Color="#DDDDDD" />
-    <SolidColorBrush x:Key="DimGrayBrush" Color="#686868" />
-    <SolidColorBrush x:Key="BlackBrush" Color="#000000" />
-    <SolidColorBrush x:Key="BrightGrayBrush" Color="#EEEEEE" />
-    <SolidColorBrush x:Key="PowderBlueBrush" Color="PowderBlue" />
-    <SolidColorBrush x:Key="DarkRedBrush" Color="DarkRed" />
-    <SolidColorBrush x:Key="BlueBrush" Color="#004BFF" />
-    <SolidColorBrush x:Key="UltramarineBlueBrush" Color="#496FFF" />
+    <!-- 104 104 104 -->
+    <SolidColorBrush x:Key="DimGrayBrush" Color="DimGray" />
+    <!-- 68 68 68 -->
     <SolidColorBrush x:Key="OuterSpaceBrush" Color="#444444" />
+    <!-- 0 0 0 -->
+    <SolidColorBrush x:Key="PerfectBlackBrush" Color="#000000" />
 
 </ResourceDictionary>

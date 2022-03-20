@@ -14,7 +14,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Menu}">
                     <Border
-                        Background="{StaticResource BrightLinearBrush}"
+                        Background="{StaticResource LightLinearBrush}"
                         BorderBrush="{StaticResource OuterSpaceLinearBrush}"
                         BorderThickness="1">
                         <StackPanel ClipToBounds="True" Orientation="Horizontal" IsItemsHost="True" />
@@ -35,8 +35,8 @@
                 <ControlTemplate TargetType="{x:Type ContextMenu}">
                     <Border
                         Name="Border"
-                        Background="{StaticResource WhiteBrush}"
-                        BorderBrush="{StaticResource TaupeGrayBrush}"
+                        Background="{StaticResource PerfectWhiteBrush}"
+                        BorderBrush="{StaticResource AntiFlashWhiteBrush}"
                         BorderThickness="1">
                         <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
                     </Border>
@@ -206,7 +206,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Separator}">
-                    <Border BorderBrush="{StaticResource TaupeGrayBrush}" BorderThickness="1" />
+                    <Border BorderBrush="{StaticResource AntiFlashWhiteBrush}" BorderThickness="1" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -230,8 +230,8 @@
                     <Border
                         Name="SubmenuBorder"
                         SnapsToDevicePixels="True"
-                        Background="{StaticResource WhiteBrush}"
-                        BorderBrush="{StaticResource TaupeGrayBrush}"
+                        Background="{StaticResource PerfectWhiteBrush}"
+                        BorderBrush="{StaticResource AntiFlashWhiteBrush}"
                         BorderThickness="1">
                         <ScrollViewer CanContentScroll="True"
                                       Style="{StaticResource MenuScrollViewer}">
@@ -258,7 +258,7 @@
             </Trigger>
             <!--/Snippet top level header-->
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{StaticResource TaupeGrayBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource AntiFlashWhiteBrush}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -281,7 +281,7 @@
                 <Setter TargetName="Border" Property="BorderBrush" Value="Transparent" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{StaticResource TaupeGrayBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource AntiFlashWhiteBrush}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -350,7 +350,7 @@
                 <Setter TargetName="Border" Property="Background" Value="{StaticResource GainsboroBrush}" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
-                <Setter Property="Foreground" Value="{StaticResource TaupeGrayBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource AntiFlashWhiteBrush}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -399,8 +399,8 @@
                     <Border
                         Name="SubmenuBorder"
                         SnapsToDevicePixels="True"
-                        Background="{StaticResource WhiteBrush}"
-                        BorderBrush="{StaticResource TaupeGrayBrush}"
+                        Background="{StaticResource PerfectWhiteBrush}"
+                        BorderBrush="{StaticResource AntiFlashWhiteBrush}"
                         BorderThickness="1">
                         <ScrollViewer CanContentScroll="True"
                                       Style="{StaticResource MenuScrollViewer}">
@@ -425,7 +425,7 @@
                 <Setter TargetName="SubmenuBorder" Property="Padding" Value="0,3,0,3" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
-                <Setter Property="Foreground" Value="{StaticResource TaupeGrayBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource AntiFlashWhiteBrush}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>

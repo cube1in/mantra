@@ -38,7 +38,7 @@ internal class UploadViewModel : BaseViewModel
                 return;
             }
 
-            ApplicationViewModel.Current.GoToPage(ApplicationPage.ImageList, files);
+            ApplicationViewModel.Current.GoToPage(ApplicationPage.Collection, files);
         }
     }
 
@@ -62,7 +62,7 @@ internal class UploadViewModel : BaseViewModel
                 return;
             }
 
-            ApplicationViewModel.Current.GoToPage(ApplicationPage.ImageList, files);
+            ApplicationViewModel.Current.GoToPage(ApplicationPage.Collection, files);
         }
 
         await Task.CompletedTask;

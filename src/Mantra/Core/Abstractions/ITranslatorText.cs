@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Mantra.Core.Abstractions;
 
@@ -18,15 +17,6 @@ public interface ITranslatorText
     string Translate(string input, string from, string to);
 
     /// <summary>
-    /// 翻译组
-    /// </summary>
-    /// <param name="groupInput"></param>
-    ///     /// <param name="from"></param>
-    /// <param name="to"></param>
-    /// <returns></returns>
-    IEnumerable<string> TranslateGroup(IEnumerable<string> groupInput, string from, string to);
-
-    /// <summary>
     /// 单个翻译
     /// </summary>
     /// <param name="input"></param>
@@ -34,13 +24,4 @@ public interface ITranslatorText
     /// <param name="to"></param>
     /// <returns></returns>
     Task<string> TranslateAsync(string input, string from, string to);
-
-    /// <summary>
-    /// 翻译组
-    /// </summary>
-    /// <param name="groupInput"></param>
-    ///     /// <param name="from"></param>
-    /// <param name="to"></param>
-    /// <returns></returns>
-    Task<IEnumerable<string>> TranslateGroupAsync(IEnumerable<string> groupInput, string from, string to);
 }

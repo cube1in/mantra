@@ -12,9 +12,9 @@ internal enum ApplicationPage
     Upload = 0,
     
     /// <summary>
-    /// The image list page
+    /// The image collection page
     /// </summary>
-    ImageList = 1,
+    Collection = 1,
 
     /// <summary>
     /// The main handel page

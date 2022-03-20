@@ -75,11 +75,6 @@ internal class Baidu : ITranslatorText
         return TranslateAsync(input, from, to).Result;
     }
 
-    public IEnumerable<string> TranslateGroup(IEnumerable<string> groupInput, string from, string to)
-    {
-        return TranslateGroupAsync(groupInput, from, to).Result;
-    }
-
     public async Task<string> TranslateAsync(string input, string from, string to)
     {
         var jsonString = $@"{{""q"":""{input}"",""from"":""{from}"",""to"":""{to}""}}";
@@ -92,14 +87,6 @@ internal class Baidu : ITranslatorText
         return string.Join(Environment.NewLine,
             JsonConvert.DeserializeObject<TranslateResponse>(result, JsonSettings.SerializerSettings)!.Result
                 .TransResult.Select(r => r.Dst));
-    }
-
-    public async Task<IEnumerable<string>> TranslateGroupAsync(IEnumerable<string> groupInput, string from, string to)
-    {
-        var input = string.Join(JsonSettings.SpecialDelimiter, groupInput);
-        var text = await TranslateAsync(input, from, to);
-
-        return text.Split(JsonSettings.SpecialDelimiter);
     }
 
     // private static IEnumerable<string> Separator(IEnumerable<string> template, string value)

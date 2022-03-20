@@ -6,7 +6,6 @@
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                 xmlns:local="clr-namespace:Mantra"
                 xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-                xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.WPF.DragDrop"
                 xmlns:system="clr-namespace:System;assembly=System.Runtime"
                 xmlns:core="clr-namespace:Mantra.Core.Models"
                 mc:Ignorable="d"
@@ -18,7 +17,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5*" />
-            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="2*" MinWidth="400" />
         </Grid.ColumnDefinitions>
 
         <!-- Image Column -->
@@ -38,7 +37,7 @@
                     SnapsToDevicePixels="True" />
 
                 <!-- ImgSource Canvas -->
-                <ItemsControl ItemsSource="{Binding RectItems}">
+                <ItemsControl ItemsSource="{Binding BoundingBoxCollection}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <!-- Must set background -->
@@ -59,43 +58,11 @@
                     </ItemsControl.ItemContainerStyle>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Grid>
-
-                                <!-- Must set mode is two way, otherwise not update -->
-                                <local:DesignerContainer Resize="True"
-                                                         StrokeColor="{Binding Color, Mode=TwoWay}"
-                                                         Width="{Binding Width, Mode=TwoWay}"
-                                                         Height="{Binding Height, Mode=TwoWay}">
-                                    <!-- Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ItemsControl}}"> -->
-
-                                    <!-- <local:DesignerContainer.ContextMenu> -->
-                                    <!--     <ContextMenu> -->
-                                    <!--         ~1~ 通过Tag中转的方式绑定Command @1@ -->
-                                    <!--         ~1~ https://stackoverflow.com/questions/47202690/wpf-command-binding-of-contextmenu-item-inside-itemscontrol @1@ -->
-                                    <!--         ~1~ ReSharper disable once Xaml.BindingWithContextNotResolved @1@ -->
-                                    <!--         <MenuItem Header="移除" -->
-                                    <!--                   Command="{Binding PlacementTarget.Tag.RemoveCommand, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" -->
-                                    <!--                   CommandParameter="{Binding}" /> -->
-                                    <!--     </ContextMenu> -->
-                                    <!-- </local:DesignerContainer.ContextMenu> -->
-
-                                    <!-- 所属组 -->
-                                    <Grid SnapsToDevicePixels="True"
-                                          Margin="-1,-25,0,0"
-                                          HorizontalAlignment="Center"
-                                          VerticalAlignment="Top"
-                                          Visibility="{Binding Group, Converter={local:GroupVisibilityConverter}}">
-
-                                        <Ellipse Fill="{Binding Color}"
-                                                 Width="20"
-                                                 Height="20" />
-
-                                        <TextBlock Foreground="White"
-                                                   HorizontalAlignment="Center"
-                                                   VerticalAlignment="Center"
-                                                   Text="{Binding Group}" />
-                                    </Grid>
-                                </local:DesignerContainer>
+                            <!-- Must set mode is two way, otherwise not update -->
+                            <local:DesignerContainer Resize="True"
+                                                     StrokeColor="{Binding Color}"
+                                                     Width="{Binding Width}"
+                                                     Height="{Binding Height}">
 
                                 <StackPanel SnapsToDevicePixels="True"
                                             Margin="0 0 0 -25"
@@ -114,7 +81,7 @@
                                             Command="{Binding DataContext.SingleOCRCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                                             CommandParameter="{Binding}" />
                                 </StackPanel>
-                            </Grid>
+                            </local:DesignerContainer>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
@@ -123,7 +90,6 @@
 
         <!-- Tool Column -->
         <ScrollViewer Grid.Column="1"
-                      x:Name="ToolScrollViewer"
                       Margin="0 30 10 30"
                       HorizontalScrollBarVisibility="Disabled"
                       VerticalScrollBarVisibility="Auto"
@@ -131,358 +97,228 @@
                       CanContentScroll="True">
 
             <TabControl Margin="10 0">
-
-                <TabControl.Resources>
-                    <CollectionViewSource IsLiveGroupingRequested="True"
-                                          IsLiveSortingRequested="True"
-                                          x:Key="CollectionViewSource"
-                                          Source="{Binding RectItems}">
-                        <CollectionViewSource.GroupDescriptions>
-                            <PropertyGroupDescription PropertyName="Group" />
-                        </CollectionViewSource.GroupDescriptions>
-                        <CollectionViewSource.SortDescriptions>
-                            <componentModel:SortDescription PropertyName="Group" />
-                            <componentModel:SortDescription PropertyName="Sort" />
-                        </CollectionViewSource.SortDescriptions>
-                        <CollectionViewSource.LiveGroupingProperties>
-                            <system:String>Group</system:String>
-                        </CollectionViewSource.LiveGroupingProperties>
-                        <CollectionViewSource.LiveSortingProperties>
-                            <system:String>Sort</system:String>
-                        </CollectionViewSource.LiveSortingProperties>
-                    </CollectionViewSource>
-
-                    <Style TargetType="{x:Type GroupItem}" x:Key="GroupContainerStyle">
-                        <Setter Property="SnapsToDevicePixels" Value="True" />
-                        <Setter Property="BorderThickness" Value="0" />
-                        <Setter Property="Margin" Value="0 0 0 20" />
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type GroupItem}">
-                                    <Border x:Name="Border"
-                                            SnapsToDevicePixels="True"
-                                            Background="{StaticResource BrightGrayBrush}"
-                                            CornerRadius="5">
-                                        <StackPanel SnapsToDevicePixels="True" Margin="10">
-                                            <Grid SnapsToDevicePixels="True" Margin="0 0 0 10">
-                                                <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
-                                                <TextBlock VerticalAlignment="Center"
-                                                           HorizontalAlignment="Left"
-                                                           FontSize="14"
-                                                           Text="{Binding Name, Converter={local:GroupFormatConverter}}"
-                                                           Foreground="{Binding Items[0].Color}" />
-                                                <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
-
-                                                <StackPanel SnapsToDevicePixels="True"
-                                                            Orientation="Horizontal"
-                                                            VerticalAlignment="Center"
-                                                            HorizontalAlignment="Right">
-                                                    <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-                                                    <Button Background="Transparent"
-                                                            BorderBrush="Transparent"
-                                                            BorderThickness="0"
-                                                            Command="{Binding  DataContext.BatchTranslateCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
-                                                            CommandParameter="{Binding Name}"
-                                                            ToolTip="整个分组翻译"
-                                                            Margin="0 0 10 0">
-                                                        <Image Stretch="Fill"
-                                                               Width="20"
-                                                               Height="20"
-                                                               Source="{Binding Source=media/docs.png, Converter={local:FilepathBytesConverter}}" />
-                                                    </Button>
-
-                                                    <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-                                                    <Button Background="Transparent"
-                                                            BorderBrush="Transparent"
-                                                            BorderThickness="0"
-                                                            Command="{Binding  DataContext.RemoveGroupCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
-                                                            CommandParameter="{Binding Name}"
-                                                            ToolTip="删除整个分组">
-                                                        <Image Stretch="Fill"
-                                                               Width="20"
-                                                               Height="20"
-                                                               Source="{Binding Source=media/delete.png, Converter={local:FilepathBytesConverter}}" />
-                                                    </Button>
-                                                </StackPanel>
-                                            </Grid>
-                                            <ItemsPresenter />
-                                        </StackPanel>
-                                    </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </TabControl.Resources>
-
                 <!-- OCR TabItem -->
-                <TabItem Header="文字识别" FontSize="16">
+                <TabItem Header="文字识别"
+                         FontSize="16"
+                         DataContext="{Binding SelectedBoundingBox}"
+                         d:DataContext="{d:DesignInstance Type=core:BoundingBox}">
 
-                    <StackPanel SnapsToDevicePixels="True">
+                    <StackPanel SnapsToDevicePixels="True" Visibility="{Binding Converter={local:NullableConverter}}">
+                        <!-- Original Text -->
+                        <Border CornerRadius="5" Background="{StaticResource WhiteSmokeBrush}" Margin="0 0 0 25">
+                            <StackPanel SnapsToDevicePixels="True"
+                                        Margin="10">
+                                <Grid SnapsToDevicePixels="True" Margin="0 0 0 5">
+                                    <TextBlock HorizontalAlignment="Left"
+                                               VerticalAlignment="Center"
+                                               Text="原文"
+                                               FontSize="16"
+                                               FontWeight="Bold" />
 
-                        <!-- Tips -->
-                        <Border CornerRadius="3"
-                                Background="{StaticResource PowderBlueBrush}"
-                                Height="40"
-                                Margin="0 0 0 20">
-                            <StackPanel Orientation="Horizontal" Margin="6 0">
-                                <Image Stretch="Fill"
-                                       Height="25"
-                                       Width="25"
-                                       Source="{Binding Source=media/light_bulb.png, Converter={local:FilepathBytesConverter}}" />
-                                <TextBlock HorizontalAlignment="Left"
-                                           VerticalAlignment="Center"
-                                           FontSize="16"
-                                           Text="小提示: 将文字块按照人物进行分组，翻译效果更佳哦..." />
+                                    <Button HorizontalAlignment="Right"
+                                            Style="{StaticResource QuaternaryFlatButtonStyle}"
+                                            Content="去除换行"
+                                            ToolTip="清除换行"
+                                            Command="{Binding DataContext.RemoveNewLineCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                            CommandParameter="{Binding}" />
+                                </Grid>
+                                <TextBox AcceptsReturn="True"
+                                         BorderThickness="1"
+                                         TextWrapping="Wrap"
+                                         Tag="请填写原文内容"
+                                         Text="{Binding OriginalText}"
+                                         FontSize="14" />
                             </StackPanel>
                         </Border>
 
-                        <!-- Groups ItemsControl -->
-                        <ItemsControl ItemsSource="{Binding Source={StaticResource CollectionViewSource}}"
-                                      dd:DragDrop.IsDragSource="True"
-                                      dd:DragDrop.UseDefaultDragAdorner="True"
-                                      dd:DragDrop.UseDefaultEffectDataTemplate="True"
-                                      dd:DragDrop.DragDirectlySelectedOnly="True"
-                                      dd:DragDrop.DropTargetScrollViewer="{Binding ElementName=ToolScrollViewer}"
+                        <!-- Translated Text -->
+                        <Border CornerRadius="5" Background="{StaticResource WhiteSmokeBrush}" Margin="0 0 0 25">
+                            <StackPanel SnapsToDevicePixels="True"
+                                        Margin="10">
+                                <TextBlock HorizontalAlignment="Left"
+                                           VerticalAlignment="Center"
+                                           Text="翻译"
+                                           FontSize="16"
+                                           FontWeight="Bold"
+                                           Margin="0 0 0 5" />
 
-                                      dd:DragDrop.IsDropTarget="True"
-                                      dd:DragDrop.DropHandler="{Binding}">
-                            <!-- Group Style -->
-                            <ItemsControl.GroupStyle>
-                                <GroupStyle ContainerStyle="{StaticResource GroupContainerStyle}" />
-                            </ItemsControl.GroupStyle>
+                                <Grid SnapsToDevicePixels="True" Margin="0 0 0 5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
 
-                            <!-- Item Panel -->
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Vertical" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-
-                            <!-- Item Template -->
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel SnapsToDevicePixels="True" Margin="0 0 0 25">
-
-                                        <!-- Tool Bar -->
-                                        <StackPanel Orientation="Horizontal" Margin="0 0 0 5">
-
-                                            <!-- Edit ToggleButton -->
-                                            <ToggleButton x:Name="EditToggleButton"
-                                                          SnapsToDevicePixels="True"
-                                                          Background="Transparent"
-                                                          BorderThickness="0"
-                                                          VerticalAlignment="Center"
-                                                          HorizontalAlignment="Left">
-                                                <Image Stretch="Fill"
-                                                       Width="20"
-                                                       Height="20"
-                                                       ToolTip="编辑"
-                                                       Source="{Binding Source=media/edit.png, Converter={local:FilepathBytesConverter}}" />
-                                            </ToggleButton>
-
-                                            <!-- Remove NewLine Button -->
-                                            <Button SnapsToDevicePixels="True"
-                                                    Background="Transparent"
-                                                    BorderThickness="0"
-                                                    VerticalAlignment="Center"
-                                                    HorizontalAlignment="Left"
-                                                    Margin="5 0 0 0 "
-                                                    Command="{Binding DataContext.RemoveNewLineCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                    CommandParameter="{Binding}">
-                                                <Image Stretch="Fill"
-                                                       Width="20"
-                                                       Height="20"
-                                                       ToolTip="清除换行"
-                                                       Source="{Binding Source=media/word.png, Converter={local:FilepathBytesConverter}}" />
-                                            </Button>
-
-                                            <!-- Translate Button -->
-                                            <Button SnapsToDevicePixels="True"
-                                                    Background="Transparent"
-                                                    BorderThickness="0"
-                                                    VerticalAlignment="Center"
-                                                    HorizontalAlignment="Left"
-                                                    Margin="5 0 0 0 "
-                                                    Command="{Binding DataContext.SingleTranslateCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                    CommandParameter="{Binding}">
-                                                <Image Stretch="Fill"
-                                                       Width="20"
-                                                       Height="20"
-                                                       ToolTip="翻译"
-                                                       Source="{Binding Source=media/search.png, Converter={local:FilepathBytesConverter}}" />
-                                            </Button>
-                                        </StackPanel>
-
-                                        <!-- Original Text -->
-                                        <Border CornerRadius="3" Background="White" Margin="0 0 0 10">
-                                            <StackPanel SnapsToDevicePixels="True"
-                                                        Margin="10">
-                                                <TextBlock Text="原文"
-                                                           FontSize="13"
-                                                           Margin="0 0 0 5" />
-                                                <Grid>
-                                                    <TextBox AcceptsReturn="True"
-                                                             BorderThickness="1"
-                                                             TextWrapping="Wrap"
-                                                             Tag="请填写原文内容"
-                                                             Text="{Binding OriginalText}"
-                                                             FontSize="14"
-                                                             Visibility="{Binding IsChecked, ElementName=EditToggleButton, Converter={local:BooleanVisibilityConverter}}" />
-
-                                                    <Border SnapsToDevicePixels="True"
-                                                            CornerRadius="3"
-                                                            BorderBrush="{StaticResource TaupeGrayBrush}"
-                                                            BorderThickness="1"
-                                                            Padding="12 3"
-                                                            Visibility="{Binding IsChecked, ElementName=EditToggleButton, Converter={local:BooleanVisibilityConverter}, ConverterParameter=true}">
-                                                        <TextBlock HorizontalAlignment="Left"
-                                                                   VerticalAlignment="Center"
-                                                                   TextWrapping="Wrap"
-                                                                   Text="{Binding OriginalText}"
-                                                                   FontSize="14"
-                                                                   Visibility="{Binding IsChecked, ElementName=EditToggleButton, Converter={local:BooleanVisibilityConverter}, ConverterParameter=true}" />
-                                                    </Border>
-                                                </Grid>
-                                            </StackPanel>
-                                        </Border>
-
-                                        <!-- Translated Text -->
-                                        <Border CornerRadius="3" Background="White" Margin="0 0 0 5">
-                                            <StackPanel SnapsToDevicePixels="True"
-                                                        Margin="10">
-                                                <TextBlock Text="译文"
-                                                           FontSize="13"
-                                                           Margin="0 0 0 5" />
-                                                <Grid>
-                                                    <TextBox AcceptsReturn="True"
-                                                             BorderThickness="1"
-                                                             TextWrapping="Wrap"
-                                                             Tag="请填写翻译结果"
-                                                             Text="{Binding TranslatedText}"
-                                                             FontSize="14"
-                                                             Visibility="{Binding IsChecked, ElementName=EditToggleButton, Converter={local:BooleanVisibilityConverter}}" />
-
-                                                    <Border SnapsToDevicePixels="True"
-                                                            CornerRadius="3"
-                                                            BorderBrush="{StaticResource TaupeGrayBrush}"
-                                                            BorderThickness="1"
-                                                            Padding="12 3"
-                                                            Visibility="{Binding IsChecked, ElementName=EditToggleButton, Converter={local:BooleanVisibilityConverter}, ConverterParameter=true}">
-                                                        <TextBlock HorizontalAlignment="Left"
-                                                                   VerticalAlignment="Center"
-                                                                   TextWrapping="Wrap"
-                                                                   Text="{Binding TranslatedText}"
-                                                                   FontSize="14"
-                                                                   Visibility="{Binding IsChecked, ElementName=EditToggleButton, Converter={local:BooleanVisibilityConverter}, ConverterParameter=true}" />
-                                                    </Border>
-                                                </Grid>
-                                            </StackPanel>
-                                        </Border>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-
-                        <!-- Add New Group -->
-                        <!-- Must set background -->
-                        <!-- ReSharper disable once UnusedMember.Global -->
-                        <Grid x:Name="NewGroup"
-                              SnapsToDevicePixels="True"
-                              Background="Transparent"
-                              Margin="0 0 0 20"
-                              dd:DragDrop.IsDropTarget="True"
-                              dd:DragDrop.DropHandler="{Binding}">
-                            <Rectangle RadiusX="3"
-                                       RadiusY="3"
-                                       Stroke="Gray"
-                                       StrokeThickness="2"
-                                       StrokeDashArray="3"
-                                       Fill="{StaticResource BrightGrayBrush}"
-                                       Height="100" />
-
-                            <TextBlock Text="+ 拖动至此处以新建分组"
-                                       FontSize="20"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"
-                                       Foreground="DimGray" />
-                        </Grid>
-
-                        <!-- Return to none Group -->
-                        <!-- Must set background -->
-                        <!-- ReSharper disable once UnusedMember.Global -->
-                        <Grid Name="NoneGroup"
-                              Visibility="{Binding NoneGroupVisibility, Converter={local:BooleanVisibilityConverter}}"
-                              SnapsToDevicePixels="True"
-                              Background="Transparent"
-                              dd:DragDrop.IsDropTarget="True"
-                              dd:DragDrop.DropHandler="{Binding}">
-                            <Rectangle RadiusX="3"
-                                       RadiusY="3"
-                                       Stroke="Gray"
-                                       StrokeThickness="2"
-                                       Fill="LightBlue"
-                                       Height="100" />
-
-                            <TextBlock Text="+ 拖动至此处消除分组"
-                                       FontSize="20"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"
-                                       Foreground="DimGray" />
-                        </Grid>
+                                    <ComboBox Grid.Column="0"
+                                              HorizontalAlignment="Left"
+                                              ToolTip="语言"
+                                              Margin="0 0 5 0 ">
+                                        <ComboBoxItem Content="简体中文" IsSelected="True" />
+                                        <ComboBoxItem Content="日语" />
+                                        <ComboBoxItem Content="英语" />
+                                    </ComboBox>
+                                    <ComboBox Grid.Column="1"
+                                              HorizontalAlignment="Left"
+                                              ToolTip="翻译引擎"
+                                              Margin="0 0 5 0 ">
+                                        <ComboBoxItem Content="百度" IsSelected="True" />
+                                        <ComboBoxItem Content="谷歌" />
+                                        <ComboBoxItem Content="微软" />
+                                    </ComboBox>
+                                    <Button Grid.Column="2"
+                                            HorizontalAlignment="Right"
+                                            Style="{StaticResource PrimaryFlatButtonStyle}"
+                                            Content="翻译"
+                                            ToolTip="翻译"
+                                            Command="{Binding DataContext.SingleTranslateCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                            CommandParameter="{Binding}" />
+                                </Grid>
+                                <TextBox AcceptsReturn="True"
+                                         BorderThickness="1"
+                                         TextWrapping="Wrap"
+                                         Tag="请填写翻译结果"
+                                         Text="{Binding TranslatedText}"
+                                         FontSize="14" />
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </TabItem>
 
-                <!-- Clear Original Text TabItem -->
-                <TabItem Header="消除原文" FontSize="16">
-                    <Button Style="{StaticResource FlatButtonStyle}"
-                            FontSize="15"
-                            Margin="30 0 30 20"
-                            Content="自动消除" />
-                </TabItem>
+                <!-- List TabItem -->
+                <TabItem Header="文字列表" FontSize="16">
+                    <TabItem.Resources>
+                        <CollectionViewSource IsLiveGroupingRequested="True"
+                                              IsLiveSortingRequested="True"
+                                              x:Key="CollectionViewSource"
+                                              Source="{Binding BoundingBoxCollection}">
+                            <CollectionViewSource.GroupDescriptions>
+                                <PropertyGroupDescription PropertyName="Group" />
+                            </CollectionViewSource.GroupDescriptions>
+                            <CollectionViewSource.SortDescriptions>
+                                <componentModel:SortDescription PropertyName="Group" />
+                                <componentModel:SortDescription PropertyName="Sort" />
+                            </CollectionViewSource.SortDescriptions>
+                            <CollectionViewSource.LiveGroupingProperties>
+                                <system:String>Group</system:String>
+                            </CollectionViewSource.LiveGroupingProperties>
+                            <CollectionViewSource.LiveSortingProperties>
+                                <system:String>Sort</system:String>
+                            </CollectionViewSource.LiveSortingProperties>
+                        </CollectionViewSource>
+                    </TabItem.Resources>
 
-                <!-- Fill TabItem -->
-                <TabItem Header="文字填充" FontSize="16">
-                    <StackPanel SnapsToDevicePixels="True">
-                        <!-- Translate Button -->
-                        <Button Style="{StaticResource FlatButtonStyle}"
-                                FontSize="15"
-                                Margin="30 0 30 20"
-                                Content="自动填充" />
+                    <!-- ItemsControl -->
+                    <ItemsControl ItemsSource="{Binding Source={StaticResource CollectionViewSource}}">
+                        <!-- Item Panel -->
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
 
-                        <!-- Groups ItemsControl -->
-                        <ItemsControl ItemsSource="{Binding Source={StaticResource CollectionViewSource}}">
-                            <!-- Group Style -->
-                            <ItemsControl.GroupStyle>
-                                <GroupStyle ContainerStyle="{StaticResource GroupContainerStyle}" />
-                            </ItemsControl.GroupStyle>
+                        <!-- Item Template -->
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border CornerRadius="5"
+                                        Background="{StaticResource WhiteSmokeBrush}"
+                                        Margin="0 0 0 20"
+                                        BorderBrush="{StaticResource DarkBlueBrush}">
 
-                            <!-- Item Panel -->
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Vertical" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
+                                    <Border.Resources>
+                                        <local:BorderThicknessConverter
+                                            x:Key="BorderThicknessConverter" />
+                                    </Border.Resources>
 
-                            <!-- Item Template -->
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border CornerRadius="3" Background="White" Margin="0 0 0 20">
+                                    <Border.BorderThickness>
+                                        <MultiBinding Converter="{StaticResource BorderThicknessConverter}">
+                                            <Binding Path="DataContext.SelectedBoundingBox"
+                                                     RelativeSource="{RelativeSource AncestorType=ItemsControl}" />
+                                            <Binding Path="DataContext"
+                                                     RelativeSource="{RelativeSource Mode=Self}" />
+                                        </MultiBinding>
+                                    </Border.BorderThickness>
+
+                                    <!-- Click Command -->
+                                    <Border.InputBindings>
+                                        <MouseBinding Gesture="LeftClick"
+                                                      Command="{Binding DataContext.SelectBoundingBoxCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                      CommandParameter="{Binding}" />
+                                    </Border.InputBindings>
+
+                                    <!-- Content Item -->
+                                    <StackPanel SnapsToDevicePixels="True" Margin="10">
+                                        
+                                        <Grid SnapsToDevicePixels="True" Margin="0 0 0 10">
+                                            <!-- Index -->
+                                            <TextBlock FontSize="14"
+                                                       Foreground="{StaticResource NormalBlueBrush}"
+                                                       HorizontalAlignment="Left"
+                                                       VerticalAlignment="Center">
+
+                                                <TextBlock.Resources>
+                                                    <local:BoundingBoxCollectionIndexConverter
+                                                        x:Key="BoundingBoxCollectionIndexConverter" />
+                                                </TextBlock.Resources>
+
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="# {0}"
+                                                                  Converter="{StaticResource BoundingBoxCollectionIndexConverter}">
+                                                        <Binding Path="DataContext.BoundingBoxCollection"
+                                                                 RelativeSource="{RelativeSource AncestorType=ItemsControl}" />
+                                                        <Binding Path="DataContext"
+                                                                 RelativeSource="{RelativeSource Mode=Self}" />
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                            
+                                            <!-- Delete Button -->
+                                            <Button SnapsToDevicePixels="True"
+                                                    Background="Transparent"
+                                                    BorderBrush="Transparent"
+                                                    BorderThickness="0"
+                                                    HorizontalAlignment="Right"
+                                                    VerticalAlignment="Center"
+                                                    Command="{Binding DataContext.RemoveCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                    CommandParameter="{Binding}">
+                                                <Image SnapsToDevicePixels="True"
+                                                       Stretch="Fill"
+                                                       Width="22"
+                                                       Height="22"
+                                                       Source="{Binding Source=media/delete.png, Converter={local:FilepathBytesConverter}}"/>
+                                            </Button>
+                                        </Grid>
+
+                                        <!-- Original Text -->
+                                        <TextBlock FontSize="14"
+                                                   Text="原文"
+                                                   Margin="0 0 0 5" />
 
                                         <TextBox AcceptsReturn="True"
                                                  BorderThickness="1"
                                                  TextWrapping="Wrap"
-                                                 Tag="请填写翻译结果"
+                                                 Tag="没有原文"
+                                                 Text="{Binding OriginalText}"
+                                                 FontSize="14"
+                                                 Margin="0 0 0 8"
+                                                 IsEnabled="False" />
+
+                                        <!-- Translated Text -->
+                                        <TextBlock FontSize="14"
+                                                   Text="翻译"
+                                                   Margin="0 0 0 5" />
+                                        <TextBox AcceptsReturn="True"
+                                                 BorderThickness="1"
+                                                 TextWrapping="Wrap"
+                                                 Tag="没有翻译结果"
                                                  Text="{Binding TranslatedText}"
                                                  FontSize="14"
-                                                 IsEnabled="False"
-                                                 VerticalAlignment="Center" />
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
+                                                 IsEnabled="False" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </TabItem>
-
             </TabControl>
         </ScrollViewer>
     </Grid>

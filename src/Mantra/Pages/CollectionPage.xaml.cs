@@ -1,14 +1,14 @@
 ﻿// ReSharper disable once CheckNamespace
 namespace Mantra;
 
-internal partial class ImageListPage
+internal partial class CollectionPage
 {
-    private ImageListViewModel ViewModel => (DataContext as ImageListViewModel)!;
+    private CollectionViewModel ViewModel => (DataContext as CollectionViewModel)!;
 
-    public ImageListPage()
+    public CollectionPage()
     {
         InitializeComponent();
-        DataContext = new ImageListViewModel();
+        DataContext = new CollectionViewModel();
     }
 
     public override void OnApplyTemplate()
