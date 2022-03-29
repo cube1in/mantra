@@ -3,22 +3,21 @@
                     xmlns:local="clr-namespace:Mantra">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/SizeChrome.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/ResizeChrome.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/Mantra;component/Controls/Resizable/ResizeChrome.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <ControlTemplate x:Key="MoveThumbTemplate" TargetType="{x:Type local:MoveThumb}">
         <Rectangle Fill="Transparent" />
     </ControlTemplate>
 
-    <Style x:Key="{x:Type local:DesignerContainer}" TargetType="{x:Type local:DesignerContainer}">
+    <Style x:Key="{x:Type local:ResizableContainer}" TargetType="{x:Type local:ResizableContainer}">
         <Setter Property="MinHeight" Value="10" />
         <Setter Property="MinWidth" Value="10" />
         <Setter Property="RenderTransformOrigin" Value="0.5, 0.5" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:DesignerContainer}">
+                <ControlTemplate TargetType="{x:Type local:ResizableContainer}">
                     <Grid DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
                         <local:MoveThumb Template="{StaticResource MoveThumbTemplate}" Cursor="SizeAll" />
                         <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />

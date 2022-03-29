@@ -33,6 +33,11 @@ internal class BoundingBox : BaseViewModel
     /// #FFDB7093
     /// </summary>
     public string Color { get; set; } = "#FFDB7093";
+    
+    /// <summary>
+    /// 字体
+    /// </summary>
+    public string? FontFamily { get; set; }
 
     /// <summary>
     /// 矩形内的源词
@@ -45,4 +50,9 @@ internal class BoundingBox : BaseViewModel
     /// 必须具有默认值，否则在传到翻译 api 时会导致插入值错误
     /// </summary>
     public string TranslatedText { get; set; } = "没有翻译结果";
+    
+    /// <summary>
+    /// 墨水
+    /// </summary>
+    public Ink? Ink { get; set; }
 }

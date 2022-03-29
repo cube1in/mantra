@@ -3,7 +3,7 @@
                     xmlns:local="clr-namespace:Mantra"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                    d:DataContext="{d:DesignInstance Type=local:DesignerContainer}"
+                    d:DataContext="{d:DesignInstance Type=local:ResizableContainer}"
                     mc:Ignorable="d">
 
     <Style TargetType="{x:Type Rectangle}" x:Key="ThumbCorner">
@@ -66,8 +66,7 @@
                                        StrokeThickness="1.5"
                                        Margin="0"
                                        Stroke="{Binding StrokeColor}"
-                                       StrokeDashArray="3">
-                            </Rectangle>
+                                       StrokeDashArray="3" />
 
                             <!-- 左上 -->
                             <Rectangle Style="{StaticResource ThumbCorner}"

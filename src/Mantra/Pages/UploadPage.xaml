@@ -13,17 +13,22 @@
 
     <!-- Must set background: https://codeinreview.com/136/enabling-drag-and-drop-over-a-grid-in-wpf/ -->
     <!-- It turns out that if you do not set a background on a UIElement, the element background will not participate in hit-testing -->
-    <Grid Margin="35" SnapsToDevicePixels="True" Drop="Grid_OnDrop" AllowDrop="True" Background="Transparent">
+    <Grid SnapsToDevicePixels="True" Margin="35 50" Drop="Grid_OnDrop" AllowDrop="True" Background="Transparent">
         <Grid.InputBindings>
             <MouseBinding Gesture="LeftClick" Command="{Binding UploadCommand}" />
         </Grid.InputBindings>
 
-        <Rectangle RadiusX="3" RadiusY="3" Stroke="Gray" StrokeThickness="2" StrokeDashArray="5" />
+        <Rectangle RadiusX="3" 
+                   RadiusY="3" 
+                   Stroke="{StaticResource DimGrayBrush}"
+                   StrokeThickness="2" 
+                   StrokeDashArray="5" />
+        
         <StackPanel Orientation="Vertical"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
             <Image Height="200" Width="250"
-                   Source="{Binding Source=media/upload.png, Converter={local:FilepathBytesConverter}}" />
+                   Source="{Binding Source=media/insert_image.png, Converter={local:FilepathBytesConverter}}" />
 
             <TextBlock Text="点击上传"
                        Foreground="DimGray"
@@ -31,7 +36,7 @@
                        Margin="0 30 0 10"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center" />
-            
+
             <TextBlock Text="或 拖拽图片文件至此区域"
                        Foreground="DimGray"
                        FontSize="18"

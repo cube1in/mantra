@@ -5,14 +5,16 @@ using System.Windows;
 // ReSharper disable once CheckNamespace
 namespace Mantra;
 
-internal class NullableConverter : BaseValueConverter<NullableConverter>
+internal class NullableVisibilityConverter : BaseValueConverter<NullableVisibilityConverter>
 {
     public override object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         return parameter switch
         {
-            "boolean" => value is not null,
-            _ => value is null ? Visibility.Hidden : Visibility.Visible
+            // Inverse
+            not null => value is not null ? Visibility.Hidden : Visibility.Visible,
+            // Default
+            null => value is null ? Visibility.Hidden : Visibility.Visible
         };
     }
 

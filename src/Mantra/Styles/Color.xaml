@@ -30,10 +30,16 @@
     </LinearGradientBrush>
 
     <!-- Text &　Button Brushes -->
-    <SolidColorBrush x:Key="BrightLightBlueBrush" Color="AliceBlue" />
-    <SolidColorBrush x:Key="LightBlueBrush" Color="#929CD6" />
-    <SolidColorBrush x:Key="NormalBlueBrush" Color="#6A75CA" />
-    <SolidColorBrush x:Key="DarkBlueBrush" Color="#4D54A3" />
+    <Color x:Key="LightBlue">#929CD6</Color>
+    <Color x:Key="BrightLightBlue">#AEB4DE</Color>
+    <Color x:Key="NormalBlue">#6A75CA</Color>
+    <Color x:Key="DarkBlue">#4D54A3</Color>
+
+    <SolidColorBrush x:Key="AliceBlueBrush" Color="AliceBlue" />
+    <SolidColorBrush x:Key="BrightLightBlueBrush" Color="{StaticResource BrightLightBlue}" />
+    <SolidColorBrush x:Key="LightBlueBrush" Color="{StaticResource LightBlue}" />
+    <SolidColorBrush x:Key="NormalBlueBrush" Color="{StaticResource NormalBlue}" />
+    <SolidColorBrush x:Key="DarkBlueBrush" Color="{StaticResource DarkBlue}" />
 
     <!-- Miscellaneous Brushes -->
     <!-- 255 255 255 -->

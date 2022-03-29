@@ -7,7 +7,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <!-- Primary Button -->
-    <Style x:Key="PrimaryFlatButtonStyle" TargetType="{x:Type Button}">
+    <Style x:Key="PrimaryButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Background" Value="{StaticResource NormalBlueBrush}" />
         <Setter Property="Foreground" Value="{StaticResource PerfectWhiteBrush}" />
@@ -55,7 +55,7 @@
     </Style>
 
     <!-- Secondary Button -->
-    <Style x:Key="SecondaryFlatButtonStyle" TargetType="{x:Type Button}">
+    <Style x:Key="SecondaryButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{StaticResource LightBlueBrush}" />
@@ -108,7 +108,7 @@
     </Style>
 
     <!-- Tertiary Button -->
-    <Style x:Key="TertiaryFlatButtonStyle" TargetType="{x:Type Button}">
+    <Style x:Key="TertiaryButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Background" Value="{StaticResource PerfectWhiteBrush}" />
         <Setter Property="Foreground" Value="{StaticResource NormalBlueBrush}" />
@@ -158,7 +158,7 @@
     </Style>
 
     <!-- Quaternary Button -->
-    <Style x:Key="QuaternaryFlatButtonStyle" TargetType="{x:Type Button}">
+    <Style x:Key="QuaternaryButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Background" Value="{StaticResource PerfectWhiteBrush}" />
         <Setter Property="Foreground" Value="{StaticResource DimGrayBrush}" />
@@ -210,7 +210,7 @@
     </Style>
 
     <!-- Icon Button -->
-    <Style x:Key="IconFlatButtonStyle" TargetType="{x:Type Button}">
+    <Style x:Key="IconButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Background" Value="{StaticResource NormalBlueBrush}" />
         <Setter Property="Foreground" Value="{StaticResource PerfectWhiteBrush}" />
@@ -261,7 +261,7 @@
     </Style>
 
     <!-- IconText Button -->
-    <Style x:Key="IconTextFlatButtonStyle" TargetType="{x:Type Button}">
+    <Style x:Key="IconTextButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Background" Value="{StaticResource NormalBlueBrush}" />
         <Setter Property="Foreground" Value="{StaticResource PerfectWhiteBrush}" />
@@ -316,6 +316,185 @@
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="Border" Property="Background" Value="{StaticResource DarkBlueBrush}" />
                         </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Primary Toggle Button -->
+    <Style x:Key="PrimaryToggleButtonStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Background" Value="{StaticResource BrightLightBlueBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource TaupeGrayBrush}" />
+        <Setter Property="Height" Value="20" />
+        <Setter Property="Width" Value="35" />
+        <Setter Property="MaxHeight" Value="20" />
+        <Setter Property="MaxWidth" Value="35" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Grid>
+                        <Border x:Name="Border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="7"
+                                Height="14"
+                                Width="35"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center">
+                            <!-- Option -->
+                            <!-- <Border.Effect> -->
+                            <!--     <DropShadowEffect ShadowDepth="0.5" Opacity="0.3" /> -->
+                            <!-- </Border.Effect> -->
+                        </Border>
+                        <Ellipse x:Name="Ellipse"
+                                 Height="20"
+                                 Width="20"
+                                 HorizontalAlignment="Left"
+                                 VerticalAlignment="Center"
+                                 Fill="{StaticResource PerfectWhiteBrush}"
+                                 Stroke="{StaticResource LightSilverBrush}"
+                                 StrokeThickness="3">
+                            <!-- Option -->
+                            <!-- <Ellipse.Effect> -->
+                            <!--     <DropShadowEffect ShadowDepth="0.5" Opacity="0.3" /> -->
+                            <!-- </Ellipse.Effect> -->
+                        </Ellipse>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <!-- EventTriggers Checked -->
+                        <EventTrigger RoutedEvent="Checked">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetName="Border"
+                                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                    To="{StaticResource NormalBlue}"
+                                                    Duration="0:0:0.2" />
+                                    <ThicknessAnimation Storyboard.TargetName="Ellipse"
+                                                        Storyboard.TargetProperty="Margin"
+                                                        To="15 0 0 0"
+                                                        Duration="0:0:0.2" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <!-- EventTriggers Unchecked -->
+                        <EventTrigger RoutedEvent="Unchecked">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetName="Border"
+                                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                    To="{StaticResource BrightLightBlue}"
+                                                    Duration="0:0:0.2" />
+                                    <ThicknessAnimation Storyboard.TargetName="Ellipse"
+                                                        Storyboard.TargetProperty="Margin"
+                                                        To="0 0 0 0"
+                                                        Duration="0:0:0.2" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+
+                        <Trigger Property="IsChecked" Value="True">
+                            <!-- <Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource NormalBlueBrush}" /> -->
+                            <Setter TargetName="Ellipse" Property="Stroke" Value="{StaticResource DarkBlueBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Secondary Toggle Button -->
+    <Style x:Key="SecondaryToggleButtonStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Background" Value="#FF5DB454" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Width" Value="80" />
+        <Setter Property="MaxHeight" Value="30" />
+        <Setter Property="MaxWidth" Value="80" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Grid>
+                        <Border x:Name="Border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="5"
+                                Height="30"
+                                Width="80"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center">
+                            <!-- Option -->
+                            <!-- <Border.Effect> -->
+                            <!--     <DropShadowEffect ShadowDepth="0.5" Opacity="0.3" /> -->
+                            <!-- </Border.Effect> -->
+                        </Border>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="OFF"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Foreground="{StaticResource PerfectWhiteBrush}"
+                                       FontWeight="Bold"
+                                       FontSize="16" />
+
+                            <TextBlock Grid.Column="1"
+                                       Text="ON"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Foreground="{StaticResource PerfectWhiteBrush}"
+                                       FontWeight="Bold"
+                                       FontSize="16" />
+                        </Grid>
+                        <Rectangle x:Name="Slider"
+                                   Height="30"
+                                   Width="40"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Center"
+                                   Fill="{StaticResource PerfectWhiteBrush}"
+                                   RadiusX="4"
+                                   RadiusY="4">
+                            <!-- Option -->
+                            <!-- <Ellipse.Effect> -->
+                            <!--     <DropShadowEffect ShadowDepth="0.5" Opacity="0.3" /> -->
+                            <!-- </Ellipse.Effect> -->
+                        </Rectangle>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <!-- EventTriggers Checked -->
+                        <EventTrigger RoutedEvent="Checked">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetName="Border"
+                                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                    To="#FFB45454"
+                                                    Duration="0:0:0.2" />
+                                    <ThicknessAnimation Storyboard.TargetName="Slider"
+                                                        Storyboard.TargetProperty="Margin"
+                                                        To="40 0 0 0"
+                                                        Duration="0:0:0.2" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <!-- EventTriggers Unchecked -->
+                        <EventTrigger RoutedEvent="Unchecked">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetName="Border"
+                                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                    To="#FF5DB454"
+                                                    Duration="0:0:0.2" />
+                                    <ThicknessAnimation Storyboard.TargetName="Slider"
+                                                        Storyboard.TargetProperty="Margin"
+                                                        To="0 0 0 0"
+                                                        Duration="0:0:0.2" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

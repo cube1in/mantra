@@ -11,7 +11,7 @@ namespace Mantra;
 /// Designer容器
 /// </summary>
 [SuppressMessage("ReSharper", "IdentifierTypo")]
-internal class DesignerContainer : ContentControl
+internal class ResizableContainer : ContentControl
 {
     #region Private Members
 
@@ -20,11 +20,6 @@ internal class DesignerContainer : ContentControl
     /// </summary>
     private ResizeAdorner? _resizeAdorner;
 
-    /// <summary>
-    /// 显示大小装饰器
-    /// </summary>
-    private SizeAdorner? _sizeAdorner;
-
     #endregion
 
     #region Dependency Properties Definitions
@@ -32,27 +27,27 @@ internal class DesignerContainer : ContentControl
     /// <summary>
     /// 显示调整大小装饰器
     /// </summary>
-    public static readonly DependencyProperty ResizeProperty =
-        DependencyProperty.Register(nameof(Resize), typeof(bool), typeof(DesignerContainer),
-            new FrameworkPropertyMetadata(false, ResizePropertyChanged));
+    public static readonly DependencyProperty ResizableProperty =
+        DependencyProperty.Register(nameof(Resizable), typeof(bool), typeof(ResizableContainer),
+            new FrameworkPropertyMetadata(false, ResizablePropertyChanged));
 
     /// <summary>
     /// 显示调整大小装饰器
     /// </summary>
-    public bool Resize
+    public bool Resizable
     {
-        get => (bool) GetValue(ResizeProperty);
-        set => SetValue(ResizeProperty, value);
+        get => (bool) GetValue(ResizableProperty);
+        set => SetValue(ResizableProperty, value);
     }
 
     /// <summary>
-    /// 当 <see cref="ResizeProperty"/> 改变后触发
+    /// 当 <see cref="ResizableProperty"/> 改变后触发
     /// </summary>
     /// <param name="d">DependencyObject</param>
     /// <param name="e">DependencyPropertyChangedEventArgs</param>
-    private static void ResizePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void ResizablePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var decorator = (DesignerContainer) d;
+        var decorator = (ResizableContainer) d;
         var showDecorator = (bool) e.NewValue;
 
         if (showDecorator) decorator.ShowResizeAdorner();
@@ -60,39 +55,10 @@ internal class DesignerContainer : ContentControl
     }
 
     /// <summary>
-    /// 显示大小装饰器
-    /// </summary>
-    public static readonly DependencyProperty SizeProperty = DependencyProperty.Register(nameof(Size),
-        typeof(bool), typeof(DesignerContainer), new FrameworkPropertyMetadata(false, SizePropertyChanged));
-
-    /// <summary>
-    /// 显示大小装饰器
-    /// </summary>
-    public bool Size
-    {
-        get => (bool) GetValue(SizeProperty);
-        set => SetValue(SizeProperty, value);
-    }
-
-    /// <summary>
-    /// 当 <see cref="SizeProperty"/> 改变后触发
-    /// </summary>
-    /// <param name="d">DependencyObject</param>
-    /// <param name="e">DependencyPropertyChangedEventArgs</param>
-    private static void SizePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var decorator = (DesignerContainer) d;
-        var showDecorator = (bool) e.NewValue;
-
-        if (showDecorator) decorator.ShowSizeAdorner();
-        else decorator.HideSizeAdorner();
-    }
-
-    /// <summary>
     /// 外边框颜色
     /// </summary>
     public static readonly DependencyProperty StrokeColorProperty =
-        DependencyProperty.Register(nameof(StrokeColor), typeof(string), typeof(DesignerContainer),
+        DependencyProperty.Register(nameof(StrokeColor), typeof(string), typeof(ResizableContainer),
             new PropertyMetadata("#FFDB7093", null, CoerceStrokeColor));
 
     /// <summary>
@@ -124,7 +90,7 @@ internal class DesignerContainer : ContentControl
     /// <summary>
     /// 默认构造函数
     /// </summary>
-    public DesignerContainer()
+    public ResizableContainer()
     {
         Unloaded += HandleUnloaded;
     }
@@ -142,14 +108,6 @@ internal class DesignerContainer : ContentControl
             adornerLayer?.Remove(_resizeAdorner);
 
             _resizeAdorner = null;
-        }
-
-        if (_sizeAdorner != null)
-        {
-            var adornerLayer = AdornerLayer.GetAdornerLayer(this);
-            adornerLayer?.Remove(_sizeAdorner);
-
-            _sizeAdorner = null;
         }
     }
 
@@ -187,38 +145,6 @@ internal class DesignerContainer : ContentControl
         }
 
         if (_resizeAdorner != null) _resizeAdorner.Visibility = Visibility.Visible;
-    }
-
-    /// <summary>
-    /// 隐藏大小装饰器
-    /// </summary>
-    private void HideSizeAdorner()
-    {
-        if (_sizeAdorner != null)
-        {
-            _sizeAdorner.Visibility = Visibility.Hidden;
-        }
-    }
-
-    /// <summary>
-    /// 显示大小装饰器
-    /// </summary>
-    private void ShowSizeAdorner()
-    {
-        if (_sizeAdorner == null)
-        {
-            var adornerLayer = AdornerLayer.GetAdornerLayer(this);
-            if (adornerLayer != null)
-            {
-                if (this.GetVisualAncestor<Canvas>() != null)
-                {
-                    _sizeAdorner = new SizeAdorner(this);
-                    adornerLayer.Add(_sizeAdorner);
-                }
-            }
-        }
-
-        if (_sizeAdorner != null) _sizeAdorner.Visibility = Visibility.Visible;
     }
 
     #endregion

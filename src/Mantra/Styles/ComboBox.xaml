@@ -168,7 +168,7 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsHighlighted" Value="True">
                             <Setter TargetName="Border" Property="Background"
-                                    Value="{StaticResource BrightLightBlueBrush}" />
+                                    Value="{StaticResource AliceBlueBrush}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Foreground" Value="{StaticResource TaupeGrayBrush}" />

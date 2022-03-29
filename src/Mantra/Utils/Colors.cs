@@ -7,6 +7,16 @@ namespace Mantra;
 internal static class Colors
 {
     /// <summary>
+    /// 将 <see cref="Color"/> 转为 <see cref="string"/>
+    /// </summary>
+    /// <param name="color"></param>
+    /// <returns></returns>
+    public static string AsString(Color color)
+    {
+        return ColorTranslator.ToHtml(color);
+    }
+    
+    /// <summary>
     /// 获取暗色
     /// </summary>
     /// <param name="borderLine">默认低于180</param>

@@ -6,7 +6,7 @@ using Mantra.Core.Models;
 // ReSharper disable once CheckNamespace
 namespace Mantra;
 
-internal class BorderThicknessConverter : BaseMultiValueConverter<BorderThicknessConverter>
+internal class BoundingBoxCompareBorderThicknessConverter : BaseMultiValueConverter<BoundingBoxCompareBorderThicknessConverter>
 {
     public override object Convert(object[] values, Type targetType, object? parameter, CultureInfo culture)
     {

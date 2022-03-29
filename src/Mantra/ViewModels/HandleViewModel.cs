@@ -9,7 +9,6 @@ using System.Windows.Input;
 using Mantra.Core.Abstractions;
 using Mantra.Core.Models;
 using Mantra.Plugins;
-using Mantra.Translators.Baidu;
 using Point = System.Windows.Point;
 
 // ReSharper disable once CheckNamespace
@@ -30,7 +29,7 @@ internal class HandleViewModel : BaseViewModel
     /// <summary>
     /// 翻译器
     /// </summary>
-    private readonly ITranslatorText _translator = new Baidu();
+    private readonly ITranslatorText _translator = new BaiduTranslatorText();
 
     #endregion
 
@@ -55,7 +54,7 @@ internal class HandleViewModel : BaseViewModel
     /// 原文字区域
     /// </summary>
     public ObservableCollection<BoundingBox> BoundingBoxCollection { get; set; } = new();
-    
+
     /// <summary>
     /// 选中文字区域
     /// </summary>
@@ -81,7 +80,7 @@ internal class HandleViewModel : BaseViewModel
     /// 移除框命令
     /// </summary>
     // ReSharper disable once UnusedMember.Global
-    public ICommand RemoveCommand => new Command<BoundingBox>(OnRemove);
+    public ICommand RemoveBoundingBoxCommand => new Command<BoundingBox>(OnRemoveBoundingBox);
 
     /// <summary>
     /// 单个翻译命令
@@ -97,6 +96,16 @@ internal class HandleViewModel : BaseViewModel
     /// 选中命令
     /// </summary>
     public ICommand SelectBoundingBoxCommand => new Command<BoundingBox>(OnSelectBoundingBox);
+
+    /// <summary>
+    /// 添加墨水命令
+    /// </summary>
+    public ICommand AddInkCommand => new Command<BoundingBox>(OnAddInk);
+
+    /// <summary>
+    /// 移除墨水命令
+    /// </summary>
+    public ICommand RemoveInkCommand => new Command<BoundingBox>(OnRemoveInk);
 
     #endregion
 
@@ -137,7 +146,7 @@ internal class HandleViewModel : BaseViewModel
 
         var boxes = await _computerVision.ReadFileStreamAsync(bytes, "eng");
         value.OriginalText = string.Join(string.Empty, from box in boxes select box.OriginalText);
-        
+
         // Set selected
         SelectedBoundingBox = value;
 
@@ -146,10 +155,10 @@ internal class HandleViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// 移除时触发
+    /// <see cref="RemoveBoundingBoxCommand"/> 时触发
     /// </summary>
     /// <param name="value"></param>
-    private void OnRemove(BoundingBox value)
+    private void OnRemoveBoundingBox(BoundingBox value)
     {
         BoundingBoxCollection.Remove(value);
         if (value == SelectedBoundingBox) SelectedBoundingBox = null;
@@ -169,9 +178,7 @@ internal class HandleViewModel : BaseViewModel
     /// </summary>
     /// <param name="value"></param>
     private void OnRemoveNewLine(BoundingBox value)
-    {
-        value.OriginalText = value.OriginalText.Replace("\n", " ").Replace("\r", " ");
-    }
+        => value.OriginalText = value.OriginalText.Replace("\n", " ").Replace("\r", " ");
 
     /// <summary>
     /// <see cref="SelectBoundingBoxCommand"/> 时触发
@@ -179,6 +186,35 @@ internal class HandleViewModel : BaseViewModel
     /// <param name="value"></param>
     private void OnSelectBoundingBox(BoundingBox value)
         => SelectedBoundingBox = value;
+
+    /// <summary>
+    /// <see cref="AddInkCommand"/> 时触发
+    /// </summary>
+    /// <param name="value"></param>
+    private void OnAddInk(BoundingBox value)
+    {
+        var bitmap = CropImage(ImgSource!,
+            new Rectangle
+            {
+                X = (int) value.Left,
+                Y = (int) value.Top,
+                Width = (int) value.Width,
+                Height = (int) value.Height
+            });
+
+        var color = bitmap.GetPixel(0, 0);
+        value.Ink = new Ink
+        {
+            Background = Colors.AsString(color)
+        };
+    }
+
+    /// <summary>
+    /// <see cref="RemoveInkCommand"/> 时触发
+    /// </summary>
+    /// <param name="value"></param>
+    private void OnRemoveInk(BoundingBox value)
+        => value.Ink = null;
 
     /// <summary>
     /// Set image original size
@@ -301,7 +337,8 @@ internal class HandleViewModel : BaseViewModel
     public void MouseUpHandler(object sender, MouseButtonEventArgs e)
     {
         // 如果小于 MinSize 将不会被创建
-        if (_createdBoundingBox != null && (_createdBoundingBox.Width <= MinSize || _createdBoundingBox.Height <= MinSize))
+        if (_createdBoundingBox != null &&
+            (_createdBoundingBox.Width <= MinSize || _createdBoundingBox.Height <= MinSize))
         {
             BoundingBoxCollection.Remove(_createdBoundingBox);
         }

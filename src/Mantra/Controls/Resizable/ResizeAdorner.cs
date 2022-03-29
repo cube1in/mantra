@@ -49,7 +49,7 @@ internal class ResizeAdorner : Adorner
 
     protected override Size ArrangeOverride(Size finalSize)
     {
-        _chrome.Arrange(new System.Windows.Rect(finalSize));
+        _chrome.Arrange(new Rect(finalSize));
         return finalSize;
     }
 

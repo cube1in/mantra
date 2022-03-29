@@ -12,12 +12,13 @@
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Color.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Text.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Button.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/DesignerContainer.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/ResizableContainer.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/ScrollViewer.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/TabControl.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Menu.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/ToolTip.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Combobox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Slider.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

@@ -8,10 +8,9 @@ using Mantra.Core.Abstractions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-// ReSharper disable InconsistentNaming
-namespace Mantra.Translators.Baidu;
+namespace Mantra.Plugins;
 
-internal class Baidu : ITranslatorText
+internal class BaiduTranslatorText : ITranslatorText
 {
     #region Private Members
 
@@ -28,12 +27,12 @@ internal class Baidu : ITranslatorText
     /// <summary>
     /// 百度云中开通对应服务应用的 API Key 建议开通应用的时候多选服务
     /// </summary>
-    private readonly string _clientId;
+    private static readonly string ClientId;
 
     /// <summary>
     /// 百度云中开通对应服务应用的 Secret Key
     /// </summary>
-    private readonly string _clientSecret;
+    private static readonly string ClientSecret;
 
     /// <summary>
     /// Http Client
@@ -42,14 +41,14 @@ internal class Baidu : ITranslatorText
 
     #endregion
 
-    public Baidu()
+    static BaiduTranslatorText()
     {
         const string path = @"C:\Users\sou1m\Documents\baidu_translator.json";
         if (!File.Exists(path)) throw new FileNotFoundException();
 
         var jo = JObject.Parse(File.ReadAllText(path));
-        _clientId = jo["ClientId"]!.Value<string>()!;
-        _clientSecret = jo["ClientSecret"]!.Value<string>()!;
+        ClientId = jo["ClientId"]!.Value<string>()!;
+        ClientSecret = jo["ClientSecret"]!.Value<string>()!;
     }
 
     private async Task<string?> GetTokenAsync()
@@ -57,8 +56,8 @@ internal class Baidu : ITranslatorText
         var paraList = new List<KeyValuePair<string, string>>
         {
             new("grant_type", "client_credentials"),
-            new("client_id", _clientId),
-            new("client_secret", _clientSecret)
+            new("client_id", ClientId),
+            new("client_secret", ClientSecret)
         };
 
         var response = await Client.PostAsync(AuthHost, new FormUrlEncodedContent(paraList));
@@ -77,6 +76,8 @@ internal class Baidu : ITranslatorText
 
     public async Task<string> TranslateAsync(string input, string from, string to)
     {
+        if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+
         var jsonString = $@"{{""q"":""{input}"",""from"":""{from}"",""to"":""{to}""}}";
         var response = await Client.PostAsync($"{TransHost}?access_token={await GetTokenAsync()}",
             new StringContent(jsonString, null, "application/json"));
@@ -107,4 +108,45 @@ internal class Baidu : ITranslatorText
     // }
 
     #endregion
+}
+
+internal class Token
+{
+    /// <summary>
+    /// 要获取的Access Token
+    /// </summary>
+    public string AccessToken { get; set; } = null!;
+
+    /// <summary>
+    /// Refresh Token
+    /// </summary>
+    public string RefreshToken { get; set; } = null!;
+
+    /// <summary>
+    /// Access Token的有效期(秒为单位，有效期30天)
+    /// </summary>
+    public long ExpiresIn { get; set; }
+}
+
+internal class TranslateResponse
+{
+    public string LogId { get; set; } = null!;
+
+    public TranslateResult Result { get; set; } = null!;
+}
+
+internal class TranslateResult
+{
+    public IEnumerable<TranslateContext> TransResult { get; set; } = null!;
+
+    public string From { get; set; } = null!;
+
+    public string To { get; set; } = null!;
+}
+
+internal class TranslateContext
+{
+    public string Dst { get; set; } = null!;
+
+    public string Src { get; set; } = null!;
 }

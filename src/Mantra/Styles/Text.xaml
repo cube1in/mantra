@@ -14,7 +14,7 @@
         <Setter Property="BorderThickness" Value="2" />
         <Setter Property="BorderBrush" Value="{StaticResource  LightSilverBrush}" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-        <Setter Property="MinWidth" Value="120" />
+        <Setter Property="MinWidth" Value="60" />
         <Setter Property="MinHeight" Value="20" />
         <Setter Property="AllowDrop" Value="true" />
         <Setter Property="Padding" Value="6 3" />
@@ -102,7 +102,7 @@
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="FontFamily" Value="Verdana" />
         <Setter Property="PasswordChar" Value="●" />
-        <Setter Property="MinWidth" Value="120" />
+        <Setter Property="MinWidth" Value="60" />
         <Setter Property="MinHeight" Value="20" />
         <Setter Property="AllowDrop" Value="true" />
         <Setter Property="BorderThickness" Value="2" />

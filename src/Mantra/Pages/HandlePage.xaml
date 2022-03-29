@@ -58,30 +58,78 @@
                     </ItemsControl.ItemContainerStyle>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <!-- Must set mode is two way, otherwise not update -->
-                            <local:DesignerContainer Resize="True"
-                                                     StrokeColor="{Binding Color}"
-                                                     Width="{Binding Width}"
-                                                     Height="{Binding Height}">
+                            <!-- ResizableContainer -->
+                            <local:ResizableContainer StrokeColor="{Binding Color}"
+                                                      Width="{Binding Width}"
+                                                      Height="{Binding Height}"
+                                                      Resizable="True">
+                                <Grid>
+                                    <StackPanel SnapsToDevicePixels="True"
+                                                Margin="0 0 0 -25"
+                                                Orientation="Horizontal"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Bottom"
+                                                Visibility="{Binding Ink, Converter={local:NullableVisibilityConverter}, ConverterParameter=true}">
+                                        <Button Content="X"
+                                                Background="Red"
+                                                Command="{Binding DataContext.RemoveBoundingBoxCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                CommandParameter="{Binding}">
+                                            <Button.LayoutTransform>
+                                                <ScaleTransform ScaleX="1.5" />
+                                            </Button.LayoutTransform>
+                                        </Button>
+                                        <Button Content="识别文字"
+                                                Command="{Binding DataContext.SingleOCRCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                CommandParameter="{Binding}" />
+                                    </StackPanel>
 
-                                <StackPanel SnapsToDevicePixels="True"
-                                            Margin="0 0 0 -25"
-                                            Orientation="Horizontal"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Bottom">
-                                    <Button Content="X"
-                                            Background="Red"
-                                            Command="{Binding DataContext.RemoveCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
-                                            CommandParameter="{Binding}">
-                                        <Button.LayoutTransform>
-                                            <ScaleTransform ScaleX="1.5" />
-                                        </Button.LayoutTransform>
-                                    </Button>
-                                    <Button Content="识别文字"
-                                            Command="{Binding DataContext.SingleOCRCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
-                                            CommandParameter="{Binding}" />
-                                </StackPanel>
-                            </local:DesignerContainer>
+                                    <TextBlock Text="{Binding TranslatedText}"
+                                               Background="{Binding Ink.Background}"
+                                               Foreground="{Binding Ink.Foreground}"
+                                               FontSize="{Binding Ink.FontSize}"
+                                               FontWeight="{Binding Ink.FontWeight}"
+                                               Visibility="{Binding Ink, Converter={local:NullableVisibilityConverter}}"
+                                               TextWrapping="Wrap"
+                                               IsHitTestVisible="False" />
+
+                                    <!-- <ItemsControl Background="{Binding Ink.Background}" -->
+                                    <!--               ItemsSource="{Binding TranslatedText}" -->
+                                    <!--               Visibility="{Binding Ink, Converter={local:NullableVisibilityConverter}}" -->
+                                    <!--               IsHitTestVisible="False"> -->
+                                    <!--     <ItemsControl.ItemsPanel> -->
+                                    <!--         <ItemsPanelTemplate> -->
+                                    <!--             <WrapPanel Orientation="{Binding Ink.Orientation}" /> -->
+                                    <!--         </ItemsPanelTemplate> -->
+                                    <!--     </ItemsControl.ItemsPanel> -->
+                                    <!--     <ItemsControl.ItemTemplate> -->
+                                    <!--         <DataTemplate> -->
+                                    <!--             <TextBlock HorizontalAlignment="Center" -->
+                                    <!--                        VerticalAlignment="Center" -->
+                                    <!--                        Text="{Binding}" -->
+                                    <!--                        Foreground="{Binding DataContext.Ink.Foreground, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" -->
+                                    <!--                        FontSize="{Binding DataContext.Ink.FontSize, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" -->
+                                    <!--                        FontWeight="{Binding DataContext.Ink.FontWeight, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"> -->
+                                    <!-- -->
+                                    <!--                 <TextBlock.Resources> -->
+                                    <!--                     <local:CharacterSpacingMarginConverter -->
+                                    <!--                         x:Key="CharacterSpacingMarginConverter" /> -->
+                                    <!--                 </TextBlock.Resources> -->
+                                    <!--                 <TextBlock.Margin> -->
+                                    <!--                     <MultiBinding -->
+                                    <!--                         Converter="{StaticResource CharacterSpacingMarginConverter}"> -->
+                                    <!--                         <Binding Path="DataContext.Ink.HorizontalCharacterSpacing" -->
+                                    <!--                                  RelativeSource="{RelativeSource AncestorType={x:Type ItemsControl}}" /> -->
+                                    <!--                         <Binding Path="DataContext.Ink.VerticalCharacterSpacing" -->
+                                    <!--                                  RelativeSource="{RelativeSource AncestorType={x:Type ItemsControl}}" /> -->
+                                    <!--                     </MultiBinding> -->
+                                    <!--                 </TextBlock.Margin> -->
+                                    <!--             </TextBlock> -->
+                                    <!--         </DataTemplate> -->
+                                    <!--     </ItemsControl.ItemTemplate> -->
+                                    <!-- </ItemsControl> -->
+                                </Grid>
+
+                            </local:ResizableContainer>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
@@ -99,15 +147,13 @@
             <TabControl Margin="10 0">
                 <!-- OCR TabItem -->
                 <TabItem Header="文字识别"
-                         FontSize="16"
-                         DataContext="{Binding SelectedBoundingBox}"
-                         d:DataContext="{d:DesignInstance Type=core:BoundingBox}">
+                         FontSize="16">
 
-                    <StackPanel SnapsToDevicePixels="True" Visibility="{Binding Converter={local:NullableConverter}}">
+                    <StackPanel SnapsToDevicePixels="True"
+                                Visibility="{Binding SelectedBoundingBox, Converter={local:NullableVisibilityConverter}}">
                         <!-- Original Text -->
                         <Border CornerRadius="5" Background="{StaticResource WhiteSmokeBrush}" Margin="0 0 0 25">
-                            <StackPanel SnapsToDevicePixels="True"
-                                        Margin="10">
+                            <StackPanel SnapsToDevicePixels="True" Margin="10">
                                 <Grid SnapsToDevicePixels="True" Margin="0 0 0 5">
                                     <TextBlock HorizontalAlignment="Left"
                                                VerticalAlignment="Center"
@@ -116,25 +162,24 @@
                                                FontWeight="Bold" />
 
                                     <Button HorizontalAlignment="Right"
-                                            Style="{StaticResource QuaternaryFlatButtonStyle}"
+                                            Style="{StaticResource QuaternaryButtonStyle}"
                                             Content="去除换行"
                                             ToolTip="清除换行"
-                                            Command="{Binding DataContext.RemoveNewLineCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                            CommandParameter="{Binding}" />
+                                            Command="{Binding RemoveNewLineCommand}"
+                                            CommandParameter="{Binding SelectedBoundingBox}" />
                                 </Grid>
                                 <TextBox AcceptsReturn="True"
                                          BorderThickness="1"
                                          TextWrapping="Wrap"
                                          Tag="请填写原文内容"
-                                         Text="{Binding OriginalText}"
+                                         Text="{Binding SelectedBoundingBox.OriginalText, UpdateSourceTrigger=PropertyChanged}"
                                          FontSize="14" />
                             </StackPanel>
                         </Border>
 
                         <!-- Translated Text -->
                         <Border CornerRadius="5" Background="{StaticResource WhiteSmokeBrush}" Margin="0 0 0 25">
-                            <StackPanel SnapsToDevicePixels="True"
-                                        Margin="10">
+                            <StackPanel SnapsToDevicePixels="True" Margin="10">
                                 <TextBlock HorizontalAlignment="Left"
                                            VerticalAlignment="Center"
                                            Text="翻译"
@@ -167,18 +212,197 @@
                                     </ComboBox>
                                     <Button Grid.Column="2"
                                             HorizontalAlignment="Right"
-                                            Style="{StaticResource PrimaryFlatButtonStyle}"
+                                            Style="{StaticResource PrimaryButtonStyle}"
                                             Content="翻译"
                                             ToolTip="翻译"
-                                            Command="{Binding DataContext.SingleTranslateCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                            CommandParameter="{Binding}" />
+                                            Command="{Binding SingleTranslateCommand}"
+                                            CommandParameter="{Binding SelectedBoundingBox}" />
                                 </Grid>
                                 <TextBox AcceptsReturn="True"
                                          BorderThickness="1"
                                          TextWrapping="Wrap"
                                          Tag="请填写翻译结果"
-                                         Text="{Binding TranslatedText}"
+                                         Text="{Binding SelectedBoundingBox.TranslatedText, UpdateSourceTrigger=PropertyChanged}"
                                          FontSize="14" />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Clean Original Text -->
+                        <Border CornerRadius="5" Background="{StaticResource WhiteSmokeBrush}" Margin="0 0 0 25">
+
+                            <StackPanel SnapsToDevicePixels="True" Margin="10">
+                                <!-- Title -->
+                                <TextBlock HorizontalAlignment="Left"
+                                           VerticalAlignment="Center"
+                                           Text="消除原文"
+                                           FontSize="16"
+                                           FontWeight="Bold"
+                                           Margin="0 0 0 5" />
+
+                                <!-- Buttons -->
+                                <Grid SnapsToDevicePixels="True" Margin="0 0 0 5">
+                                    <ToggleButton HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Style="{StaticResource SecondaryToggleButtonStyle}"
+                                                  Content="启动消除"
+                                                  ToolTip="启动消除原文"
+                                                  Command="{Binding　AddInkCommand}"
+                                                  CommandParameter="{Binding SelectedBoundingBox}"
+                                                  Margin="0 0 0 5" />
+
+                                    <Button HorizontalAlignment="Right"
+                                            Style="{StaticResource PrimaryButtonStyle}"
+                                            Content="自动消除"
+                                            ToolTip="自动消除原文"
+                                            Command="{Binding　AddInkCommand}"
+                                            CommandParameter="{Binding SelectedBoundingBox}" />
+                                </Grid>
+
+                                <!-- Slider -->
+                                <Border SnapsToDevicePixels="True"
+                                        CornerRadius="5"
+                                        Background="{StaticResource PerfectWhiteBrush}"
+                                        Margin="0 0 0 5">
+                                    <StackPanel SnapsToDevicePixels="True" Margin="10">
+                                        <TextBlock HorizontalAlignment="Left"
+                                                   VerticalAlignment="Center"
+                                                   Text="笔触大小"
+                                                   FontSize="15"
+                                                   Margin="0 0 0 5" />
+
+                                        <Grid SnapsToDevicePixels="True">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="50" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <!-- IsSnapToTickEnabled="True" -->
+                                            <Slider x:Name="RubberSlider"
+                                                    VerticalAlignment="Center"
+                                                    Minimum="3"
+                                                    Maximum="100"
+                                                    TickFrequency="1"
+                                                    IsMoveToPointEnabled="True" />
+                                            <Border Grid.Column="2"
+                                                    BorderBrush="{StaticResource LightSilverBrush}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="5">
+                                                <TextBox BorderThickness="1"
+                                                         MaxLines="1"
+                                                         IsEnabled="False"
+                                                         Text="{Binding Value, ElementName=RubberSlider, StringFormat=N0}" />
+                                            </Border>
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Text Font -->
+                        <Border CornerRadius="5" Background="{StaticResource WhiteSmokeBrush}" Margin="0 0 0 25">
+
+                            <StackPanel SnapsToDevicePixels="True" Margin="10">
+                                <!-- Title -->
+                                <TextBlock HorizontalAlignment="Left"
+                                           VerticalAlignment="Center"
+                                           Text="字体样式"
+                                           FontSize="16"
+                                           FontWeight="Bold"
+                                           Margin="0 0 0 5" />
+
+                                <!-- Font FontFamily -->
+                                <Grid Margin="0 0 0 5">
+                                    <ComboBox HorizontalAlignment="Left" ToolTip="字体">
+                                        <ComboBoxItem Content="Comic Sans MS" IsSelected="True" />
+                                        <ComboBoxItem Content="Arial Black" />
+                                        <ComboBoxItem Content="MV Boli" />
+                                    </ComboBox>
+
+                                    <TextBox HorizontalAlignment="Right"
+                                             BorderBrush="{StaticResource LightSilverBrush}"
+                                             BorderThickness="1"
+                                             MaxLines="1"
+                                             local:IsOnlyNumber.Value="True"
+                                             local:MaxNumber.Value="100" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- HorizontalCharacter Spacing -->
+                        <Border CornerRadius="5" Background="{StaticResource WhiteSmokeBrush}" Margin="0 0 0 25">
+
+                            <StackPanel SnapsToDevicePixels="True" Margin="10">
+                                <!-- Title -->
+                                <TextBlock HorizontalAlignment="Left"
+                                           VerticalAlignment="Center"
+                                           Text="字间距设置"
+                                           FontSize="16"
+                                           FontWeight="Bold"
+                                           Margin="0 0 0 5" />
+
+                                <Grid SnapsToDevicePixels="True">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <!-- IsSnapToTickEnabled="True" -->
+                                    <Slider x:Name="HorizontalCharacterSpacingSlider"
+                                            VerticalAlignment="Center"
+                                            Minimum="0"
+                                            Maximum="5"
+                                            TickFrequency="0.1"
+                                            IsMoveToPointEnabled="True" />
+                                    <Border Grid.Column="2"
+                                            BorderBrush="{StaticResource LightSilverBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="5">
+                                        <TextBox BorderThickness="1"
+                                                 MaxLines="1"
+                                                 IsEnabled="False"
+                                                 Text="{Binding Value, ElementName=HorizontalCharacterSpacingSlider, StringFormat=N1}" />
+                                    </Border>
+                                </Grid>
+
+                            </StackPanel>
+                        </Border>
+
+                        <!-- VerticalCharacter Spacing -->
+                        <Border CornerRadius="5" Background="{StaticResource WhiteSmokeBrush}" Margin="0 0 0 25">
+
+                            <StackPanel SnapsToDevicePixels="True" Margin="10">
+                                <!-- Title -->
+                                <TextBlock HorizontalAlignment="Left"
+                                           VerticalAlignment="Center"
+                                           Text="行间距设置"
+                                           FontSize="16"
+                                           FontWeight="Bold"
+                                           Margin="0 0 0 5" />
+
+                                <Grid SnapsToDevicePixels="True">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <!-- IsSnapToTickEnabled="True" -->
+                                    <Slider x:Name="VerticalCharacterSpacingSlider"
+                                            VerticalAlignment="Center"
+                                            Minimum="0"
+                                            Maximum="5"
+                                            TickFrequency="0.1"
+                                            IsMoveToPointEnabled="True" />
+                                    <Border Grid.Column="2"
+                                            BorderBrush="{StaticResource LightSilverBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="5">
+                                        <TextBox BorderThickness="1"
+                                                 MaxLines="1"
+                                                 IsEnabled="False"
+                                                 Text="{Binding Value, ElementName=VerticalCharacterSpacingSlider, StringFormat=N1}" />
+                                    </Border>
+                                </Grid>
+
                             </StackPanel>
                         </Border>
                     </StackPanel>
@@ -225,12 +449,13 @@
                                         BorderBrush="{StaticResource DarkBlueBrush}">
 
                                     <Border.Resources>
-                                        <local:BorderThicknessConverter
-                                            x:Key="BorderThicknessConverter" />
+                                        <local:BoundingBoxCompareBorderThicknessConverter
+                                            x:Key="BoundingBoxCompareBorderThicknessConverter" />
                                     </Border.Resources>
 
                                     <Border.BorderThickness>
-                                        <MultiBinding Converter="{StaticResource BorderThicknessConverter}">
+                                        <MultiBinding
+                                            Converter="{StaticResource BoundingBoxCompareBorderThicknessConverter}">
                                             <Binding Path="DataContext.SelectedBoundingBox"
                                                      RelativeSource="{RelativeSource AncestorType=ItemsControl}" />
                                             <Binding Path="DataContext"
@@ -247,7 +472,7 @@
 
                                     <!-- Content Item -->
                                     <StackPanel SnapsToDevicePixels="True" Margin="10">
-                                        
+
                                         <Grid SnapsToDevicePixels="True" Margin="0 0 0 10">
                                             <!-- Index -->
                                             <TextBlock FontSize="14"
@@ -270,7 +495,7 @@
                                                     </MultiBinding>
                                                 </TextBlock.Text>
                                             </TextBlock>
-                                            
+
                                             <!-- Delete Button -->
                                             <Button SnapsToDevicePixels="True"
                                                     Background="Transparent"
@@ -278,13 +503,14 @@
                                                     BorderThickness="0"
                                                     HorizontalAlignment="Right"
                                                     VerticalAlignment="Center"
-                                                    Command="{Binding DataContext.RemoveCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
-                                                    CommandParameter="{Binding}">
+                                                    Command="{Binding DataContext.RemoveBoundingBoxCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                    CommandParameter="{Binding}"
+                                                    ToolTip="删除">
                                                 <Image SnapsToDevicePixels="True"
                                                        Stretch="Fill"
                                                        Width="22"
                                                        Height="22"
-                                                       Source="{Binding Source=media/delete.png, Converter={local:FilepathBytesConverter}}"/>
+                                                       Source="{Binding Source=media/delete.png, Converter={local:FilepathBytesConverter}}" />
                                             </Button>
                                         </Grid>
 
