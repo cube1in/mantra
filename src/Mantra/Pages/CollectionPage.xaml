@@ -52,7 +52,7 @@
                                     CommandParameter="{Binding}"
                                     Margin="0 2 2 0">
                                 <Image
-                                    Source="{Binding Source=media/close_small.png, Converter={local:FilepathBytesConverter}}"
+                                    Source="{Binding Source=media/close_small.png, Converter={local:FilepathToBytesConverter}}"
                                     Width="23"
                                     Height="23" />
                             </Button>
@@ -75,7 +75,7 @@
 
                     <Rectangle.Fill>
                         <ImageBrush
-                            ImageSource="{Binding Source=media/image_add.png, Converter={local:FilepathBytesConverter}}"
+                            ImageSource="{Binding Source=media/image_add.png, Converter={local:FilepathToBytesConverter}}"
                             Opacity="0.3"
                             Stretch="Fill"
                             Viewport="0.25 0.25 0.5 0.5" />

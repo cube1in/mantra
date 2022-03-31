@@ -304,6 +304,8 @@ internal class HandleViewModel : BaseViewModel
         // 导致无法触发 MouseUp 事件。
         // 当一个对象捕获鼠标时，所有与鼠标相关的事件都被视为具有鼠标捕获的对象执行该事件，即使鼠标指针位于另一个对象之上。
         el.CaptureMouse();
+
+        SelectedBoundingBox = _createdBoundingBox;
     }
 
     /// <summary>

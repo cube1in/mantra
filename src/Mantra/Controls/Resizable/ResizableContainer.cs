@@ -11,7 +11,7 @@ namespace Mantra;
 /// Designer容器
 /// </summary>
 [SuppressMessage("ReSharper", "IdentifierTypo")]
-internal class ResizableContainer : ContentControl
+internal class ResizableContainer : RadioButton
 {
     #region Private Members
 
@@ -23,36 +23,6 @@ internal class ResizableContainer : ContentControl
     #endregion
 
     #region Dependency Properties Definitions
-
-    /// <summary>
-    /// 显示调整大小装饰器
-    /// </summary>
-    public static readonly DependencyProperty ResizableProperty =
-        DependencyProperty.Register(nameof(Resizable), typeof(bool), typeof(ResizableContainer),
-            new FrameworkPropertyMetadata(false, ResizablePropertyChanged));
-
-    /// <summary>
-    /// 显示调整大小装饰器
-    /// </summary>
-    public bool Resizable
-    {
-        get => (bool) GetValue(ResizableProperty);
-        set => SetValue(ResizableProperty, value);
-    }
-
-    /// <summary>
-    /// 当 <see cref="ResizableProperty"/> 改变后触发
-    /// </summary>
-    /// <param name="d">DependencyObject</param>
-    /// <param name="e">DependencyPropertyChangedEventArgs</param>
-    private static void ResizablePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var decorator = (ResizableContainer) d;
-        var showDecorator = (bool) e.NewValue;
-
-        if (showDecorator) decorator.ShowResizeAdorner();
-        else decorator.HideResizeAdorner();
-    }
 
     /// <summary>
     /// 外边框颜色
@@ -96,40 +66,9 @@ internal class ResizableContainer : ContentControl
     }
 
     /// <summary>
-    /// 处理卸载
+    /// Override OnApplyTemplate
     /// </summary>
-    /// <param name="sender">object</param>
-    /// <param name="e">RoutedEventArgs</param>
-    private void HandleUnloaded(object sender, RoutedEventArgs e)
-    {
-        if (_resizeAdorner != null)
-        {
-            var adornerLayer = AdornerLayer.GetAdornerLayer(this);
-            adornerLayer?.Remove(_resizeAdorner);
-
-            _resizeAdorner = null;
-        }
-    }
-
-    #endregion
-
-    #region Private Methods
-
-    /// <summary>
-    /// 隐藏装饰器
-    /// </summary>
-    private void HideResizeAdorner()
-    {
-        if (_resizeAdorner != null)
-        {
-            _resizeAdorner.Visibility = Visibility.Hidden;
-        }
-    }
-
-    /// <summary>
-    /// 显示调整大小装饰器
-    /// </summary>
-    private void ShowResizeAdorner()
+    public override void OnApplyTemplate()
     {
         if (_resizeAdorner == null)
         {
@@ -145,6 +84,22 @@ internal class ResizableContainer : ContentControl
         }
 
         if (_resizeAdorner != null) _resizeAdorner.Visibility = Visibility.Visible;
+    }
+
+    /// <summary>
+    /// 处理卸载
+    /// </summary>
+    /// <param name="sender">object</param>
+    /// <param name="e">RoutedEventArgs</param>
+    private void HandleUnloaded(object sender, RoutedEventArgs e)
+    {
+        if (_resizeAdorner != null)
+        {
+            var adornerLayer = AdornerLayer.GetAdornerLayer(this);
+            adornerLayer?.Remove(_resizeAdorner);
+
+            _resizeAdorner = null;
+        }
     }
 
     #endregion

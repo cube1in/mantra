@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 
 // ReSharper disable once CheckNamespace
 namespace Mantra;
@@ -34,6 +35,22 @@ internal class MoveThumb : Thumb
 
             Canvas.SetLeft(element, left + e.HorizontalChange);
             Canvas.SetTop(element, top + e.VerticalChange);
+        }
+    }
+
+    #endregion
+
+    #region Override Methods
+
+    protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
+    {
+        RaiseEvent(e);
+        if (DataContext is ToggleButton button)
+        {
+            // HitTest cannot be used in the container because we need MoveThumb always exist
+            // So, override the OnMouseDoubleClick method of MoveThumb to support DoubleClick
+            button.IsChecked = true;
+            button.Command.Execute(button.CommandParameter);
         }
     }
 

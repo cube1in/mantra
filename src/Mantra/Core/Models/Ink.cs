@@ -53,4 +53,9 @@ internal class Ink
     /// Vertical
     /// </summary>
     public string Orientation { get; set; } = "Horizontal";
+
+    /// <summary>
+    /// 水平对齐
+    /// </summary>
+    public string HorizontalAlignment { get; set; } = "Left";
 }

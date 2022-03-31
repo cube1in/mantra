@@ -62,14 +62,16 @@
                             <local:ResizableContainer StrokeColor="{Binding Color}"
                                                       Width="{Binding Width}"
                                                       Height="{Binding Height}"
-                                                      Resizable="True">
+                                                      Command="{Binding DataContext.SelectBoundingBoxCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                      CommandParameter="{Binding}"
+                                                      GroupName="ResizableContainer">
                                 <Grid>
                                     <StackPanel SnapsToDevicePixels="True"
                                                 Margin="0 0 0 -25"
                                                 Orientation="Horizontal"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Bottom"
-                                                Visibility="{Binding Ink, Converter={local:NullableVisibilityConverter}, ConverterParameter=true}">
+                                                Visibility="{Binding Ink, Converter={local:NullToVisibilityConverter}, ConverterParameter=true}">
                                         <Button Content="X"
                                                 Background="Red"
                                                 Command="{Binding DataContext.RemoveBoundingBoxCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
@@ -83,52 +85,36 @@
                                                 CommandParameter="{Binding}" />
                                     </StackPanel>
 
-                                    <TextBlock Text="{Binding TranslatedText}"
-                                               Background="{Binding Ink.Background}"
-                                               Foreground="{Binding Ink.Foreground}"
-                                               FontSize="{Binding Ink.FontSize}"
-                                               FontWeight="{Binding Ink.FontWeight}"
-                                               Visibility="{Binding Ink, Converter={local:NullableVisibilityConverter}}"
-                                               TextWrapping="Wrap"
-                                               IsHitTestVisible="False" />
-
-                                    <!-- <ItemsControl Background="{Binding Ink.Background}" -->
-                                    <!--               ItemsSource="{Binding TranslatedText}" -->
-                                    <!--               Visibility="{Binding Ink, Converter={local:NullableVisibilityConverter}}" -->
-                                    <!--               IsHitTestVisible="False"> -->
-                                    <!--     <ItemsControl.ItemsPanel> -->
-                                    <!--         <ItemsPanelTemplate> -->
-                                    <!--             <WrapPanel Orientation="{Binding Ink.Orientation}" /> -->
-                                    <!--         </ItemsPanelTemplate> -->
-                                    <!--     </ItemsControl.ItemsPanel> -->
-                                    <!--     <ItemsControl.ItemTemplate> -->
-                                    <!--         <DataTemplate> -->
-                                    <!--             <TextBlock HorizontalAlignment="Center" -->
-                                    <!--                        VerticalAlignment="Center" -->
-                                    <!--                        Text="{Binding}" -->
-                                    <!--                        Foreground="{Binding DataContext.Ink.Foreground, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" -->
-                                    <!--                        FontSize="{Binding DataContext.Ink.FontSize, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" -->
-                                    <!--                        FontWeight="{Binding DataContext.Ink.FontWeight, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"> -->
-                                    <!-- -->
-                                    <!--                 <TextBlock.Resources> -->
-                                    <!--                     <local:CharacterSpacingMarginConverter -->
-                                    <!--                         x:Key="CharacterSpacingMarginConverter" /> -->
-                                    <!--                 </TextBlock.Resources> -->
-                                    <!--                 <TextBlock.Margin> -->
-                                    <!--                     <MultiBinding -->
-                                    <!--                         Converter="{StaticResource CharacterSpacingMarginConverter}"> -->
-                                    <!--                         <Binding Path="DataContext.Ink.HorizontalCharacterSpacing" -->
-                                    <!--                                  RelativeSource="{RelativeSource AncestorType={x:Type ItemsControl}}" /> -->
-                                    <!--                         <Binding Path="DataContext.Ink.VerticalCharacterSpacing" -->
-                                    <!--                                  RelativeSource="{RelativeSource AncestorType={x:Type ItemsControl}}" /> -->
-                                    <!--                     </MultiBinding> -->
-                                    <!--                 </TextBlock.Margin> -->
-                                    <!--             </TextBlock> -->
-                                    <!--         </DataTemplate> -->
-                                    <!--     </ItemsControl.ItemTemplate> -->
-                                    <!-- </ItemsControl> -->
+                                    <Border SnapsToDevicePixels="True"
+                                            Background="{Binding Ink.Background}"
+                                            IsHitTestVisible="False"
+                                            Visibility="{Binding Ink, Converter={local:NullToVisibilityConverter}}">
+                                        <TextBlock Text="{Binding TranslatedText}"
+                                                   Background="{Binding Ink.Background}"
+                                                   Foreground="{Binding Ink.Foreground}"
+                                                   FontSize="{Binding Ink.FontSize}"
+                                                   FontWeight="{Binding Ink.FontWeight}"
+                                                   HorizontalAlignment="{Binding Ink.HorizontalAlignment}"
+                                                   TextWrapping="Wrap"
+                                                   IsHitTestVisible="False" />
+                                    </Border>
                                 </Grid>
 
+                                <!-- IsClicked Property -->
+                                <local:ResizableContainer.Resources>
+                                    <local:CompareBoundingBoxToBooleanConverter
+                                        x:Key="CompareBoundingBoxToBooleanConverter" />
+                                </local:ResizableContainer.Resources>
+                                
+                                <local:ResizableContainer.IsChecked>
+                                    <MultiBinding
+                                        Converter="{StaticResource CompareBoundingBoxToBooleanConverter}">
+                                        <Binding Path="DataContext.SelectedBoundingBox"
+                                                 RelativeSource="{RelativeSource AncestorType=ItemsControl}"
+                                                 Mode="TwoWay" />
+                                        <Binding Path="DataContext" RelativeSource="{RelativeSource Mode=Self}" />
+                                    </MultiBinding>
+                                </local:ResizableContainer.IsChecked>
                             </local:ResizableContainer>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -150,7 +136,7 @@
                          FontSize="16">
 
                     <StackPanel SnapsToDevicePixels="True"
-                                Visibility="{Binding SelectedBoundingBox, Converter={local:NullableVisibilityConverter}}">
+                                Visibility="{Binding SelectedBoundingBox, Converter={local:NullToVisibilityConverter}}">
                         <!-- Original Text -->
                         <Border CornerRadius="5" Background="{StaticResource WhiteSmokeBrush}" Margin="0 0 0 25">
                             <StackPanel SnapsToDevicePixels="True" Margin="10">
@@ -239,67 +225,46 @@
                                            FontWeight="Bold"
                                            Margin="0 0 0 5" />
 
-                                <!-- Buttons -->
-                                <Grid SnapsToDevicePixels="True" Margin="0 0 0 5">
-                                    <ToggleButton HorizontalAlignment="Left"
-                                                  VerticalAlignment="Center"
-                                                  Style="{StaticResource SecondaryToggleButtonStyle}"
-                                                  Content="启动消除"
-                                                  ToolTip="启动消除原文"
-                                                  Command="{Binding　AddInkCommand}"
-                                                  CommandParameter="{Binding SelectedBoundingBox}"
-                                                  Margin="0 0 0 5" />
-
-                                    <Button HorizontalAlignment="Right"
-                                            Style="{StaticResource PrimaryButtonStyle}"
-                                            Content="自动消除"
-                                            ToolTip="自动消除原文"
-                                            Command="{Binding　AddInkCommand}"
-                                            CommandParameter="{Binding SelectedBoundingBox}" />
-                                </Grid>
+                                <Button HorizontalAlignment="Right"
+                                        Style="{StaticResource PrimaryButtonStyle}"
+                                        Content="自动消除"
+                                        ToolTip="自动消除原文"
+                                        Command="{Binding　AddInkCommand}"
+                                        CommandParameter="{Binding SelectedBoundingBox}"
+                                        Margin="0 0 0 5" />
 
                                 <!-- Slider -->
-                                <Border SnapsToDevicePixels="True"
-                                        CornerRadius="5"
-                                        Background="{StaticResource PerfectWhiteBrush}"
-                                        Margin="0 0 0 5">
-                                    <StackPanel SnapsToDevicePixels="True" Margin="10">
-                                        <TextBlock HorizontalAlignment="Left"
-                                                   VerticalAlignment="Center"
-                                                   Text="笔触大小"
-                                                   FontSize="15"
-                                                   Margin="0 0 0 5" />
-
-                                        <Grid SnapsToDevicePixels="True">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="50" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-                                            <!-- IsSnapToTickEnabled="True" -->
-                                            <Slider x:Name="RubberSlider"
-                                                    VerticalAlignment="Center"
-                                                    Minimum="3"
-                                                    Maximum="100"
-                                                    TickFrequency="1"
-                                                    IsMoveToPointEnabled="True" />
-                                            <Border Grid.Column="2"
-                                                    BorderBrush="{StaticResource LightSilverBrush}"
-                                                    BorderThickness="1"
-                                                    CornerRadius="5">
-                                                <TextBox BorderThickness="1"
-                                                         MaxLines="1"
-                                                         IsEnabled="False"
-                                                         Text="{Binding Value, ElementName=RubberSlider, StringFormat=N0}" />
-                                            </Border>
-                                        </Grid>
-                                    </StackPanel>
-                                </Border>
+                                <Grid SnapsToDevicePixels="True">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="5*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <!-- IsSnapToTickEnabled="True" -->
+                                    <Slider x:Name="RubberSlider"
+                                            VerticalAlignment="Center"
+                                            Minimum="3"
+                                            Maximum="100"
+                                            TickFrequency="1"
+                                            IsMoveToPointEnabled="True" />
+                                    <Border Grid.Column="2"
+                                            BorderBrush="{StaticResource LightSilverBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="5">
+                                        <TextBox BorderThickness="1"
+                                                 MaxLines="1"
+                                                 IsEnabled="False"
+                                                 Text="{Binding Value, ElementName=RubberSlider, StringFormat=N0}" />
+                                    </Border>
+                                </Grid>
                             </StackPanel>
                         </Border>
 
                         <!-- Text Font -->
-                        <Border CornerRadius="5" Background="{StaticResource WhiteSmokeBrush}" Margin="0 0 0 25">
+                        <Border CornerRadius="5"
+                                Background="{StaticResource WhiteSmokeBrush}"
+                                Margin="0 0 0 25"
+                                Visibility="{Binding SelectedBoundingBox.Ink, Converter={local:NullToVisibilityConverter}}">
 
                             <StackPanel SnapsToDevicePixels="True" Margin="10">
                                 <!-- Title -->
@@ -311,25 +276,42 @@
                                            Margin="0 0 0 5" />
 
                                 <!-- Font FontFamily -->
-                                <Grid Margin="0 0 0 5">
-                                    <ComboBox HorizontalAlignment="Left" ToolTip="字体">
+                                <StackPanel Orientation="Horizontal" Margin="0 0 0 5">
+                                    <ComboBox ToolTip="字体" Margin="0 0 20 0 ">
                                         <ComboBoxItem Content="Comic Sans MS" IsSelected="True" />
                                         <ComboBoxItem Content="Arial Black" />
                                         <ComboBoxItem Content="MV Boli" />
                                     </ComboBox>
 
-                                    <TextBox HorizontalAlignment="Right"
-                                             BorderBrush="{StaticResource LightSilverBrush}"
+                                    <TextBox BorderBrush="{StaticResource LightSilverBrush}"
                                              BorderThickness="1"
                                              MaxLines="1"
                                              local:IsOnlyNumber.Value="True"
-                                             local:MaxNumber.Value="100" />
-                                </Grid>
+                                             local:MaxNumber.Value="100"
+                                             ToolTip="字体大小"
+                                             Text="{Binding SelectedBoundingBox.Ink.FontSize, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+
+                                <!-- Text Horizontal Alignment -->
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton Style="{StaticResource LeftRadioButtonStyle}" Content="左"
+                                                 GroupName="HorizontalAlignment"
+                                                 IsChecked="{Binding SelectedBoundingBox.Ink.HorizontalAlignment, Converter={local:CompareStringToBooleanConverter}, ConverterParameter=Left}" />
+                                    <RadioButton Style="{StaticResource CenterRadioButtonStyle}" Content="中"
+                                                 GroupName="HorizontalAlignment"
+                                                 IsChecked="{Binding SelectedBoundingBox.Ink.HorizontalAlignment, Converter={local:CompareStringToBooleanConverter}, ConverterParameter=Center}" />
+                                    <RadioButton Style="{StaticResource RightRadioButtonStyle}" Content="右"
+                                                 GroupName="HorizontalAlignment"
+                                                 IsChecked="{Binding SelectedBoundingBox.Ink.HorizontalAlignment, Converter={local:CompareStringToBooleanConverter}, ConverterParameter=Right}" />
+                                </StackPanel>
                             </StackPanel>
                         </Border>
 
                         <!-- HorizontalCharacter Spacing -->
-                        <Border CornerRadius="5" Background="{StaticResource WhiteSmokeBrush}" Margin="0 0 0 25">
+                        <Border CornerRadius="5"
+                                Background="{StaticResource WhiteSmokeBrush}"
+                                Margin="0 0 0 25"
+                                Visibility="{Binding SelectedBoundingBox.Ink, Converter={local:NullToVisibilityConverter}}">
 
                             <StackPanel SnapsToDevicePixels="True" Margin="10">
                                 <!-- Title -->
@@ -340,10 +322,11 @@
                                            FontWeight="Bold"
                                            Margin="0 0 0 5" />
 
+                                <!-- Slider -->
                                 <Grid SnapsToDevicePixels="True">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="5*" />
+                                        <ColumnDefinition Width="2*" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <!-- IsSnapToTickEnabled="True" -->
@@ -368,7 +351,10 @@
                         </Border>
 
                         <!-- VerticalCharacter Spacing -->
-                        <Border CornerRadius="5" Background="{StaticResource WhiteSmokeBrush}" Margin="0 0 0 25">
+                        <Border CornerRadius="5"
+                                Background="{StaticResource WhiteSmokeBrush}"
+                                Margin="0 0 0 25"
+                                Visibility="{Binding SelectedBoundingBox.Ink, Converter={local:NullToVisibilityConverter}}">
 
                             <StackPanel SnapsToDevicePixels="True" Margin="10">
                                 <!-- Title -->
@@ -379,10 +365,11 @@
                                            FontWeight="Bold"
                                            Margin="0 0 0 5" />
 
+                                <!-- Slider -->
                                 <Grid SnapsToDevicePixels="True">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="5*" />
+                                        <ColumnDefinition Width="2*" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <!-- IsSnapToTickEnabled="True" -->
@@ -444,12 +431,12 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border CornerRadius="5"
-                                        Background="{StaticResource WhiteSmokeBrush}"
                                         Margin="0 0 0 20"
+                                        Background="{StaticResource WhiteSmokeBrush}"
                                         BorderBrush="{StaticResource DarkBlueBrush}">
 
                                     <Border.Resources>
-                                        <local:BoundingBoxCompareBorderThicknessConverter
+                                        <local:CompareBoundingBoxToThicknessConverter
                                             x:Key="BoundingBoxCompareBorderThicknessConverter" />
                                     </Border.Resources>
 
@@ -481,7 +468,7 @@
                                                        VerticalAlignment="Center">
 
                                                 <TextBlock.Resources>
-                                                    <local:BoundingBoxCollectionIndexConverter
+                                                    <local:IndexConverter
                                                         x:Key="BoundingBoxCollectionIndexConverter" />
                                                 </TextBlock.Resources>
 
@@ -510,7 +497,7 @@
                                                        Stretch="Fill"
                                                        Width="22"
                                                        Height="22"
-                                                       Source="{Binding Source=media/delete.png, Converter={local:FilepathBytesConverter}}" />
+                                                       Source="{Binding Source=media/delete.png, Converter={local:FilepathToBytesConverter}}" />
                                             </Button>
                                         </Grid>
 

@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Globalization;
-using System.Windows;
-using Mantra.Core.Models;
+using System.Linq;
 
 // ReSharper disable once CheckNamespace
 namespace Mantra;
 
-internal class BoundingBoxCompareBorderThicknessConverter : BaseMultiValueConverter<BoundingBoxCompareBorderThicknessConverter>
+internal class AndConverter : BaseMultiValueConverter<OrConverter>
 {
     public override object Convert(object[] values, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (values[0] is BoundingBox box1 && values[1] is BoundingBox box2)
+        if (values.All(x=>x is bool))
         {
-            return box1 == box2 ? new Thickness(1) : new Thickness(0);
+            return values.Cast<bool>().All(x => x);
         }
 
-        // values[0] is null
-        return new Thickness(0);
+        throw new NotSupportedException();
     }
 
     public override object[] ConvertBack(object value, Type[] targetTypes, object? parameter, CultureInfo culture)

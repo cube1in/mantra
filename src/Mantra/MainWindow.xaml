@@ -15,7 +15,7 @@
             <ImageBrush TileMode="Tile"
                         ViewportUnits="Absolute"
                         Viewport="0 0 500 500"
-                        ImageSource="{Binding Source=media/emoji-background.png, Converter={local:FilepathBytesConverter}}" />
+                        ImageSource="{Binding Source=media/emoji-background.png, Converter={local:FilepathToBytesConverter}}" />
         </Grid.Background>
 
         <!-- Page Host -->

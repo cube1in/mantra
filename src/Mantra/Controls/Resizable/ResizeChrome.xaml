@@ -62,29 +62,35 @@
                                                HorizontalAlignment="Right" />
                         </Grid>
                         <Grid IsHitTestVisible="False" Opacity="1" Margin="-3">
-                            <Rectangle SnapsToDevicePixels="True"
+                            <!-- 边框 -->
+                            <Rectangle x:Name="Rectangle"
+                                       SnapsToDevicePixels="True"
                                        StrokeThickness="1.5"
                                        Margin="0"
                                        Stroke="{Binding StrokeColor}"
                                        StrokeDashArray="3" />
 
                             <!-- 左上 -->
-                            <Rectangle Style="{StaticResource ThumbCorner}"
+                            <Rectangle x:Name="TopLeft"
+                                       Style="{StaticResource ThumbCorner}"
                                        Stroke="{Binding StrokeColor}"
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Top" />
                             <!-- 右上 -->
-                            <Rectangle Style="{StaticResource ThumbCorner}"
+                            <Rectangle x:Name="TopRight"
+                                       Style="{StaticResource ThumbCorner}"
                                        Stroke="{Binding StrokeColor}"
                                        HorizontalAlignment="Right"
                                        VerticalAlignment="Top" />
                             <!-- 左下 -->
-                            <Rectangle Style="{StaticResource ThumbCorner}"
+                            <Rectangle x:Name="BottomLeft"
+                                       Style="{StaticResource ThumbCorner}"
                                        Stroke="{Binding StrokeColor}"
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Bottom" />
                             <!-- 右下 -->
-                            <Rectangle Style="{StaticResource ThumbCorner}"
+                            <Rectangle x:Name="BottomRight"
+                                       Style="{StaticResource ThumbCorner}"
                                        Stroke="{Binding StrokeColor}"
                                        HorizontalAlignment="Right"
                                        VerticalAlignment="Bottom" />
@@ -104,6 +110,23 @@
                                        VerticalAlignment="Bottom" />-->
                         </Grid>
                     </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsChecked}" Value="True">
+                            <Setter TargetName="Rectangle" Property="Stroke" Value="Red" />
+                            <Setter TargetName="TopLeft" Property="Stroke" Value="Red" />
+                            <Setter TargetName="TopRight" Property="Stroke" Value="Red" />
+                            <Setter TargetName="BottomLeft" Property="Stroke" Value="Red" />
+                            <Setter TargetName="BottomRight" Property="Stroke" Value="Red" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsChecked}" Value="False">
+                            <Setter TargetName="Rectangle" Property="Stroke" Value="{Binding StrokeColor}" />
+                            <Setter TargetName="TopLeft" Property="Stroke" Value="{Binding StrokeColor}" />
+                            <Setter TargetName="TopRight" Property="Stroke" Value="{Binding StrokeColor}" />
+                            <Setter TargetName="BottomLeft" Property="Stroke" Value="{Binding StrokeColor}" />
+                            <Setter TargetName="BottomRight" Property="Stroke" Value="{Binding StrokeColor}" />
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

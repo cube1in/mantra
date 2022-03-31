@@ -1,21 +1,22 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Windows;
 using Mantra.Core.Models;
 
 // ReSharper disable once CheckNamespace
 namespace Mantra;
 
-internal class BoundingBoxCollectionIndexConverter : BaseMultiValueConverter<BoundingBoxCollectionIndexConverter>
+internal class CompareBoundingBoxToThicknessConverter : BaseMultiValueConverter<CompareBoundingBoxToThicknessConverter>
 {
     public override object Convert(object[] values, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (values[0] is ObservableCollection<BoundingBox> array && values[1] is BoundingBox item)
+        if (values[0] is BoundingBox box1 && values[1] is BoundingBox box2)
         {
-            return array.IndexOf(item) + 1;
+            return box1 == box2 ? new Thickness(1) : new Thickness(0);
         }
 
-        throw new NotSupportedException();
+        // values[0] is null
+        return new Thickness(0);
     }
 
     public override object[] ConvertBack(object value, Type[] targetTypes, object? parameter, CultureInfo culture)
