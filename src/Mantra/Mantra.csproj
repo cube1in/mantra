@@ -24,5 +24,9 @@
         <None Include="$(SolutionDir)\x64\**" CopyToOutputDirectory="PreserveNewest" LinkBase="x64\" />
         <None Include="$(SolutionDir)\x86\**" CopyToOutputDirectory="PreserveNewest" LinkBase="x86\" />
     </ItemGroup>
+    
+    <ItemGroup>
+        <Resource Include="Fonts\**" />
+    </ItemGroup>
 
 </Project>

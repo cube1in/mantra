@@ -10,6 +10,7 @@
                 <!-- Order is important -->
                 <!-- primary，secondary，tertiary，quaternary，quinary，senary，septenary，octonary，nonary，denary -->
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Color.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Font.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Text.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Styles/Button.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Mantra;component/Controls/Resizable/ResizableContainer.xaml" />

@@ -371,8 +371,8 @@ internal class HandleViewModel : BaseViewModel
             var offsetY = point.Y - _lastPoint.Y;
 
             // 更新位置
-            _createdBoundingBox.Width += (float)offsetX;
-            _createdBoundingBox.Height += (float)offsetY;
+            _createdBoundingBox.Width += (float) offsetX;
+            _createdBoundingBox.Height += (float) offsetY;
 
             // 保存鼠标位置
             _lastPoint = point;

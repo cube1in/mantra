@@ -23,10 +23,10 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Button Style="{StaticResource QuaternaryButtonStyle}"
+                <Button Style="{StaticResource IconTextButtonStyle}"
                         VerticalAlignment="Center"
-                        FontSize="15"
-                        Content="返回" />
+                        Content="返回"
+                        Tag="{StaticResource FontAwesomeArrowLeftIcon}" />
                 <TextBlock Grid.Column="0"
                            Grid.ColumnSpan="2"
                            HorizontalAlignment="Center"
@@ -36,15 +36,17 @@
             </Grid>
             <Separator />
             <StackPanel SnapsToDevicePixels="True" Orientation="Horizontal" Margin="10">
-                <Button Style="{StaticResource QuaternaryButtonStyle}"
+                <Button Style="{StaticResource IconTextButtonStyle}"
                         FontSize="15"
                         Margin="0 0 10 0"
                         Command="{Binding SaveCommand}"
+                        Tag="{StaticResource FontAwesomeSaveIcon}"
                         Content="保存" />
-                <Button Style="{StaticResource QuaternaryButtonStyle}"
+                <Button Style="{StaticResource IconTextButtonStyle}"
                         FontSize="15"
                         Margin="0 0 10 0"
                         Click="DownloadButton_OnClick"
+                        Tag="{StaticResource FontAwesomeDownloadIcon}"
                         Content="下载图片" />
             </StackPanel>
             <Separator />
