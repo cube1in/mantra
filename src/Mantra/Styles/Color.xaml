@@ -43,20 +43,27 @@
 
     <!-- Miscellaneous Brushes -->
     <!-- 255 255 255 -->
-    <SolidColorBrush x:Key="PerfectWhiteBrush" Color="#FFFFFF" />
+    <Color x:Key="PerfectWhite">White</Color>
+    <SolidColorBrush x:Key="PerfectWhiteBrush" Color="{StaticResource PerfectWhite}" />
     <!-- 245 245 245 -->
     <SolidColorBrush x:Key="WhiteSmokeBrush" Color="WhiteSmoke" />
     <!-- 242 242 242 -->
-    <SolidColorBrush x:Key="AntiFlashWhiteBrush" Color="#F2F2F2" />
+    <Color x:Key="AntiFlashWhite">#F2F2F2</Color>
+    <SolidColorBrush x:Key="AntiFlashWhiteBrush" Color="{StaticResource AntiFlashWhite}" />
     <!-- 217 217 217 -->
-    <SolidColorBrush x:Key="LightSilverBrush" Color="#D9D9D9" />
+    <Color x:Key="LightSilver">#D9D9D9</Color>
+    <SolidColorBrush x:Key="LightSilverBrush" Color="{StaticResource LightSilver}" />
     <!-- 136 136 136 -->
-    <SolidColorBrush x:Key="TaupeGrayBrush" Color="#888888" />
+    <Color x:Key="TaupeGray">#F2F2F2</Color>
+    <SolidColorBrush x:Key="TaupeGrayBrush" Color="{StaticResource TaupeGray}" />
     <!-- 104 104 104 -->
-    <SolidColorBrush x:Key="DimGrayBrush" Color="DimGray" />
+    <Color x:Key="DimGray">DimGray</Color>
+    <SolidColorBrush x:Key="DimGrayBrush" Color="{StaticResource DimGray}" />
     <!-- 68 68 68 -->
-    <SolidColorBrush x:Key="OuterSpaceBrush" Color="#444444" />
+    <Color x:Key="OuterSpace">#444444</Color>
+    <SolidColorBrush x:Key="OuterSpaceBrush" Color="{StaticResource OuterSpace}" />
     <!-- 0 0 0 -->
-    <SolidColorBrush x:Key="PerfectBlackBrush" Color="#000000" />
+    <Color x:Key="PerfectBlack">Black</Color>
+    <SolidColorBrush x:Key="PerfectBlackBrush" Color="{StaticResource PerfectBlack}" />
 
 </ResourceDictionary>
