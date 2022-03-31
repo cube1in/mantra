@@ -57,10 +57,10 @@ internal class AzureComputerVision : IComputerVision
             from line in result.Lines
             select new BoundingBox
             {
-                Left = line.BoundingBox[0]!.Value,
-                Top = line.BoundingBox[1]!.Value,
-                Width = line.BoundingBox[2]!.Value,
-                Height = line.BoundingBox[3]!.Value,
+                Left = (float)line.BoundingBox[0]!.Value,
+                Top = (float)line.BoundingBox[1]!.Value,
+                Width = (float)line.BoundingBox[2]!.Value,
+                Height = (float)line.BoundingBox[3]!.Value,
                 OriginalText = line.Text
             };
     }
@@ -90,10 +90,10 @@ internal class AzureComputerVision : IComputerVision
             from line in result.Lines
             select new BoundingBox
             {
-                Left = line.BoundingBox[0]!.Value,
-                Top = line.BoundingBox[1]!.Value,
-                Width = line.BoundingBox[2]!.Value,
-                Height = line.BoundingBox[3]!.Value,
+                Left = (float)line.BoundingBox[0]!.Value,
+                Top = (float)line.BoundingBox[1]!.Value,
+                Width = (float)line.BoundingBox[2]!.Value,
+                Height = (float)line.BoundingBox[3]!.Value,
                 OriginalText = line.Text
             };
     }
@@ -123,10 +123,10 @@ internal class AzureComputerVision : IComputerVision
             from line in result.Lines
             select new BoundingBox
             {
-                Left = line.BoundingBox[0]!.Value,
-                Top = line.BoundingBox[1]!.Value,
-                Width = line.BoundingBox[2]!.Value,
-                Height = line.BoundingBox[3]!.Value,
+                Left = (float)line.BoundingBox[0]!.Value,
+                Top = (float)line.BoundingBox[1]!.Value,
+                Width = (float)line.BoundingBox[2]!.Value,
+                Height = (float)line.BoundingBox[3]!.Value,
                 OriginalText = line.Text
             };
     }

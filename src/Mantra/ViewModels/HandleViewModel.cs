@@ -1,14 +1,19 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using MvvmHelpers.Commands;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using Mantra.Core.Abstractions;
 using Mantra.Core.Models;
 using Mantra.Plugins;
+using Microsoft.Win32;
 using Point = System.Windows.Point;
 
 // ReSharper disable once CheckNamespace
@@ -36,9 +41,9 @@ internal class HandleViewModel : BaseViewModel
     #region Public Properties
 
     /// <summary>
-    /// 原图片缓存
+    /// 原图片地址
     /// </summary>
-    public string? ImgSource { get; set; }
+    public string? Filepath { get; set; }
 
     /// <summary>
     /// 图片实际宽度
@@ -107,6 +112,11 @@ internal class HandleViewModel : BaseViewModel
     /// </summary>
     public ICommand RemoveInkCommand => new Command<BoundingBox>(OnRemoveInk);
 
+    /// <summary>
+    /// 保存命令
+    /// </summary>
+    public ICommand SaveCommand => new Command(OnSave);
+
     #endregion
 
     #region Private Methods
@@ -116,13 +126,13 @@ internal class HandleViewModel : BaseViewModel
     /// </summary>
     private async Task OnBatchOCRAsync()
     {
-        if (ImgSource == null)
+        if (Filepath == null)
         {
             MessageBox.Show("图片不存在", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
-        var boxes = await _computerVision.ReadFileLocalAsync(ImgSource, "eng");
+        var boxes = await _computerVision.ReadFileLocalAsync(Filepath, "eng");
         BoundingBoxCollection = new ObservableCollection<BoundingBox>(boxes);
     }
 
@@ -132,13 +142,13 @@ internal class HandleViewModel : BaseViewModel
     /// <param name="value"></param>
     private async Task OnSingleOCRAsync(BoundingBox value)
     {
-        var bitmap = CropImage(ImgSource!,
-            new Rectangle
+        var bitmap = CropImage(Filepath!,
+            new RectangleF
             {
-                X = (int) value.Left,
-                Y = (int) value.Top,
-                Width = (int) value.Width,
-                Height = (int) value.Height
+                X = value.Left,
+                Y = value.Top,
+                Width = value.Width,
+                Height = value.Height
             });
 
         var converter = new ImageConverter();
@@ -193,13 +203,13 @@ internal class HandleViewModel : BaseViewModel
     /// <param name="value"></param>
     private void OnAddInk(BoundingBox value)
     {
-        var bitmap = CropImage(ImgSource!,
-            new Rectangle
+        var bitmap = CropImage(Filepath!,
+            new RectangleF
             {
-                X = (int) value.Left,
-                Y = (int) value.Top,
-                Width = (int) value.Width,
-                Height = (int) value.Height
+                X = value.Left,
+                Y = value.Top,
+                Width = value.Width,
+                Height = value.Height
             });
 
         var color = bitmap.GetPixel(0, 0);
@@ -217,14 +227,21 @@ internal class HandleViewModel : BaseViewModel
         => value.Ink = null;
 
     /// <summary>
+    /// <see cref="SaveCommand"/> 时触发
+    /// </summary>
+    private void OnSave()
+    {
+    }
+
+    /// <summary>
     /// Set image original size
     /// </summary>
     private void SetOriginalSize()
     {
-        if (ImgSource == null) return;
+        if (Filepath == null) return;
 
         // Get image original size
-        var bitmap = new Bitmap(ImgSource);
+        var bitmap = new Bitmap(Filepath);
         ImgPixelHeight = bitmap.Height;
         ImgPixelWidth = bitmap.Width;
     }
@@ -235,7 +252,7 @@ internal class HandleViewModel : BaseViewModel
     /// <param name="path"></param>
     /// <param name="cropArea"></param>
     /// <returns></returns>
-    private static Bitmap CropImage(string path, Rectangle cropArea)
+    private static Bitmap CropImage(string path, RectangleF cropArea)
     {
         var bitmap = new Bitmap(path);
         return bitmap.Clone(cropArea, bitmap.PixelFormat);
@@ -256,8 +273,39 @@ internal class HandleViewModel : BaseViewModel
 #endif
         if (pushValue is string path)
         {
-            ImgSource = path;
+            Filepath = path;
             SetOriginalSize();
+        }
+    }
+
+    /// <summary>
+    /// 处理下载
+    /// </summary>
+    /// <param name="func"></param>
+    internal void DownloadHandler(Func<IEnumerable<(RectangleF, bool)>, IEnumerable<(float, float, Bitmap)>> func)
+    {
+        var bitmaps = func(from box in BoundingBoxCollection
+            select (new RectangleF(box.Left, box.Top, box.Width, box.Height), box.Ink != null));
+
+        var source = new Bitmap(Filepath!);
+        foreach (var (x, y, bitmap) in bitmaps)
+        {
+            source.Replace(bitmap, x, y);
+        }
+
+        var dialog = new SaveFileDialog
+        {
+            FileName = Path.GetFileName(Filepath),
+            Filter = "PNG|*.png|JPEG|*.jpg|BMP|*.bmp"
+        };
+
+        if (dialog.ShowDialog() == true)
+        {
+            // Or JpegBitmapDecoder, or whichever encoder you want
+            var encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(BitmapHelper.ConvertBitmap(source)));
+            using var stream = dialog.OpenFile();
+            encoder.Save(stream);
         }
     }
 
@@ -293,7 +341,7 @@ internal class HandleViewModel : BaseViewModel
     {
         var el = (UIElement) sender;
         var point = Mouse.GetPosition(el);
-        _createdBoundingBox = new BoundingBox {Left = point.X, Top = point.Y};
+        _createdBoundingBox = new BoundingBox {Left = (float) point.X, Top = (float) point.Y};
         _dragInProgress = true;
         BoundingBoxCollection.Add(_createdBoundingBox);
 
@@ -323,8 +371,8 @@ internal class HandleViewModel : BaseViewModel
             var offsetY = point.Y - _lastPoint.Y;
 
             // 更新位置
-            _createdBoundingBox.Width += offsetX;
-            _createdBoundingBox.Height += offsetY;
+            _createdBoundingBox.Width += (float)offsetX;
+            _createdBoundingBox.Height += (float)offsetY;
 
             // 保存鼠标位置
             _lastPoint = point;
@@ -342,6 +390,7 @@ internal class HandleViewModel : BaseViewModel
         if (_createdBoundingBox != null &&
             (_createdBoundingBox.Width <= MinSize || _createdBoundingBox.Height <= MinSize))
         {
+            if (SelectedBoundingBox == _createdBoundingBox) SelectedBoundingBox = null;
             BoundingBoxCollection.Remove(_createdBoundingBox);
         }
 

@@ -38,17 +38,16 @@
             <StackPanel SnapsToDevicePixels="True" Orientation="Horizontal" Margin="10">
                 <Button Style="{StaticResource QuaternaryButtonStyle}"
                         FontSize="15"
-                        Content="保存"
-                        Margin="0 0 10 0" />
+                        Margin="0 0 10 0"
+                        Command="{Binding SaveCommand}"
+                        Content="保存" />
                 <Button Style="{StaticResource QuaternaryButtonStyle}"
                         FontSize="15"
-                        Content="下载图片"
-                        Margin="0 0 10 0" />
+                        Margin="0 0 10 0"
+                        Click="DownloadButton_OnClick"
+                        Content="下载图片" />
             </StackPanel>
-
-            <StackPanel.Effect>
-                <DropShadowEffect Color="{StaticResource DimGray}" ShadowDepth="0.3" />
-            </StackPanel.Effect>
+            <Separator />
         </StackPanel>
         <!-- End: Top Menu -->
 
@@ -70,13 +69,13 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Stretch="Uniform"
-                        Source="{Binding ImgSource}"
+                        Source="{Binding Filepath}"
                         Width="{Binding ImgPixelWidth}"
                         Height="{Binding ImgPixelHeight}"
                         SnapsToDevicePixels="True" />
 
                     <!-- Start: Canvas -->
-                    <ItemsControl ItemsSource="{Binding BoundingBoxCollection}">
+                    <ItemsControl x:Name="CanvasItemsControl" ItemsSource="{Binding BoundingBoxCollection}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <!-- Must set background -->
@@ -99,22 +98,55 @@
                             <DataTemplate>
                                 <!-- ResizableContainer -->
                                 <local:ResizableContainer StrokeColor="{Binding Color}"
-                                                          Width="{Binding Width}"
-                                                          Height="{Binding Height}"
+                                                          Width="{Binding Width, Mode=TwoWay}"
+                                                          Height="{Binding Height, Mode=TwoWay}"
                                                           Command="{Binding DataContext.SelectBoundingBoxCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                                                           CommandParameter="{Binding}"
                                                           GroupName="ResizableContainer">
                                     <Grid>
+                                        <!-- Ink -->
+                                        <Grid x:Name="ScreenShot" SnapsToDevicePixels="True">
+                                            <Border SnapsToDevicePixels="True"
+                                                    Background="{Binding Ink.Background}"
+                                                    IsHitTestVisible="False"
+                                                    Visibility="{Binding Ink, Converter={local:NullToVisibilityConverter}}">
+                                                <TextBlock Text="{Binding TranslatedText}"
+                                                           Background="{Binding Ink.Background}"
+                                                           Foreground="{Binding Ink.Foreground}"
+                                                           FontSize="{Binding Ink.FontSize}"
+                                                           FontWeight="{Binding Ink.FontWeight}"
+                                                           HorizontalAlignment="{Binding Ink.HorizontalAlignment}"
+                                                           VerticalAlignment="{Binding Ink.VerticalAlignment}"
+                                                           TextWrapping="Wrap"
+                                                           IsHitTestVisible="False" />
+                                            </Border>
+                                        </Grid>
+
+                                        <!-- Remove Ink Button -->
+                                        <Button Background="Red"
+                                                Command="{Binding DataContext.RemoveInkCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                CommandParameter="{Binding}"
+                                                Visibility="{Binding Ink, Converter={local:NullToVisibilityConverter}}"
+                                                Margin="0 0 0 -25"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Bottom"
+                                                Content="X">
+                                            <Button.LayoutTransform>
+                                                <ScaleTransform ScaleX="1.5" />
+                                            </Button.LayoutTransform>
+                                        </Button>
+
+                                        <!-- Remove Box & Ocr Button -->
                                         <StackPanel SnapsToDevicePixels="True"
                                                     Margin="0 0 0 -25"
                                                     Orientation="Horizontal"
                                                     HorizontalAlignment="Right"
                                                     VerticalAlignment="Bottom"
                                                     Visibility="{Binding Ink, Converter={local:NullToVisibilityConverter}, ConverterParameter=true}">
-                                            <Button Content="X"
-                                                    Background="Red"
+                                            <Button Background="Red"
                                                     Command="{Binding DataContext.RemoveBoundingBoxCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
-                                                    CommandParameter="{Binding}">
+                                                    CommandParameter="{Binding}"
+                                                    Content="X">
                                                 <Button.LayoutTransform>
                                                     <ScaleTransform ScaleX="1.5" />
                                                 </Button.LayoutTransform>
@@ -123,20 +155,6 @@
                                                     Command="{Binding DataContext.SingleOCRCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                                                     CommandParameter="{Binding}" />
                                         </StackPanel>
-
-                                        <Border SnapsToDevicePixels="True"
-                                                Background="{Binding Ink.Background}"
-                                                IsHitTestVisible="False"
-                                                Visibility="{Binding Ink, Converter={local:NullToVisibilityConverter}}">
-                                            <TextBlock Text="{Binding TranslatedText}"
-                                                       Background="{Binding Ink.Background}"
-                                                       Foreground="{Binding Ink.Foreground}"
-                                                       FontSize="{Binding Ink.FontSize}"
-                                                       FontWeight="{Binding Ink.FontWeight}"
-                                                       HorizontalAlignment="{Binding Ink.HorizontalAlignment}"
-                                                       TextWrapping="Wrap"
-                                                       IsHitTestVisible="False" />
-                                        </Border>
                                     </Grid>
 
                                     <!-- IsClicked Property -->
@@ -331,18 +349,35 @@
                                                  Text="{Binding SelectedBoundingBox.Ink.FontSize, UpdateSourceTrigger=PropertyChanged}" />
                                     </StackPanel>
 
-                                    <!-- Text Horizontal Alignment -->
-                                    <StackPanel Orientation="Horizontal">
-                                        <RadioButton Style="{StaticResource LeftRadioButtonStyle}" Content="左"
-                                                     GroupName="HorizontalAlignment"
-                                                     IsChecked="{Binding SelectedBoundingBox.Ink.HorizontalAlignment, Converter={local:CompareStringToBooleanConverter}, ConverterParameter=Left}" />
-                                        <RadioButton Style="{StaticResource CenterRadioButtonStyle}" Content="中"
-                                                     GroupName="HorizontalAlignment"
-                                                     IsChecked="{Binding SelectedBoundingBox.Ink.HorizontalAlignment, Converter={local:CompareStringToBooleanConverter}, ConverterParameter=Center}" />
-                                        <RadioButton Style="{StaticResource RightRadioButtonStyle}" Content="右"
-                                                     GroupName="HorizontalAlignment"
-                                                     IsChecked="{Binding SelectedBoundingBox.Ink.HorizontalAlignment, Converter={local:CompareStringToBooleanConverter}, ConverterParameter=Right}" />
-                                    </StackPanel>
+                                    <WrapPanel SnapsToDevicePixels="True" Orientation="Horizontal">
+                                        <StackPanel Orientation="Horizontal" Margin="0 0 10 5">
+                                            <RadioButton Style="{StaticResource LeftRadioButtonStyle}" Content="左"
+                                                         GroupName="HorizontalAlignment"
+                                                         IsChecked="{Binding SelectedBoundingBox.Ink.HorizontalAlignment, Converter={local:CompareStringToBooleanConverter}, ConverterParameter=Left}" />
+                                            <RadioButton Style="{StaticResource CenterRadioButtonStyle}" Content="中"
+                                                         GroupName="HorizontalAlignment"
+                                                         IsChecked="{Binding SelectedBoundingBox.Ink.HorizontalAlignment, Converter={local:CompareStringToBooleanConverter}, ConverterParameter=Center}" />
+                                            <RadioButton Style="{StaticResource RightRadioButtonStyle}" Content="右"
+                                                         GroupName="HorizontalAlignment"
+                                                         IsChecked="{Binding SelectedBoundingBox.Ink.HorizontalAlignment, Converter={local:CompareStringToBooleanConverter}, ConverterParameter=Right}" />
+                                        </StackPanel>
+
+                                        <Line Width="15" Height="15" />
+
+                                        <!-- Text Vertical Alignment -->
+                                        <StackPanel Orientation="Horizontal" Margin="0 0 0 5">
+                                            <RadioButton Style="{StaticResource LeftRadioButtonStyle}" Content="上"
+                                                         GroupName="HorizontalAlignment"
+                                                         IsChecked="{Binding SelectedBoundingBox.Ink.VerticalAlignment, Converter={local:CompareStringToBooleanConverter}, ConverterParameter=Top}" />
+                                            <RadioButton Style="{StaticResource CenterRadioButtonStyle}" Content="中"
+                                                         GroupName="HorizontalAlignment"
+                                                         IsChecked="{Binding SelectedBoundingBox.Ink.VerticalAlignment, Converter={local:CompareStringToBooleanConverter}, ConverterParameter=Center}" />
+                                            <RadioButton Style="{StaticResource RightRadioButtonStyle}" Content="下"
+                                                         GroupName="HorizontalAlignment"
+                                                         IsChecked="{Binding SelectedBoundingBox.Ink.VerticalAlignment, Converter={local:CompareStringToBooleanConverter}, ConverterParameter=Bottom}" />
+                                        </StackPanel>
+                                    </WrapPanel>
+
                                 </StackPanel>
                             </Border>
 

@@ -11,22 +11,22 @@ internal class BoundingBox : BaseViewModel
     /// <summary>
     /// 左边位置
     /// </summary>
-    public double Left { get; set; }
+    public float Left { get; set; }
 
     /// <summary>
     /// 顶部位置
     /// </summary>
-    public double Top { get; set; }
+    public float Top { get; set; }
 
     /// <summary>
     /// 宽度
     /// </summary>
-    public double Width { get; set; }
+    public float Width { get; set; }
 
     /// <summary>
     /// 高度
     /// </summary>
-    public double Height { get; set; }
+    public float Height { get; set; }
 
     /// <summary>
     /// 颜色

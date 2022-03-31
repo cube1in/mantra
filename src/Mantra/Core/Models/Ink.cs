@@ -58,4 +58,9 @@ internal class Ink
     /// 水平对齐
     /// </summary>
     public string HorizontalAlignment { get; set; } = "Left";
+
+    /// <summary>
+    /// 垂直对齐
+    /// </summary>
+    public string VerticalAlignment { get; set; } = "Top";
 }
