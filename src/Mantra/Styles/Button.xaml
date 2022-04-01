@@ -9,10 +9,11 @@
     <!-- Primary Button -->
     <Style x:Key="PrimaryButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="Background" Value="{StaticResource NormalBlueBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource PerfectWhiteBrush}" />
+        <Setter Property="Background" Value="{StaticResource RegularBlueBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}" />
         <Setter Property="FontWeight" Value="Regular" />
-        <Setter Property="Padding" Value="15 3" />
+        <Setter Property="Padding" Value="8 3" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="MaxHeight" Value="40" />
         <Setter Property="Width" Value="Auto" />
@@ -61,8 +62,9 @@
         <Setter Property="Foreground" Value="{StaticResource LightBlueBrush}" />
         <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}" />
         <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}" />
         <Setter Property="FontWeight" Value="Regular" />
-        <Setter Property="Padding" Value="15 3" />
+        <Setter Property="Padding" Value="8 3" />
         <Setter Property="MaxHeight" Value="40" />
         <Setter Property="Width" Value="Auto" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -93,13 +95,13 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource NormalBlueBrush}" />
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource NormalBlueBrush}" />
-                            <Setter Property="Foreground" Value="{StaticResource PerfectWhiteBrush}" />
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource RegularBlueBrush}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource RegularBlueBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource WhiteBrush}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="Border" Property="Background" Value="{StaticResource DarkBlueBrush}" />
-                            <Setter Property="Foreground" Value="{StaticResource PerfectWhiteBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource WhiteBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -110,10 +112,11 @@
     <!-- Tertiary Button -->
     <Style x:Key="TertiaryButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="Background" Value="{StaticResource PerfectWhiteBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource NormalBlueBrush}" />
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource RegularBlueBrush}" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}" />
         <Setter Property="FontWeight" Value="Regular" />
-        <Setter Property="Padding" Value="15 3" />
+        <Setter Property="Padding" Value="8 3" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="MaxHeight" Value="40" />
         <Setter Property="Width" Value="Auto" />
@@ -145,11 +148,11 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="Border" Property="Background" Value="{StaticResource LightBlueBrush}" />
-                            <Setter Property="Foreground" Value="{StaticResource PerfectWhiteBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource WhiteBrush}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="Border" Property="Background" Value="{StaticResource DarkBlueBrush}" />
-                            <Setter Property="Foreground" Value="{StaticResource PerfectWhiteBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource WhiteBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -160,12 +163,13 @@
     <!-- Quaternary Button -->
     <Style x:Key="QuaternaryButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="Background" Value="{StaticResource PerfectWhiteBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource DimGrayBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource LightSilverBrush}" />
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource DarkTextBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderLightBrush}" />
         <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}" />
         <Setter Property="FontWeight" Value="Regular" />
-        <Setter Property="Padding" Value="15 3" />
+        <Setter Property="Padding" Value="8 3" />
         <Setter Property="MaxHeight" Value="40" />
         <Setter Property="Width" Value="Auto" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -200,8 +204,8 @@
                             <Setter Property="Foreground" Value="{StaticResource LightBlueBrush}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource NormalBlueBrush}" />
-                            <Setter Property="Foreground" Value="{StaticResource NormalBlueBrush}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource RegularBlueBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource RegularBlueBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -209,15 +213,15 @@
         </Setter>
     </Style>
 
-    <!-- IconText Button -->
-    <Style x:Key="IconTextButtonStyle" TargetType="{x:Type Button}">
+    <!-- Icon Button -->
+    <Style x:Key="IconButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="Background" Value="{StaticResource PerfectWhiteBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource DimGrayBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource LightSilverBrush}" />
-        <Setter Property="FontWeight" Value="Regular" />
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource DarkTextBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderLightBrush}" />
         <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}" />
-        <Setter Property="Padding" Value="15 3" />
+        <Setter Property="FontWeight" Value="Regular" />
+        <Setter Property="Padding" Value="4 3" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="MaxHeight" Value="40" />
         <Setter Property="Width" Value="Auto" />
@@ -235,7 +239,113 @@
                             Width="{TemplateBinding Width}"
                             MaxHeight="{TemplateBinding MaxHeight}"
                             Padding="{TemplateBinding Padding}">
-                        
+
+                        <TextBlock Text="{TemplateBinding Content}"
+                                   FontFamily="{StaticResource FontAwesome}"
+                                   FontSize="{TemplateBinding FontSize}"
+                                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                   Margin="{TemplateBinding Padding}" />
+
+                        <!-- <Border.Effect> -->
+                        <!--     <DropShadowEffect ShadowDepth="0.5" Direction="0" Opacity="0.3" /> -->
+                        <!-- </Border.Effect> -->
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource LightBlueBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource LightBlueBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource RegularBlueBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource RegularBlueBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Icon Warning Button -->
+    <Style x:Key="IconWarningButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource DarkTextBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderLightBrush}" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}" />
+        <Setter Property="FontWeight" Value="Regular" />
+        <Setter Property="Padding" Value="4 3" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="MaxHeight" Value="40" />
+        <Setter Property="Width" Value="Auto" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="Border"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                            CornerRadius="5"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}"
+                            Width="{TemplateBinding Width}"
+                            MaxHeight="{TemplateBinding MaxHeight}"
+                            Padding="{TemplateBinding Padding}">
+
+                        <TextBlock Text="{TemplateBinding Content}"
+                                   FontFamily="{StaticResource FontAwesome}"
+                                   FontSize="{TemplateBinding FontSize}"
+                                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                   Margin="{TemplateBinding Padding}" />
+
+                        <!-- <Border.Effect> -->
+                        <!--     <DropShadowEffect ShadowDepth="0.5" Direction="0" Opacity="0.3" /> -->
+                        <!-- </Border.Effect> -->
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource LightRedBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource LightRedBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource RegularRedBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource RegularRedBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- IconText Button -->
+    <Style x:Key="IconTextButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource DarkTextBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderLightBrush}" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}" />
+        <Setter Property="FontWeight" Value="Regular" />
+        <Setter Property="Padding" Value="8 3" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="MaxHeight" Value="40" />
+        <Setter Property="Width" Value="Auto" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="Border"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                            CornerRadius="5"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}"
+                            Width="{TemplateBinding Width}"
+                            MaxHeight="{TemplateBinding MaxHeight}"
+                            Padding="{TemplateBinding Padding}">
+
                         <Grid SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                               Margin="{TemplateBinding Padding}">
                             <Grid.ColumnDefinitions>
@@ -268,8 +378,8 @@
                             <Setter Property="Foreground" Value="{StaticResource LightBlueBrush}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource NormalBlueBrush}" />
-                            <Setter Property="Foreground" Value="{StaticResource NormalBlueBrush}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource RegularBlueBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource RegularBlueBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -277,12 +387,11 @@
         </Setter>
     </Style>
 
-
     <!-- Primary Toggle Button -->
     <Style x:Key="PrimaryToggleButtonStyle" TargetType="{x:Type ToggleButton}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="Background" Value="{StaticResource BrightLightBlueBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource TaupeGrayBrush}" />
+        <Setter Property="Background" Value="{StaticResource VeryLightBlueBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderLightBrush}" />
         <Setter Property="Height" Value="20" />
         <Setter Property="Width" Value="35" />
         <Setter Property="MaxHeight" Value="20" />
@@ -308,8 +417,8 @@
                                  Width="20"
                                  HorizontalAlignment="Left"
                                  VerticalAlignment="Center"
-                                 Fill="{StaticResource PerfectWhiteBrush}"
-                                 Stroke="{StaticResource LightSilverBrush}"
+                                 Fill="{StaticResource WhiteBrush}"
+                                 Stroke="{StaticResource BorderLightBrush}"
                                  StrokeThickness="3">
                             <!-- Option -->
                             <!-- <Ellipse.Effect> -->
@@ -324,7 +433,7 @@
                                 <Storyboard>
                                     <ColorAnimation Storyboard.TargetName="Border"
                                                     Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                    To="{StaticResource NormalBlue}"
+                                                    To="{StaticResource RegularBlue}"
                                                     Duration="0:0:0.2" />
                                     <ThicknessAnimation Storyboard.TargetName="Ellipse"
                                                         Storyboard.TargetProperty="Margin"
@@ -339,7 +448,7 @@
                                 <Storyboard>
                                     <ColorAnimation Storyboard.TargetName="Border"
                                                     Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                    To="{StaticResource BrightLightBlue}"
+                                                    To="{StaticResource VeryLightBlue}"
                                                     Duration="0:0:0.2" />
                                     <ThicknessAnimation Storyboard.TargetName="Ellipse"
                                                         Storyboard.TargetProperty="Margin"
@@ -350,7 +459,7 @@
                         </EventTrigger>
 
                         <Trigger Property="IsChecked" Value="True">
-                            <!-- <Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource NormalBlueBrush}" /> -->
+                            <!-- <Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource RegularBlueBrush}" /> -->
                             <Setter TargetName="Ellipse" Property="Stroke" Value="{StaticResource DarkBlueBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -394,7 +503,7 @@
                             <TextBlock Text="OFF"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center"
-                                       Foreground="{StaticResource PerfectWhiteBrush}"
+                                       Foreground="{StaticResource WhiteBrush}"
                                        FontWeight="Bold"
                                        FontSize="16" />
 
@@ -402,7 +511,7 @@
                                        Text="ON"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center"
-                                       Foreground="{StaticResource PerfectWhiteBrush}"
+                                       Foreground="{StaticResource WhiteBrush}"
                                        FontWeight="Bold"
                                        FontSize="16" />
                         </Grid>
@@ -411,7 +520,7 @@
                                    Width="40"
                                    HorizontalAlignment="Left"
                                    VerticalAlignment="Center"
-                                   Fill="{StaticResource PerfectWhiteBrush}"
+                                   Fill="{StaticResource WhiteBrush}"
                                    RadiusX="4"
                                    RadiusY="4">
                             <!-- Option -->
@@ -460,14 +569,15 @@
     <!-- Default Toggle Button -->
     <Style x:Key="{x:Type ToggleButton}" TargetType="{x:Type ToggleButton}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="BorderBrush" Value="{StaticResource LightSilverBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderLightBrush}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Background" Value="{StaticResource PerfectWhiteBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource DimGrayBrush}" />
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource DarkTextBrush}" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}" />
         <Setter Property="FontWeight" Value="Regular" />
-        <Setter Property="Padding" Value="15 3" />
+        <Setter Property="Padding" Value="8 3" />
         <Setter Property="MaxHeight" Value="40" />
         <Setter Property="Width" Value="Auto" />
         <Setter Property="Template">
@@ -496,9 +606,9 @@
                             <Setter Property="Foreground" Value="{StaticResource LightBlueBrush}" />
                         </Trigger>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource NormalBlueBrush}" />
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource NormalBlueBrush}" />
-                            <Setter Property="Foreground" Value="{StaticResource PerfectWhiteBrush}" />
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource RegularBlueBrush}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource RegularBlueBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource WhiteBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -509,14 +619,15 @@
     <!-- Left Radio Button -->
     <Style x:Key="LeftRadioButtonStyle" TargetType="{x:Type RadioButton}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="BorderBrush" Value="{StaticResource LightSilverBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderLightBrush}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Background" Value="{StaticResource PerfectWhiteBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource DimGrayBrush}" />
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource DarkTextBrush}" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}" />
         <Setter Property="FontWeight" Value="Regular" />
-        <Setter Property="Padding" Value="15 3" />
+        <Setter Property="Padding" Value="8 3" />
         <Setter Property="MaxHeight" Value="40" />
         <Setter Property="Width" Value="Auto" />
         <Setter Property="Template">
@@ -545,9 +656,9 @@
                             <Setter Property="Foreground" Value="{StaticResource LightBlueBrush}" />
                         </Trigger>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource NormalBlueBrush}" />
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource NormalBlueBrush}" />
-                            <Setter Property="Foreground" Value="{StaticResource PerfectWhiteBrush}" />
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource RegularBlueBrush}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource RegularBlueBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource WhiteBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -558,14 +669,15 @@
     <!-- Center Radio Button -->
     <Style x:Key="CenterRadioButtonStyle" TargetType="{x:Type RadioButton}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="BorderBrush" Value="{StaticResource LightSilverBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderLightBrush}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Background" Value="{StaticResource PerfectWhiteBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource DimGrayBrush}" />
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource DarkTextBrush}" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}" />
         <Setter Property="FontWeight" Value="Regular" />
-        <Setter Property="Padding" Value="15 3" />
+        <Setter Property="Padding" Value="8 3" />
         <Setter Property="MaxHeight" Value="40" />
         <Setter Property="Width" Value="Auto" />
         <Setter Property="Template">
@@ -594,9 +706,9 @@
                             <Setter Property="Foreground" Value="{StaticResource LightBlueBrush}" />
                         </Trigger>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource NormalBlueBrush}" />
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource NormalBlueBrush}" />
-                            <Setter Property="Foreground" Value="{StaticResource PerfectWhiteBrush}" />
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource RegularBlueBrush}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource RegularBlueBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource WhiteBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -607,14 +719,15 @@
     <!-- Right Radio Button -->
     <Style x:Key="RightRadioButtonStyle" TargetType="{x:Type RadioButton}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="BorderBrush" Value="{StaticResource LightSilverBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderLightBrush}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Background" Value="{StaticResource PerfectWhiteBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource DimGrayBrush}" />
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource DarkTextBrush}" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}" />
         <Setter Property="FontWeight" Value="Regular" />
-        <Setter Property="Padding" Value="15 3" />
+        <Setter Property="Padding" Value="8 3" />
         <Setter Property="MaxHeight" Value="40" />
         <Setter Property="Width" Value="Auto" />
         <Setter Property="Template">
@@ -643,9 +756,9 @@
                             <Setter Property="Foreground" Value="{StaticResource LightBlueBrush}" />
                         </Trigger>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource NormalBlueBrush}" />
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource NormalBlueBrush}" />
-                            <Setter Property="Foreground" Value="{StaticResource PerfectWhiteBrush}" />
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource RegularBlueBrush}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource RegularBlueBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource WhiteBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

@@ -17,7 +17,7 @@
     <DockPanel LastChildFill="True">
 
         <!-- Start: Top Menu -->
-        <StackPanel DockPanel.Dock="Top" ZIndex="1" Background="{StaticResource WhiteSmokeBrush}">
+        <StackPanel DockPanel.Dock="Top" ZIndex="1" Background="{StaticResource BackgroundLightBrush}">
             <Grid SnapsToDevicePixels="True" Margin="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -37,13 +37,11 @@
             <Separator />
             <StackPanel SnapsToDevicePixels="True" Orientation="Horizontal" Margin="10">
                 <Button Style="{StaticResource IconTextButtonStyle}"
-                        FontSize="15"
                         Margin="0 0 10 0"
                         Command="{Binding SaveCommand}"
                         Tag="{StaticResource FontAwesomeSaveIcon}"
                         Content="保存" />
                 <Button Style="{StaticResource IconTextButtonStyle}"
-                        FontSize="15"
                         Margin="0 0 10 0"
                         Click="DownloadButton_OnClick"
                         Tag="{StaticResource FontAwesomeDownloadIcon}"
@@ -197,7 +195,7 @@
                         <StackPanel SnapsToDevicePixels="True"
                                     Visibility="{Binding SelectedBoundingBox, Converter={local:NullToVisibilityConverter}}">
                             <!-- Original Text -->
-                            <Border CornerRadius="5" Background="{StaticResource WhiteSmokeBrush}" Margin="0 0 0 25">
+                            <Border CornerRadius="5" Background="{StaticResource BackgroundLightBrush}" Margin="0 0 0 25">
                                 <StackPanel SnapsToDevicePixels="True" Margin="10">
                                     <Grid SnapsToDevicePixels="True" Margin="0 0 0 5">
                                         <TextBlock HorizontalAlignment="Left"
@@ -223,7 +221,7 @@
                             </Border>
 
                             <!-- Translated Text -->
-                            <Border CornerRadius="5" Background="{StaticResource WhiteSmokeBrush}" Margin="0 0 0 25">
+                            <Border CornerRadius="5" Background="{StaticResource BackgroundLightBrush}" Margin="0 0 0 25">
                                 <StackPanel SnapsToDevicePixels="True" Margin="10">
                                     <TextBlock HorizontalAlignment="Left"
                                                VerticalAlignment="Center"
@@ -273,7 +271,7 @@
                             </Border>
 
                             <!-- Clean Original Text -->
-                            <Border CornerRadius="5" Background="{StaticResource WhiteSmokeBrush}" Margin="0 0 0 25">
+                            <Border CornerRadius="5" Background="{StaticResource BackgroundLightBrush}" Margin="0 0 0 25">
 
                                 <StackPanel SnapsToDevicePixels="True" Margin="10">
                                     <!-- Title -->
@@ -307,7 +305,7 @@
                                                 TickFrequency="1"
                                                 IsMoveToPointEnabled="True" />
                                         <Border Grid.Column="2"
-                                                BorderBrush="{StaticResource LightSilverBrush}"
+                                                BorderBrush="{StaticResource BorderLightBrush}"
                                                 BorderThickness="1"
                                                 CornerRadius="5">
                                             <TextBox BorderThickness="1"
@@ -321,7 +319,7 @@
 
                             <!-- Text Font -->
                             <Border CornerRadius="5"
-                                    Background="{StaticResource WhiteSmokeBrush}"
+                                    Background="{StaticResource BackgroundLightBrush}"
                                     Margin="0 0 0 25"
                                     Visibility="{Binding SelectedBoundingBox.Ink, Converter={local:NullToVisibilityConverter}}">
 
@@ -342,7 +340,7 @@
                                             <ComboBoxItem Content="MV Boli" />
                                         </ComboBox>
 
-                                        <TextBox BorderBrush="{StaticResource LightSilverBrush}"
+                                        <TextBox BorderBrush="{StaticResource BorderLightBrush}"
                                                  BorderThickness="1"
                                                  MaxLines="1"
                                                  local:IsOnlyNumber.Value="True"
@@ -385,7 +383,7 @@
 
                             <!-- HorizontalCharacter Spacing -->
                             <Border CornerRadius="5"
-                                    Background="{StaticResource WhiteSmokeBrush}"
+                                    Background="{StaticResource BackgroundLightBrush}"
                                     Margin="0 0 0 25"
                                     Visibility="{Binding SelectedBoundingBox.Ink, Converter={local:NullToVisibilityConverter}}">
 
@@ -413,7 +411,7 @@
                                                 TickFrequency="0.1"
                                                 IsMoveToPointEnabled="True" />
                                         <Border Grid.Column="2"
-                                                BorderBrush="{StaticResource LightSilverBrush}"
+                                                BorderBrush="{StaticResource BorderLightBrush}"
                                                 BorderThickness="1"
                                                 CornerRadius="5">
                                             <TextBox BorderThickness="1"
@@ -428,7 +426,7 @@
 
                             <!-- VerticalCharacter Spacing -->
                             <Border CornerRadius="5"
-                                    Background="{StaticResource WhiteSmokeBrush}"
+                                    Background="{StaticResource BackgroundLightBrush}"
                                     Margin="0 0 0 25"
                                     Visibility="{Binding SelectedBoundingBox.Ink, Converter={local:NullToVisibilityConverter}}">
 
@@ -456,7 +454,7 @@
                                                 TickFrequency="0.1"
                                                 IsMoveToPointEnabled="True" />
                                         <Border Grid.Column="2"
-                                                BorderBrush="{StaticResource LightSilverBrush}"
+                                                BorderBrush="{StaticResource BorderLightBrush}"
                                                 BorderThickness="1"
                                                 CornerRadius="5">
                                             <TextBox BorderThickness="1"
@@ -509,7 +507,7 @@
                                 <DataTemplate>
                                     <Border CornerRadius="5"
                                             Margin="0 0 0 20"
-                                            Background="{StaticResource WhiteSmokeBrush}"
+                                            Background="{StaticResource BackgroundLightBrush}"
                                             BorderBrush="{StaticResource DarkBlueBrush}">
 
                                         <Border.Resources>
@@ -540,7 +538,7 @@
                                             <Grid SnapsToDevicePixels="True" Margin="0 0 0 10">
                                                 <!-- Index -->
                                                 <TextBlock FontSize="14"
-                                                           Foreground="{StaticResource NormalBlueBrush}"
+                                                           Foreground="{StaticResource RegularBlueBrush}"
                                                            HorizontalAlignment="Left"
                                                            VerticalAlignment="Center">
 
@@ -561,21 +559,13 @@
                                                 </TextBlock>
 
                                                 <!-- Delete Button -->
-                                                <Button SnapsToDevicePixels="True"
-                                                        Background="Transparent"
-                                                        BorderBrush="Transparent"
-                                                        BorderThickness="0"
+                                                <Button Style="{StaticResource IconWarningButtonStyle}"
                                                         HorizontalAlignment="Right"
                                                         VerticalAlignment="Center"
                                                         Command="{Binding DataContext.RemoveBoundingBoxCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                                                         CommandParameter="{Binding}"
-                                                        ToolTip="删除">
-                                                    <Image SnapsToDevicePixels="True"
-                                                           Stretch="Fill"
-                                                           Width="22"
-                                                           Height="22"
-                                                           Source="{Binding Source=media/delete.png, Converter={local:FilepathToBytesConverter}}" />
-                                                </Button>
+                                                        Content="{StaticResource FontAwesomeTrashIcon}"
+                                                        ToolTip="删除" />
                                             </Grid>
 
                                             <!-- Original Text -->

@@ -17,8 +17,7 @@
                   Margin="30">
         <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
             <!-- Image Items -->
-            <ItemsControl ItemsSource="{Binding ImageList}">
-
+            <ItemsControl ItemsSource="{Binding ImageCollection}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel Orientation="Horizontal" />
@@ -30,31 +29,33 @@
                         <Grid SnapsToDevicePixels="True " Width="100" Height="100">
 
                             <!-- Preview Image -->
-                            <Border BorderBrush="Gray" Width="80" Height="80" BorderThickness="1">
+                            <Border BorderBrush="{StaticResource BorderDarkBrush}" Width="80" Height="80"
+                                    BorderThickness="1">
                                 <Border.InputBindings>
                                     <MouseBinding Gesture="LeftClick"
                                                   Command="{Binding Path=DataContext.GoToCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                                                   CommandParameter="{Binding}" />
                                 </Border.InputBindings>
-
                                 <Image Source="{Binding}"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center" />
                             </Border>
 
                             <!-- Close Button -->
-                            <Button Background="Transparent"
-                                    BorderBrush="Transparent"
-                                    BorderThickness="0"
+                            <Button Style="{StaticResource IconWarningButtonStyle}"
+                                    Content="{StaticResource FontAwesomeTimesCircleIcon}"
                                     VerticalAlignment="Top"
                                     HorizontalAlignment="Right"
                                     Command="{Binding DataContext.RemoveCommand ,RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                                     CommandParameter="{Binding}"
-                                    Margin="0 2 2 0">
-                                <Image
-                                    Source="{Binding Source=media/close_small.png, Converter={local:FilepathToBytesConverter}}"
-                                    Width="23"
-                                    Height="23" />
+                                    Height="20"
+                                    Width="20"
+                                    Padding="1"
+                                    Margin="0 5 5 0">
+                                <!-- <Image -->
+                                <!--     Source="{Binding Source=media/close_small.png, Converter={local:FilepathToBytesConverter}}" -->
+                                <!--     Width="23" -->
+                                <!--     Height="23" /> -->
                             </Button>
                         </Grid>
                     </DataTemplate>
@@ -63,7 +64,7 @@
 
             <!-- Add Image Icon -->
             <Border SnapsToDevicePixels="True" Width="100" Height="100">
-                <Rectangle Stroke="Gray"
+                <Rectangle Stroke="{StaticResource BorderDarkBrush}"
                            Width="80"
                            Height="80"
                            StrokeDashArray="3"

@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- Menu Brushes -->
-    <LinearGradientBrush x:Key="NormaLinearBrush" StartPoint="0 0" EndPoint="0 1">
+    <LinearGradientBrush x:Key="LightLinearBrush" StartPoint="0 0" EndPoint="0 1">
         <GradientBrush.GradientStops>
             <GradientStopCollection>
                 <GradientStop Color="#FFFFFF" Offset="0.0" />
@@ -11,7 +11,7 @@
         </GradientBrush.GradientStops>
     </LinearGradientBrush>
 
-    <LinearGradientBrush x:Key="OuterSpaceLinearBrush" StartPoint="0 0" EndPoint="0 1">
+    <LinearGradientBrush x:Key="RegularLinearBrush" StartPoint="0 0" EndPoint="0 1">
         <GradientBrush.GradientStops>
             <GradientStopCollection>
                 <GradientStop Color="#CCCCCC" Offset="0.0" />
@@ -20,7 +20,7 @@
         </GradientBrush.GradientStops>
     </LinearGradientBrush>
 
-    <LinearGradientBrush x:Key="LightLinearBrush" StartPoint="0 0" EndPoint="0 1">
+    <LinearGradientBrush x:Key="VeryLightLinearBrush" StartPoint="0 0" EndPoint="0 1">
         <GradientBrush.GradientStops>
             <GradientStopCollection>
                 <GradientStop Color="#FFFFFF" Offset="0.0" />
@@ -30,40 +30,43 @@
     </LinearGradientBrush>
 
     <!-- Text &　Button Brushes -->
-    <Color x:Key="LightBlue">#929CD6</Color>
-    <Color x:Key="BrightLightBlue">#AEB4DE</Color>
-    <Color x:Key="NormalBlue">#6A75CA</Color>
+    <Color x:Key="VeryLightBlue">#929CD6</Color>
+    <Color x:Key="LightBlue">#AEB4DE</Color>
+    <Color x:Key="RegularBlue">#6A75CA</Color>
     <Color x:Key="DarkBlue">#4D54A3</Color>
+    <Color x:Key="LightRed">#FF7875</Color>
+    <Color x:Key="RegularRed">#FF4D4F</Color>
+    <Color x:Key="DarkRed">#D9363E</Color>
 
-    <SolidColorBrush x:Key="AliceBlueBrush" Color="AliceBlue" />
-    <SolidColorBrush x:Key="BrightLightBlueBrush" Color="{StaticResource BrightLightBlue}" />
+    <SolidColorBrush x:Key="VeryVeryLightBlueBrush" Color="AliceBlue" />
+    <SolidColorBrush x:Key="VeryLightBlueBrush" Color="{StaticResource VeryLightBlue}" />
     <SolidColorBrush x:Key="LightBlueBrush" Color="{StaticResource LightBlue}" />
-    <SolidColorBrush x:Key="NormalBlueBrush" Color="{StaticResource NormalBlue}" />
+    <SolidColorBrush x:Key="RegularBlueBrush" Color="{StaticResource RegularBlue}" />
     <SolidColorBrush x:Key="DarkBlueBrush" Color="{StaticResource DarkBlue}" />
+    
+    <SolidColorBrush x:Key="LightRedBrush" Color="{StaticResource LightRed}" />
+    <SolidColorBrush x:Key="RegularRedBrush" Color="{StaticResource RegularRed}" />
+    <SolidColorBrush x:Key="DarkRedBrush" Color="{StaticResource DarkRed}" />
 
     <!-- Miscellaneous Brushes -->
     <!-- 255 255 255 -->
-    <Color x:Key="PerfectWhite">White</Color>
-    <SolidColorBrush x:Key="PerfectWhiteBrush" Color="{StaticResource PerfectWhite}" />
+    <Color x:Key="White">White</Color>
     <!-- 245 245 245 -->
-    <SolidColorBrush x:Key="WhiteSmokeBrush" Color="WhiteSmoke" />
-    <!-- 242 242 242 -->
-    <Color x:Key="AntiFlashWhite">#F2F2F2</Color>
-    <SolidColorBrush x:Key="AntiFlashWhiteBrush" Color="{StaticResource AntiFlashWhite}" />
+    <Color x:Key="BackgroundLight">WhiteSmoke</Color>
     <!-- 217 217 217 -->
-    <Color x:Key="LightSilver">#D9D9D9</Color>
-    <SolidColorBrush x:Key="LightSilverBrush" Color="{StaticResource LightSilver}" />
-    <!-- 136 136 136 -->
-    <Color x:Key="TaupeGray">#888888</Color>
-    <SolidColorBrush x:Key="TaupeGrayBrush" Color="{StaticResource TaupeGray}" />
+    <Color x:Key="BorderLight">#D9D9D9</Color>
     <!-- 104 104 104 -->
-    <Color x:Key="DimGray">DimGray</Color>
-    <SolidColorBrush x:Key="DimGrayBrush" Color="{StaticResource DimGray}" />
-    <!-- 68 68 68 -->
-    <Color x:Key="OuterSpace">#444444</Color>
-    <SolidColorBrush x:Key="OuterSpaceBrush" Color="{StaticResource OuterSpace}" />
+    <Color x:Key="BorderDark">DimGray</Color>
+    <!-- 104 104 104 -->
+    <Color x:Key="DarkText">DimGray</Color>
     <!-- 0 0 0 -->
-    <Color x:Key="PerfectBlack">Black</Color>
-    <SolidColorBrush x:Key="PerfectBlackBrush" Color="{StaticResource PerfectBlack}" />
+    <Color x:Key="Black">Black</Color>
+
+    <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource White}" />
+    <SolidColorBrush x:Key="BackgroundLightBrush" Color="{StaticResource BackgroundLight}" />
+    <SolidColorBrush x:Key="BorderLightBrush" Color="{StaticResource BorderLight}" />
+    <SolidColorBrush x:Key="BorderDarkBrush" Color="{StaticResource BorderDark}" />
+    <SolidColorBrush x:Key="DarkTextBrush" Color="{StaticResource DarkText}" />
+    <SolidColorBrush x:Key="BlackBrush" Color="{StaticResource Black}" />
 
 </ResourceDictionary>

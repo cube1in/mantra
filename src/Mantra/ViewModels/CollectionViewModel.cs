@@ -15,7 +15,7 @@ internal class CollectionViewModel : BaseViewModel
     /// <summary>
     /// 图片集合
     /// </summary>
-    public ObservableCollection<string> ImageList { get; set; } = new();
+    public ObservableCollection<string> ImageCollection { get; set; } = new();
 
     #endregion
 
@@ -56,13 +56,13 @@ internal class CollectionViewModel : BaseViewModel
             var files = dialog.FileNames;
             foreach (var file in files)
             {
-                if (ImageList.Contains(file))
+                if (ImageCollection.Contains(file))
                 {
                     MessageBox.Show("该图片已经存在", "信息");
                     return;
                 }
 
-                ImageList.Add(file);
+                ImageCollection.Add(file);
             }
         }
 
@@ -75,7 +75,7 @@ internal class CollectionViewModel : BaseViewModel
     /// <param name="item"></param>
     private async Task OnRemoveAsync(string item)
     {
-        ImageList.Remove(item);
+        ImageCollection.Remove(item);
         await Task.CompletedTask;
     }
 
@@ -103,7 +103,7 @@ internal class CollectionViewModel : BaseViewModel
         {
             foreach (var path in paths)
             {
-                ImageList.Add(path);
+                ImageCollection.Add(path);
             }
         }
     }

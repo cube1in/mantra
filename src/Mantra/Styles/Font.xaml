@@ -14,4 +14,6 @@
     <system:String x:Key="FontAwesomeArrowLeftIcon">&#xf060;</system:String>
     <system:String x:Key="FontAwesomeSaveIcon">&#xf0c7;</system:String>
     <system:String x:Key="FontAwesomeDownloadIcon">&#xf019;</system:String>
+    <system:String x:Key="FontAwesomeTrashIcon">&#xf1f8;</system:String>
+    <system:String x:Key="FontAwesomeTimesCircleIcon">&#xf1f8;</system:String>
 </ResourceDictionary>

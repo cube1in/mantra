@@ -20,7 +20,7 @@
 
         <Rectangle RadiusX="3" 
                    RadiusY="3" 
-                   Stroke="{StaticResource DimGrayBrush}"
+                   Stroke="{StaticResource DarkTextBrush}"
                    StrokeThickness="2" 
                    StrokeDashArray="5" />
         

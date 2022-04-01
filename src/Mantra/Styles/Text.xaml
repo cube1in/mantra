@@ -12,7 +12,7 @@
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
         <Setter Property="BorderThickness" Value="2" />
-        <Setter Property="BorderBrush" Value="{StaticResource  LightSilverBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource  BorderLightBrush}" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="MinWidth" Value="60" />
         <Setter Property="MinHeight" Value="20" />
@@ -23,8 +23,8 @@
         <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Background" Value="{StaticResource PerfectWhiteBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource DimGrayBrush}" />
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource DarkTextBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBoxBase}">
@@ -50,7 +50,7 @@
                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                    Visibility="Collapsed"
-                                   Foreground="{StaticResource DimGrayBrush}"
+                                   Foreground="{StaticResource DarkTextBrush}"
                                    Padding="{TemplateBinding Padding}" />
                         </Grid>
                     </Border>
@@ -65,7 +65,7 @@
                             <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}" />
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter Property="BorderBrush" Value="{StaticResource NormalBlueBrush}" />
+                            <Setter Property="BorderBrush" Value="{StaticResource RegularBlueBrush}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <!-- <Setter TargetName="Border" Property="Background" -->
@@ -106,15 +106,15 @@
         <Setter Property="MinHeight" Value="20" />
         <Setter Property="AllowDrop" Value="true" />
         <Setter Property="BorderThickness" Value="2" />
-        <Setter Property="BorderBrush" Value="{StaticResource LightSilverBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderLightBrush}" />
         <Setter Property="Padding" Value="6 3" />
         <Setter Property="Cursor" Value="IBeam" />
         <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst" />
         <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Background" Value="{StaticResource PerfectWhiteBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource PerfectBlackBrush}" />
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource BlackBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type PasswordBox}">
@@ -138,7 +138,7 @@
                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                    Visibility="Collapsed"
-                                   Foreground="{StaticResource DimGrayBrush}"
+                                   Foreground="{StaticResource DarkTextBrush}"
                                    Padding="{TemplateBinding Padding}" />
                         </Grid>
                     </Border>
@@ -153,14 +153,14 @@
                             <Setter Property="BorderBrush" Value="{StaticResource LightBlueBrush}" />
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter Property="BorderBrush" Value="{StaticResource NormalBlueBrush}" />
+                            <Setter Property="BorderBrush" Value="{StaticResource RegularBlueBrush}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="Border" Property="Background"
-                                    Value="{StaticResource WhiteSmokeBrush}" />
+                                    Value="{StaticResource BackgroundLightBrush}" />
                             <Setter TargetName="Border" Property="BorderBrush"
-                                    Value="{StaticResource WhiteSmokeBrush}" />
-                            <Setter Property="Foreground" Value="{StaticResource AntiFlashWhiteBrush}" />
+                                    Value="{StaticResource BackgroundLightBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource BackgroundLightBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

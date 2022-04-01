@@ -14,8 +14,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Menu}">
                     <Border
-                        Background="{StaticResource LightLinearBrush}"
-                        BorderBrush="{StaticResource OuterSpaceLinearBrush}"
+                        Background="{StaticResource VeryLightLinearBrush}"
+                        BorderBrush="{StaticResource RegularLinearBrush}"
                         BorderThickness="1">
                         <StackPanel ClipToBounds="True" Orientation="Horizontal" IsItemsHost="True" />
                     </Border>
@@ -35,8 +35,8 @@
                 <ControlTemplate TargetType="{x:Type ContextMenu}">
                     <Border
                         Name="Border"
-                        Background="{StaticResource PerfectWhiteBrush}"
-                        BorderBrush="{StaticResource AntiFlashWhiteBrush}"
+                        Background="{StaticResource WhiteBrush}"
+                        BorderBrush="{StaticResource BackgroundLightBrush}"
                         BorderThickness="1">
                         <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
                     </Border>
@@ -206,7 +206,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Separator}">
-                    <Border BorderBrush="{StaticResource AntiFlashWhiteBrush}" BorderThickness="1" />
+                    <Border BorderBrush="{StaticResource BackgroundLightBrush}" BorderThickness="1" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -230,8 +230,8 @@
                     <Border
                         Name="SubmenuBorder"
                         SnapsToDevicePixels="True"
-                        Background="{StaticResource PerfectWhiteBrush}"
-                        BorderBrush="{StaticResource AntiFlashWhiteBrush}"
+                        Background="{StaticResource WhiteBrush}"
+                        BorderBrush="{StaticResource BackgroundLightBrush}"
                         BorderThickness="1">
                         <ScrollViewer CanContentScroll="True"
                                       Style="{StaticResource MenuScrollViewer}">
@@ -248,7 +248,7 @@
                 <Setter TargetName="Popup" Property="PopupAnimation" Value="None" />
             </Trigger>
             <Trigger Property="IsHighlighted" Value="True">
-                <Setter TargetName="Border" Property="Background" Value="{StaticResource NormaLinearBrush}" />
+                <Setter TargetName="Border" Property="Background" Value="{StaticResource LightLinearBrush}" />
                 <Setter TargetName="Border" Property="BorderBrush" Value="Transparent" />
             </Trigger>
             <!--Snippet top level header-->
@@ -258,7 +258,7 @@
             </Trigger>
             <!--/Snippet top level header-->
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{StaticResource AntiFlashWhiteBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource BackgroundLightBrush}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -277,11 +277,11 @@
         </Border>
         <ControlTemplate.Triggers>
             <Trigger Property="IsHighlighted" Value="True">
-                <Setter TargetName="Border" Property="Background" Value="{StaticResource NormaLinearBrush}" />
+                <Setter TargetName="Border" Property="Background" Value="{StaticResource LightLinearBrush}" />
                 <Setter TargetName="Border" Property="BorderBrush" Value="Transparent" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{StaticResource AntiFlashWhiteBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource BackgroundLightBrush}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -309,15 +309,15 @@
                         Width="13" Height="13"
                         Visibility="Collapsed"
                         Margin="6,0,6,0"
-                        Background="{StaticResource NormaLinearBrush}"
+                        Background="{StaticResource LightLinearBrush}"
                         BorderThickness="1"
-                        BorderBrush="{StaticResource OuterSpaceLinearBrush}">
+                        BorderBrush="{StaticResource RegularLinearBrush}">
                     <Path
                         Name="CheckMark"
                         Width="7" Height="7"
                         Visibility="Hidden"
                         SnapsToDevicePixels="False"
-                        Stroke="{StaticResource OuterSpaceBrush}"
+                        Stroke="{StaticResource DarkTextBrush}"
                         StrokeThickness="2"
                         Data="M 0 0 L 7 7 M 0 7 L 7 0" />
                 </Border>
@@ -347,10 +347,10 @@
                 <Setter TargetName="Icon" Property="Visibility" Value="Hidden" />
             </Trigger>
             <Trigger Property="IsHighlighted" Value="True">
-                <Setter TargetName="Border" Property="Background" Value="{StaticResource GainsboroBrush}" />
+                <Setter TargetName="Border" Property="Background" Value="{StaticResource BackgroundLight}" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
-                <Setter Property="Foreground" Value="{StaticResource AntiFlashWhiteBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource BackgroundLightBrush}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -387,7 +387,7 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Data="M 0 0 L 0 7 L 4 3.5 Z"
-                    Fill="{StaticResource OuterSpaceBrush}" />
+                    Fill="{StaticResource DarkTextBrush}" />
                 <Popup Grid.Column="0"
                        Name="Popup"
                        Placement="Right"
@@ -399,8 +399,8 @@
                     <Border
                         Name="SubmenuBorder"
                         SnapsToDevicePixels="True"
-                        Background="{StaticResource PerfectWhiteBrush}"
-                        BorderBrush="{StaticResource AntiFlashWhiteBrush}"
+                        Background="{StaticResource WhiteBrush}"
+                        BorderBrush="{StaticResource BackgroundLightBrush}"
                         BorderThickness="1">
                         <ScrollViewer CanContentScroll="True"
                                       Style="{StaticResource MenuScrollViewer}">
@@ -418,14 +418,14 @@
                 <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
             </Trigger>
             <Trigger Property="IsHighlighted" Value="True">
-                <Setter TargetName="Border" Property="Background" Value="{StaticResource GainsboroBrush}" />
+                <Setter TargetName="Border" Property="Background" Value="{StaticResource BackgroundLight}" />
             </Trigger>
             <Trigger SourceName="Popup" Property="Popup.AllowsTransparency" Value="True">
                 <Setter TargetName="SubmenuBorder" Property="CornerRadius" Value="4" />
                 <Setter TargetName="SubmenuBorder" Property="Padding" Value="0,3,0,3" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
-                <Setter Property="Foreground" Value="{StaticResource AntiFlashWhiteBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource BackgroundLightBrush}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>

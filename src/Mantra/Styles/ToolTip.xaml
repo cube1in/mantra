@@ -8,10 +8,10 @@
     <!-- Start: Default ToolTip -->
     <Style TargetType="{x:Type ToolTip}">
         <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
-        <Setter Property="Background" Value="{StaticResource PerfectWhiteBrush}" />
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
         <Setter Property="Padding" Value="5" />
         <Setter Property="VerticalAlignment" Value="Stretch" />
-        <Setter Property="Foreground" Value="{StaticResource DimGrayBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource DarkTextBrush}" />
         <Setter Property="Placement" Value="Bottom" />
         <Setter Property="HorizontalOffset" Value="20" />
         <Setter Property="VerticalOffset" Value="20" />
