@@ -105,57 +105,55 @@
                                                           GroupName="ResizableContainer">
                                     <Grid>
                                         <!-- Text Setting -->
-                                        <Grid x:Name="ScreenShot" SnapsToDevicePixels="True">
-                                            <Border SnapsToDevicePixels="True"
-                                                    Background="{Binding Text.Setting.Background}"
-                                                    IsHitTestVisible="False"
-                                                    Visibility="{Binding Text.Setting, Converter={local:NullToVisibilityConverter}}">
-                                                <TextBlock Text="{Binding Text.TranslatedText}"
-                                                           Background="{Binding Text.Setting.Background}"
-                                                           Foreground="{Binding Text.Setting.Foreground}"
-                                                           FontSize="{Binding Text, ElementName=FontSizeTextBox}"
-                                                           FontFamily="{Binding SelectedValue, ElementName=FontFamilyComboBox, Converter={local:FontFamilyConverter}}"
-                                                           TextWrapping="Wrap"
-                                                           IsHitTestVisible="False">
-                                                    <TextBlock.Style>
-                                                        <Style TargetType="{x:Type TextBlock}">
-                                                            <Style.Triggers>
-                                                                <!-- Text Horizontal Alignment -->
-                                                                <DataTrigger Value="True"
-                                                                             Binding="{Binding IsChecked, ElementName=LftRadioButton}">
-                                                                    <Setter Property="HorizontalAlignment" Value="Left" />
-                                                                </DataTrigger>
-                                                                <DataTrigger Value="True"
-                                                                             Binding="{Binding IsChecked, ElementName=HorCenterRadioButton}">
-                                                                    <Setter Property="HorizontalAlignment"
-                                                                            Value="Center" />
-                                                                </DataTrigger>
-                                                                <DataTrigger Value="True"
-                                                                             Binding="{Binding IsChecked, ElementName=RightRadioButton}">
-                                                                    <Setter Property="HorizontalAlignment"
-                                                                            Value="Right" />
-                                                                </DataTrigger>
+                                        <Border x:Name="ScreenShot" SnapsToDevicePixels="True"
+                                                Background="{Binding Text.Setting.Background}"
+                                                IsHitTestVisible="False"
+                                                Visibility="{Binding Text.Setting, Converter={local:NullToVisibilityConverter}}">
+                                            <TextBlock Text="{Binding Text.TranslatedText}"
+                                                       Background="{Binding Text.Setting.Background}"
+                                                       Foreground="{Binding Text.Setting.Foreground}"
+                                                       FontSize="{Binding Text, ElementName=FontSizeTextBox}"
+                                                       FontFamily="{Binding SelectedValue, ElementName=FontFamilyComboBox, Converter={local:FontFamilyConverter}}"
+                                                       TextWrapping="Wrap"
+                                                       IsHitTestVisible="False">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="{x:Type TextBlock}">
+                                                        <Style.Triggers>
+                                                            <!-- Text Horizontal Alignment -->
+                                                            <DataTrigger Value="True"
+                                                                         Binding="{Binding IsChecked, ElementName=LftRadioButton}">
+                                                                <Setter Property="HorizontalAlignment" Value="Left" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Value="True"
+                                                                         Binding="{Binding IsChecked, ElementName=HorCenterRadioButton}">
+                                                                <Setter Property="HorizontalAlignment"
+                                                                        Value="Center" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Value="True"
+                                                                         Binding="{Binding IsChecked, ElementName=RightRadioButton}">
+                                                                <Setter Property="HorizontalAlignment"
+                                                                        Value="Right" />
+                                                            </DataTrigger>
 
-                                                                <!-- Text Vertical Alignment -->
-                                                                <DataTrigger Value="True"
-                                                                             Binding="{Binding IsChecked, ElementName=TopRadioButton}">
-                                                                    <Setter Property="VerticalAlignment" Value="Top" />
-                                                                </DataTrigger>
-                                                                <DataTrigger Value="True"
-                                                                             Binding="{Binding IsChecked, ElementName=VerCenterRadioButton}">
-                                                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                                                </DataTrigger>
-                                                                <DataTrigger Value="True"
-                                                                             Binding="{Binding IsChecked, ElementName=BottomRadioButton}">
-                                                                    <Setter Property="VerticalAlignment" Value="Bottom" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </TextBlock.Style>
+                                                            <!-- Text Vertical Alignment -->
+                                                            <DataTrigger Value="True"
+                                                                         Binding="{Binding IsChecked, ElementName=TopRadioButton}">
+                                                                <Setter Property="VerticalAlignment" Value="Top" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Value="True"
+                                                                         Binding="{Binding IsChecked, ElementName=VerCenterRadioButton}">
+                                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Value="True"
+                                                                         Binding="{Binding IsChecked, ElementName=BottomRadioButton}">
+                                                                <Setter Property="VerticalAlignment" Value="Bottom" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
 
-                                                </TextBlock>
-                                            </Border>
-                                        </Grid>
+                                            </TextBlock>
+                                        </Border>
 
                                         <!-- Remove Ink Button -->
                                         <Button Background="Red"

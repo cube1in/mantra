@@ -321,18 +321,17 @@ internal class HandleViewModel : BaseViewModel
     /// <summary>
     /// 处理下载
     /// </summary>
-    /// <param name="func"></param>
-    internal void DownloadHandler(Func<IEnumerable<(RectangleF, bool)>, IEnumerable<(float, float, Bitmap)>> func)
+    /// <param name="bitmaps"></param>
+    internal void DownloadHandler(IEnumerable<Bitmap> bitmaps)
     {
-        var bitmaps = func(from window in Windows
-            select (
-                new RectangleF((float) window.Left, (float) window.Top, (float) window.Width, (float) window.Height),
-                window.Text.Setting != null));
+        var windows = (from window in Windows where window.Text.Setting != null select window).ToList();
 
+        var index = 0;
         var source = new Bitmap(Filename!);
-        foreach (var (x, y, bitmap) in bitmaps)
+        foreach (var bitmap in bitmaps)
         {
-            source.Replace(bitmap, x, y);
+            source.Replace(bitmap, (int) windows[index].Left, (int) windows[index].Top);
+            index++;
         }
 
         var dialog = new SaveFileDialog
