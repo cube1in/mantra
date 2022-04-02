@@ -29,7 +29,7 @@ internal class TesseactComputerVision : IComputerVision
                 Top = box.Y1,
                 Height = box.Height,
                 Width = box.Width,
-                OriginalText = block.Text
+                Text = block.Text
             };
     }
 
@@ -47,7 +47,7 @@ internal class TesseactComputerVision : IComputerVision
                 Top = box.Y1,
                 Height = box.Height,
                 Width = box.Width,
-                OriginalText = block.Text
+                Text = block.Text
             };
     }
 
@@ -64,7 +64,7 @@ internal class TesseactComputerVision : IComputerVision
                 Top = box.Y1,
                 Height = box.Height,
                 Width = box.Width,
-                OriginalText = block.Text
+                Text = block.Text
             };
     }
 }

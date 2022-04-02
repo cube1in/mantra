@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Windows;
 using Mantra.Core.Models;
+using Window = Mantra.Core.Models.Window;
 
 // ReSharper disable once CheckNamespace
 namespace Mantra;
@@ -10,7 +11,7 @@ internal class CompareBoundingBoxToThicknessConverter : BaseMultiValueConverter<
 {
     public override object Convert(object[] values, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (values[0] is BoundingBox box1 && values[1] is BoundingBox box2)
+        if (values[0] is Window box1 && values[1] is Window box2)
         {
             return box1 == box2 ? new Thickness(1) : new Thickness(0);
         }

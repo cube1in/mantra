@@ -9,7 +9,7 @@ internal class CompareBoundingBoxToBooleanConverter : BaseMultiValueConverter<Co
 {
     public override object Convert(object[] values, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (values[0] is BoundingBox current && values[1] is BoundingBox selected)
+        if (values[0] is Window current && values[1] is Window selected)
         {
             return parameter switch
             {

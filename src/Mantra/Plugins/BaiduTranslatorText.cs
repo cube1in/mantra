@@ -6,7 +6,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Mantra.Core.Abstractions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 
 namespace Mantra.Plugins;
 
@@ -39,6 +41,26 @@ internal class BaiduTranslatorText : ITranslatorText
     /// </summary>
     private static readonly HttpClient Client = new();
 
+    /// <summary>
+    /// 序列化设置
+    /// </summary>
+    private static readonly JsonSerializerSettings SerializerSettings = new()
+    {
+        // 默认值
+        DefaultValueHandling = DefaultValueHandling.Ignore,
+
+        // 空值
+        NullValueHandling = NullValueHandling.Ignore,
+
+        // 循环序列化
+        ReferenceLoopHandling = ReferenceLoopHandling.Error,
+
+        // 蛇形
+        ContractResolver = new DefaultContractResolver {NamingStrategy = new SnakeCaseNamingStrategy()},
+
+        Converters = new JsonConverter[] {new StringEnumConverter()}
+    };
+
     #endregion
 
     static BaiduTranslatorText()
@@ -64,7 +86,7 @@ internal class BaiduTranslatorText : ITranslatorText
         response.EnsureSuccessStatusCode();
 
         var result = await response.Content.ReadAsStringAsync();
-        return JsonConvert.DeserializeObject<Token>(result, JsonSettings.SerializerSettings)?.AccessToken;
+        return JsonConvert.DeserializeObject<Token>(result, SerializerSettings)?.AccessToken;
     }
 
     #region ITranslate
@@ -86,26 +108,9 @@ internal class BaiduTranslatorText : ITranslatorText
 
         var result = await response.Content.ReadAsStringAsync();
         return string.Join(Environment.NewLine,
-            JsonConvert.DeserializeObject<TranslateResponse>(result, JsonSettings.SerializerSettings)!.Result
+            JsonConvert.DeserializeObject<TranslateResponse>(result, SerializerSettings)!.Result
                 .TransResult.Select(r => r.Dst));
     }
-
-    // private static IEnumerable<string> Separator(IEnumerable<string> template, string value)
-    // {
-    //     var chars = (from str in template select str[0]).ToList();
-    //     chars.RemoveAt(0);
-    //
-    //     var list = new List<string>();
-    //     foreach (var index in chars.Select(item => value.IndexOf(item)))
-    //     {
-    //         list.Add(value[..index]);
-    //         value = value[index..];
-    //     }
-    //
-    //     list.Add(value);
-    //
-    //     return list;
-    // }
 
     #endregion
 }

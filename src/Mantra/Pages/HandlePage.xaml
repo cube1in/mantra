@@ -69,13 +69,13 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Stretch="Uniform"
-                        Source="{Binding Filepath}"
+                        Source="{Binding Filename}"
                         Width="{Binding ImgPixelWidth}"
                         Height="{Binding ImgPixelHeight}"
                         SnapsToDevicePixels="True" />
 
                     <!-- Start: Canvas -->
-                    <ItemsControl x:Name="CanvasItemsControl" ItemsSource="{Binding BoundingBoxCollection}">
+                    <ItemsControl x:Name="CanvasItemsControl" ItemsSource="{Binding Windows}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <!-- Must set background -->
@@ -88,7 +88,7 @@
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemContainerStyle>
-                            <Style TargetType="ContentPresenter" d:DataContext="{d:DesignInstance core:BoundingBox}">
+                            <Style TargetType="ContentPresenter" d:DataContext="{d:DesignInstance core:Window}">
                                 <!-- Must set mode is two way, otherwise not update -->
                                 <Setter Property="Canvas.Left" Value="{Binding Left, Mode=TwoWay}" />
                                 <Setter Property="Canvas.Top" Value="{Binding Top, Mode=TwoWay}" />
@@ -100,33 +100,68 @@
                                 <local:ResizableContainer StrokeColor="{Binding Color}"
                                                           Width="{Binding Width, Mode=TwoWay}"
                                                           Height="{Binding Height, Mode=TwoWay}"
-                                                          Command="{Binding DataContext.SelectBoundingBoxCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                          Command="{Binding DataContext.SelectWindowCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                                                           CommandParameter="{Binding}"
                                                           GroupName="ResizableContainer">
                                     <Grid>
-                                        <!-- Ink -->
+                                        <!-- Text Setting -->
                                         <Grid x:Name="ScreenShot" SnapsToDevicePixels="True">
                                             <Border SnapsToDevicePixels="True"
-                                                    Background="{Binding Ink.Background}"
+                                                    Background="{Binding Text.Setting.Background}"
                                                     IsHitTestVisible="False"
-                                                    Visibility="{Binding Ink, Converter={local:NullToVisibilityConverter}}">
-                                                <TextBlock Text="{Binding TranslatedText}"
-                                                           Background="{Binding Ink.Background}"
-                                                           Foreground="{Binding Ink.Foreground}"
-                                                           FontSize="{Binding Ink.FontSize}"
-                                                           FontWeight="{Binding Ink.FontWeight}"
-                                                           HorizontalAlignment="{Binding Ink.HorizontalAlignment}"
-                                                           VerticalAlignment="{Binding Ink.VerticalAlignment}"
+                                                    Visibility="{Binding Text.Setting, Converter={local:NullToVisibilityConverter}}">
+                                                <TextBlock Text="{Binding Text.TranslatedText}"
+                                                           Background="{Binding Text.Setting.Background}"
+                                                           Foreground="{Binding Text.Setting.Foreground}"
+                                                           FontSize="{Binding Text, ElementName=FontSizeTextBox}"
+                                                           FontFamily="{Binding SelectedValue, ElementName=FontFamilyComboBox, Converter={local:FontFamilyConverter}}"
                                                            TextWrapping="Wrap"
-                                                           IsHitTestVisible="False" />
+                                                           IsHitTestVisible="False">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="{x:Type TextBlock}">
+                                                            <Style.Triggers>
+                                                                <!-- Text Horizontal Alignment -->
+                                                                <DataTrigger Value="True"
+                                                                             Binding="{Binding IsChecked, ElementName=LftRadioButton}">
+                                                                    <Setter Property="HorizontalAlignment" Value="Left" />
+                                                                </DataTrigger>
+                                                                <DataTrigger Value="True"
+                                                                             Binding="{Binding IsChecked, ElementName=HorCenterRadioButton}">
+                                                                    <Setter Property="HorizontalAlignment"
+                                                                            Value="Center" />
+                                                                </DataTrigger>
+                                                                <DataTrigger Value="True"
+                                                                             Binding="{Binding IsChecked, ElementName=RightRadioButton}">
+                                                                    <Setter Property="HorizontalAlignment"
+                                                                            Value="Right" />
+                                                                </DataTrigger>
+
+                                                                <!-- Text Vertical Alignment -->
+                                                                <DataTrigger Value="True"
+                                                                             Binding="{Binding IsChecked, ElementName=TopRadioButton}">
+                                                                    <Setter Property="VerticalAlignment" Value="Top" />
+                                                                </DataTrigger>
+                                                                <DataTrigger Value="True"
+                                                                             Binding="{Binding IsChecked, ElementName=VerCenterRadioButton}">
+                                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                                </DataTrigger>
+                                                                <DataTrigger Value="True"
+                                                                             Binding="{Binding IsChecked, ElementName=BottomRadioButton}">
+                                                                    <Setter Property="VerticalAlignment" Value="Bottom" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+
+                                                </TextBlock>
                                             </Border>
                                         </Grid>
 
                                         <!-- Remove Ink Button -->
                                         <Button Background="Red"
-                                                Command="{Binding DataContext.RemoveInkCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                Command="{Binding DataContext.RemoveTextSettingCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                                                 CommandParameter="{Binding}"
-                                                Visibility="{Binding Ink, Converter={local:NullToVisibilityConverter}}"
+                                                Visibility="{Binding Text.Setting, Converter={local:NullToVisibilityConverter}}"
                                                 Margin="0 0 0 -25"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Bottom"
@@ -142,9 +177,9 @@
                                                     Orientation="Horizontal"
                                                     HorizontalAlignment="Right"
                                                     VerticalAlignment="Bottom"
-                                                    Visibility="{Binding Ink, Converter={local:NullToVisibilityConverter}, ConverterParameter=true}">
+                                                    Visibility="{Binding Text.Setting, Converter={local:NullToVisibilityConverter}, ConverterParameter=true}">
                                             <Button Background="Red"
-                                                    Command="{Binding DataContext.RemoveBoundingBoxCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                    Command="{Binding DataContext.RemoveWindowCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                                                     CommandParameter="{Binding}"
                                                     Content="X">
                                                 <Button.LayoutTransform>
@@ -166,7 +201,7 @@
                                     <local:ResizableContainer.IsChecked>
                                         <MultiBinding
                                             Converter="{StaticResource CompareBoundingBoxToBooleanConverter}">
-                                            <Binding Path="DataContext.SelectedBoundingBox"
+                                            <Binding Path="DataContext.SelectedWindow"
                                                      RelativeSource="{RelativeSource AncestorType=ItemsControl}"
                                                      Mode="TwoWay" />
                                             <Binding Path="DataContext" RelativeSource="{RelativeSource Mode=Self}" />
@@ -193,9 +228,10 @@
                     <!-- Start: OCR TabItem -->
                     <TabItem Header="文字识别" FontSize="16">
                         <StackPanel SnapsToDevicePixels="True"
-                                    Visibility="{Binding SelectedBoundingBox, Converter={local:NullToVisibilityConverter}}">
+                                    Visibility="{Binding SelectedWindow, Converter={local:NullToVisibilityConverter}}">
                             <!-- Original Text -->
-                            <Border CornerRadius="5" Background="{StaticResource BackgroundLightBrush}" Margin="0 0 0 25">
+                            <Border CornerRadius="5" Background="{StaticResource BackgroundLightBrush}"
+                                    Margin="0 0 0 25">
                                 <StackPanel SnapsToDevicePixels="True" Margin="10">
                                     <Grid SnapsToDevicePixels="True" Margin="0 0 0 5">
                                         <TextBlock HorizontalAlignment="Left"
@@ -209,19 +245,20 @@
                                                 Content="去除换行"
                                                 ToolTip="清除换行"
                                                 Command="{Binding RemoveNewLineCommand}"
-                                                CommandParameter="{Binding SelectedBoundingBox}" />
+                                                CommandParameter="{Binding SelectedWindow}" />
                                     </Grid>
                                     <TextBox AcceptsReturn="True"
                                              BorderThickness="1"
                                              TextWrapping="Wrap"
                                              Tag="请填写原文内容"
-                                             Text="{Binding SelectedBoundingBox.OriginalText, UpdateSourceTrigger=PropertyChanged}"
+                                             Text="{Binding SelectedWindow.Text.OriginalText, UpdateSourceTrigger=PropertyChanged}"
                                              FontSize="14" />
                                 </StackPanel>
                             </Border>
 
                             <!-- Translated Text -->
-                            <Border CornerRadius="5" Background="{StaticResource BackgroundLightBrush}" Margin="0 0 0 25">
+                            <Border CornerRadius="5" Background="{StaticResource BackgroundLightBrush}"
+                                    Margin="0 0 0 25">
                                 <StackPanel SnapsToDevicePixels="True" Margin="10">
                                     <TextBlock HorizontalAlignment="Left"
                                                VerticalAlignment="Center"
@@ -259,19 +296,20 @@
                                                 Content="翻译"
                                                 ToolTip="翻译"
                                                 Command="{Binding SingleTranslateCommand}"
-                                                CommandParameter="{Binding SelectedBoundingBox}" />
+                                                CommandParameter="{Binding SelectedWindow}" />
                                     </Grid>
                                     <TextBox AcceptsReturn="True"
                                              BorderThickness="1"
                                              TextWrapping="Wrap"
                                              Tag="请填写翻译结果"
-                                             Text="{Binding SelectedBoundingBox.TranslatedText, UpdateSourceTrigger=PropertyChanged}"
+                                             Text="{Binding SelectedWindow.Text.TranslatedText, UpdateSourceTrigger=PropertyChanged}"
                                              FontSize="14" />
                                 </StackPanel>
                             </Border>
 
                             <!-- Clean Original Text -->
-                            <Border CornerRadius="5" Background="{StaticResource BackgroundLightBrush}" Margin="0 0 0 25">
+                            <Border CornerRadius="5" Background="{StaticResource BackgroundLightBrush}"
+                                    Margin="0 0 0 25">
 
                                 <StackPanel SnapsToDevicePixels="True" Margin="10">
                                     <!-- Title -->
@@ -286,8 +324,8 @@
                                             Style="{StaticResource PrimaryButtonStyle}"
                                             Content="自动消除"
                                             ToolTip="自动消除原文"
-                                            Command="{Binding　AddInkCommand}"
-                                            CommandParameter="{Binding SelectedBoundingBox}"
+                                            Command="{Binding　AddTextSettingCommand}"
+                                            CommandParameter="{Binding SelectedWindow}"
                                             Margin="0 0 0 5" />
 
                                     <!-- Slider -->
@@ -321,7 +359,7 @@
                             <Border CornerRadius="5"
                                     Background="{StaticResource BackgroundLightBrush}"
                                     Margin="0 0 0 25"
-                                    Visibility="{Binding SelectedBoundingBox.Ink, Converter={local:NullToVisibilityConverter}}">
+                                    Visibility="{Binding SelectedWindow.Text.Setting, Converter={local:NullToVisibilityConverter}}">
 
                                 <StackPanel SnapsToDevicePixels="True" Margin="10">
                                     <!-- Title -->
@@ -334,47 +372,92 @@
 
                                     <!-- Font FontFamily -->
                                     <StackPanel Orientation="Horizontal" Margin="0 0 0 5">
-                                        <ComboBox ToolTip="字体" Margin="0 0 20 0 ">
-                                            <ComboBoxItem Content="Comic Sans MS" IsSelected="True" />
-                                            <ComboBoxItem Content="Arial Black" />
-                                            <ComboBoxItem Content="MV Boli" />
+                                        <ComboBox x:Name="FontFamilyComboBox"
+                                                  Margin="0 0 20 0 "
+                                                  SelectedIndex="0"
+                                                  ToolTip="字体">
+                                            <ComboBoxItem FontFamily="{StaticResource ComicSansMS}"
+                                                          Content="Comic Sans MS" />
+                                            <ComboBoxItem FontFamily="{StaticResource MicrosoftYaHei}"
+                                                          Content="MicrosoftYaHei UI" />
+                                            <ComboBoxItem FontFamily="{StaticResource ArialBlack}"
+                                                          Content="Arial Black" />
+                                            <ComboBoxItem FontFamily="{StaticResource MVBoli}"
+                                                          Content="MV Boli" />
+                                            <ComboBoxItem FontFamily="{StaticResource AqumClassic}"
+                                                          Content="AQUM Classic" />
+                                            <ComboBoxItem FontFamily="{StaticResource AqumSmallCaps}"
+                                                          Content="AQUM Small Caps" />
+                                            <ComboBoxItem FontFamily="{StaticResource VersaVersa}"
+                                                          Content="Versa Versa" />
+                                            <ComboBoxItem FontFamily="{StaticResource SegoeScript}"
+                                                          Content="Segoe Script" />
+                                            <ComboBoxItem FontFamily="{StaticResource PolyRegular}"
+                                                          Content="Poly Regular" />
+                                            <ComboBoxItem FontFamily="{StaticResource PolyItalic}"
+                                                          Content="Poly Italic" />
+                                            <ComboBoxItem FontFamily="{StaticResource HuaKangYuanTiW5}"
+                                                          Content="华康圆体W5" />
+                                            <ComboBoxItem FontFamily="{StaticResource HuaKangYuanTiW3Plus}"
+                                                          Content="华康圆体W3" />
+                                            <ComboBoxItem FontFamily="{StaticResource FangZhengKaiTi}"
+                                                          Content="方正楷体简体" />
+                                            <ComboBoxItem FontFamily="{StaticResource XinHuaSongTi}"
+                                                          Content="新华宋体" />
+                                            <ComboBoxItem FontFamily="{StaticResource XinHuaFangSongTi}"
+                                                          Content="新华仿宋体" />
+                                            <ComboBoxItem FontFamily="{StaticResource PangMenZhengDaoXiXianTi}"
+                                                          Content="旁门正道细线体" />
+                                            <ComboBoxItem FontFamily="{StaticResource BoBoHei}"
+                                                          Content="荆南波波黑" />
+                                            <ComboBoxItem FontFamily="{StaticResource FangZhengHeiTiJianTi}"
+                                                          Content="方正黑体简体" />
                                         </ComboBox>
 
-                                        <TextBox BorderBrush="{StaticResource BorderLightBrush}"
+                                        <TextBox x:Name="FontSizeTextBox"
+                                                 BorderBrush="{StaticResource BorderLightBrush}"
                                                  BorderThickness="1"
                                                  MaxLines="1"
                                                  local:IsOnlyNumber.Value="True"
                                                  local:MaxNumber.Value="100"
                                                  ToolTip="字体大小"
-                                                 Text="{Binding SelectedBoundingBox.Ink.FontSize, UpdateSourceTrigger=PropertyChanged}" />
+                                                 Text="15" />
                                     </StackPanel>
 
                                     <WrapPanel SnapsToDevicePixels="True" Orientation="Horizontal">
                                         <StackPanel Orientation="Horizontal" Margin="0 0 10 5">
-                                            <RadioButton Style="{StaticResource LeftRadioButtonStyle}" Content="左"
+                                            <RadioButton x:Name="LftRadioButton"
+                                                         Style="{StaticResource LeftRadioButtonStyle}"
+                                                         Content="左"
                                                          GroupName="HorizontalAlignment"
-                                                         IsChecked="{Binding SelectedBoundingBox.Ink.HorizontalAlignment, Converter={local:CompareStringToBooleanConverter}, ConverterParameter=Left}" />
-                                            <RadioButton Style="{StaticResource CenterRadioButtonStyle}" Content="中"
-                                                         GroupName="HorizontalAlignment"
-                                                         IsChecked="{Binding SelectedBoundingBox.Ink.HorizontalAlignment, Converter={local:CompareStringToBooleanConverter}, ConverterParameter=Center}" />
-                                            <RadioButton Style="{StaticResource RightRadioButtonStyle}" Content="右"
-                                                         GroupName="HorizontalAlignment"
-                                                         IsChecked="{Binding SelectedBoundingBox.Ink.HorizontalAlignment, Converter={local:CompareStringToBooleanConverter}, ConverterParameter=Right}" />
+                                                         IsChecked="True" />
+                                            <RadioButton x:Name="HorCenterRadioButton"
+                                                         Style="{StaticResource CenterRadioButtonStyle}"
+                                                         Content="中"
+                                                         GroupName="HorizontalAlignment" />
+                                            <RadioButton x:Name="RightRadioButton"
+                                                         Style="{StaticResource RightRadioButtonStyle}"
+                                                         Content="右"
+                                                         GroupName="HorizontalAlignment" />
                                         </StackPanel>
 
                                         <Line Width="15" Height="15" />
 
                                         <!-- Text Vertical Alignment -->
                                         <StackPanel Orientation="Horizontal" Margin="0 0 0 5">
-                                            <RadioButton Style="{StaticResource LeftRadioButtonStyle}" Content="上"
+                                            <RadioButton x:Name="TopRadioButton"
+                                                         Style="{StaticResource LeftRadioButtonStyle}"
                                                          GroupName="HorizontalAlignment"
-                                                         IsChecked="{Binding SelectedBoundingBox.Ink.VerticalAlignment, Converter={local:CompareStringToBooleanConverter}, ConverterParameter=Top}" />
-                                            <RadioButton Style="{StaticResource CenterRadioButtonStyle}" Content="中"
+                                                         Content="上"
+                                                         IsChecked="True" />
+                                            <RadioButton x:Name="VerCenterRadioButton"
+                                                         Style="{StaticResource CenterRadioButtonStyle}"
                                                          GroupName="HorizontalAlignment"
-                                                         IsChecked="{Binding SelectedBoundingBox.Ink.VerticalAlignment, Converter={local:CompareStringToBooleanConverter}, ConverterParameter=Center}" />
-                                            <RadioButton Style="{StaticResource RightRadioButtonStyle}" Content="下"
+                                                         Content="中" />
+                                            <RadioButton x:Name="BottomRadioButton"
+                                                         Style="{StaticResource RightRadioButtonStyle}"
                                                          GroupName="HorizontalAlignment"
-                                                         IsChecked="{Binding SelectedBoundingBox.Ink.VerticalAlignment, Converter={local:CompareStringToBooleanConverter}, ConverterParameter=Bottom}" />
+                                                         Content="下" />
                                         </StackPanel>
                                     </WrapPanel>
 
@@ -385,7 +468,7 @@
                             <Border CornerRadius="5"
                                     Background="{StaticResource BackgroundLightBrush}"
                                     Margin="0 0 0 25"
-                                    Visibility="{Binding SelectedBoundingBox.Ink, Converter={local:NullToVisibilityConverter}}">
+                                    Visibility="{Binding SelectedWindow.Text.Setting, Converter={local:NullToVisibilityConverter}}">
 
                                 <StackPanel SnapsToDevicePixels="True" Margin="10">
                                     <!-- Title -->
@@ -428,7 +511,7 @@
                             <Border CornerRadius="5"
                                     Background="{StaticResource BackgroundLightBrush}"
                                     Margin="0 0 0 25"
-                                    Visibility="{Binding SelectedBoundingBox.Ink, Converter={local:NullToVisibilityConverter}}">
+                                    Visibility="{Binding SelectedWindow.Text.Setting, Converter={local:NullToVisibilityConverter}}">
 
                                 <StackPanel SnapsToDevicePixels="True" Margin="10">
                                     <!-- Title -->
@@ -476,7 +559,7 @@
                             <CollectionViewSource IsLiveGroupingRequested="True"
                                                   IsLiveSortingRequested="True"
                                                   x:Key="CollectionViewSource"
-                                                  Source="{Binding BoundingBoxCollection}">
+                                                  Source="{Binding Windows}">
                                 <CollectionViewSource.GroupDescriptions>
                                     <PropertyGroupDescription PropertyName="Group" />
                                 </CollectionViewSource.GroupDescriptions>
@@ -518,7 +601,7 @@
                                         <Border.BorderThickness>
                                             <MultiBinding
                                                 Converter="{StaticResource BoundingBoxCompareBorderThicknessConverter}">
-                                                <Binding Path="DataContext.SelectedBoundingBox"
+                                                <Binding Path="DataContext.SelectedWindow"
                                                          RelativeSource="{RelativeSource AncestorType=ItemsControl}" />
                                                 <Binding Path="DataContext"
                                                          RelativeSource="{RelativeSource Mode=Self}" />
@@ -528,7 +611,7 @@
                                         <!-- Click Command -->
                                         <Border.InputBindings>
                                             <MouseBinding Gesture="LeftClick"
-                                                          Command="{Binding DataContext.SelectBoundingBoxCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                          Command="{Binding DataContext.SelectWindowCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                                                           CommandParameter="{Binding}" />
                                         </Border.InputBindings>
 
@@ -550,7 +633,7 @@
                                                     <TextBlock.Text>
                                                         <MultiBinding StringFormat="# {0}"
                                                                       Converter="{StaticResource BoundingBoxCollectionIndexConverter}">
-                                                            <Binding Path="DataContext.BoundingBoxCollection"
+                                                            <Binding Path="DataContext.Windows"
                                                                      RelativeSource="{RelativeSource AncestorType=ItemsControl}" />
                                                             <Binding Path="DataContext"
                                                                      RelativeSource="{RelativeSource Mode=Self}" />
@@ -562,7 +645,7 @@
                                                 <Button Style="{StaticResource IconWarningButtonStyle}"
                                                         HorizontalAlignment="Right"
                                                         VerticalAlignment="Center"
-                                                        Command="{Binding DataContext.RemoveBoundingBoxCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                        Command="{Binding DataContext.RemoveWindowCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                                                         CommandParameter="{Binding}"
                                                         Content="{StaticResource FontAwesomeTrashIcon}"
                                                         ToolTip="删除" />
@@ -577,7 +660,7 @@
                                                      BorderThickness="1"
                                                      TextWrapping="Wrap"
                                                      Tag="没有原文"
-                                                     Text="{Binding OriginalText}"
+                                                     Text="{Binding Text.OriginalText}"
                                                      FontSize="14"
                                                      Margin="0 0 0 8"
                                                      IsEnabled="False" />
@@ -590,7 +673,7 @@
                                                      BorderThickness="1"
                                                      TextWrapping="Wrap"
                                                      Tag="没有翻译结果"
-                                                     Text="{Binding TranslatedText}"
+                                                     Text="{Binding Text.TranslatedText}"
                                                      FontSize="14"
                                                      IsEnabled="False" />
                                         </StackPanel>

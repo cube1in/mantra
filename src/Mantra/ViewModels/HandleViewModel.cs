@@ -10,11 +10,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using Mantra.Core;
 using Mantra.Core.Abstractions;
 using Mantra.Core.Models;
 using Mantra.Plugins;
 using Microsoft.Win32;
 using Point = System.Windows.Point;
+using Window = Mantra.Core.Models.Window;
 
 // ReSharper disable once CheckNamespace
 namespace Mantra;
@@ -36,6 +38,11 @@ internal class HandleViewModel : BaseViewModel
     /// </summary>
     private readonly ITranslatorText _translator = new BaiduTranslatorText();
 
+    /// <summary>
+    /// 项目处理程序
+    /// </summary>
+    private readonly IProjectHandler _projectHandler = new ProjectHandler();
+
     #endregion
 
     #region Public Properties
@@ -43,7 +50,7 @@ internal class HandleViewModel : BaseViewModel
     /// <summary>
     /// 原图片地址
     /// </summary>
-    public string? Filepath { get; set; }
+    public string? Filename { get; set; }
 
     /// <summary>
     /// 图片实际宽度
@@ -58,12 +65,12 @@ internal class HandleViewModel : BaseViewModel
     /// <summary>
     /// 原文字区域
     /// </summary>
-    public ObservableCollection<BoundingBox> BoundingBoxCollection { get; set; } = new();
+    public ObservableCollection<Window> Windows { get; set; } = new();
 
     /// <summary>
     /// 选中文字区域
     /// </summary>
-    public BoundingBox? SelectedBoundingBox { get; set; }
+    public Window? SelectedWindow { get; set; }
 
     #endregion
 
@@ -79,38 +86,38 @@ internal class HandleViewModel : BaseViewModel
     /// 单个光学识别命令
     /// </summary>
     // ReSharper disable once InconsistentNaming
-    public ICommand SingleOCRCommand => new AsyncCommand<BoundingBox>(OnSingleOCRAsync);
+    public ICommand SingleOCRCommand => new AsyncCommand<Window>(OnSingleOCRAsync);
 
     /// <summary>
     /// 移除框命令
     /// </summary>
     // ReSharper disable once UnusedMember.Global
-    public ICommand RemoveBoundingBoxCommand => new Command<BoundingBox>(OnRemoveBoundingBox);
+    public ICommand RemoveWindowCommand => new Command<Window>(OnRemoveWindow);
 
     /// <summary>
     /// 单个翻译命令
     /// </summary>
-    public ICommand SingleTranslateCommand => new AsyncCommand<BoundingBox>(OnSingleTranslateAsync);
+    public ICommand SingleTranslateCommand => new AsyncCommand<Window>(OnSingleTranslateAsync);
 
     /// <summary>
     /// 消除换行
     /// </summary>
-    public ICommand RemoveNewLineCommand => new Command<BoundingBox>(OnRemoveNewLine);
+    public ICommand RemoveNewLineCommand => new Command<Window>(OnRemoveNewLine);
 
     /// <summary>
     /// 选中命令
     /// </summary>
-    public ICommand SelectBoundingBoxCommand => new Command<BoundingBox>(OnSelectBoundingBox);
+    public ICommand SelectWindowCommand => new Command<Window>(OnSelectWindow);
 
     /// <summary>
-    /// 添加墨水命令
+    /// 添加文字设置命令
     /// </summary>
-    public ICommand AddInkCommand => new Command<BoundingBox>(OnAddInk);
+    public ICommand AddTextSettingCommand => new Command<Window>(OnAddTextSetting);
 
     /// <summary>
-    /// 移除墨水命令
+    /// 移除文字设置命令
     /// </summary>
-    public ICommand RemoveInkCommand => new Command<BoundingBox>(OnRemoveInk);
+    public ICommand RemoveTextSettingCommand => new Command<Window>(OnRemoveTextSetting);
 
     /// <summary>
     /// 保存命令
@@ -126,111 +133,144 @@ internal class HandleViewModel : BaseViewModel
     /// </summary>
     private async Task OnBatchOCRAsync()
     {
-        if (Filepath == null)
+        if (Filename == null)
         {
             MessageBox.Show("图片不存在", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
-        var boxes = await _computerVision.ReadFileLocalAsync(Filepath, "eng");
-        BoundingBoxCollection = new ObservableCollection<BoundingBox>(boxes);
+        var boxes = await _computerVision.ReadFileLocalAsync(Filename, "eng");
+        Windows = new ObservableCollection<Window>(from box in boxes
+            select new Window
+            {
+                Left = box.Left, Top = box.Top, Width = box.Width, Height = box.Height,
+                Text = new Text {OriginalText = box.Text}
+            });
     }
 
     /// <summary>
     /// <see cref="SingleOCRCommand"/> 时触发
     /// </summary>
     /// <param name="value"></param>
-    private async Task OnSingleOCRAsync(BoundingBox value)
+    private async Task OnSingleOCRAsync(Window value)
     {
-        var bitmap = CropImage(Filepath!,
+        var bitmap = CropImage(Filename!,
             new RectangleF
             {
-                X = value.Left,
-                Y = value.Top,
-                Width = value.Width,
-                Height = value.Height
+                X = (float) value.Left,
+                Y = (float) value.Top,
+                Width = (float) value.Width,
+                Height = (float) value.Height
             });
 
         var converter = new ImageConverter();
         var bytes = (byte[]) converter.ConvertTo(bitmap, typeof(byte[]))!;
 
         var boxes = await _computerVision.ReadFileStreamAsync(bytes, "eng");
-        value.OriginalText = string.Join(string.Empty, from box in boxes select box.OriginalText);
+        value.Text.OriginalText = string.Join(string.Empty, from box in boxes select box.Text);
 
         // Set selected
-        SelectedBoundingBox = value;
+        SelectedWindow = value;
 
         // Translate text
         await OnSingleTranslateAsync(value);
     }
 
     /// <summary>
-    /// <see cref="RemoveBoundingBoxCommand"/> 时触发
+    /// <see cref="RemoveWindowCommand"/> 时触发
     /// </summary>
     /// <param name="value"></param>
-    private void OnRemoveBoundingBox(BoundingBox value)
+    private void OnRemoveWindow(Window value)
     {
-        BoundingBoxCollection.Remove(value);
-        if (value == SelectedBoundingBox) SelectedBoundingBox = null;
+        Windows.Remove(value);
+        if (value == SelectedWindow) SelectedWindow = null;
     }
 
     /// <summary>
     /// <see cref="SingleTranslateCommand"/> 时触发
     /// </summary>
     /// <param name="value"></param>
-    private async Task OnSingleTranslateAsync(BoundingBox value)
+    private async Task OnSingleTranslateAsync(Window value)
     {
-        value.TranslatedText = await _translator.TranslateAsync(value.OriginalText, "en", "zh");
+        value.Text.TranslatedText = await _translator.TranslateAsync(value.Text.OriginalText, "en", "zh");
     }
 
     /// <summary>
     /// <see cref="RemoveNewLineCommand"/> 时触发
     /// </summary>
     /// <param name="value"></param>
-    private void OnRemoveNewLine(BoundingBox value)
-        => value.OriginalText = value.OriginalText.Replace("\n", " ").Replace("\r", " ");
+    private void OnRemoveNewLine(Window value)
+        => value.Text.OriginalText = value.Text.OriginalText.Replace("\n", " ").Replace("\r", " ");
 
     /// <summary>
-    /// <see cref="SelectBoundingBoxCommand"/> 时触发
+    /// <see cref="SelectWindowCommand"/> 时触发
     /// </summary>
     /// <param name="value"></param>
-    private void OnSelectBoundingBox(BoundingBox value)
-        => SelectedBoundingBox = value;
+    private void OnSelectWindow(Window value)
+        => SelectedWindow = value;
 
     /// <summary>
-    /// <see cref="AddInkCommand"/> 时触发
+    /// <see cref="AddTextSettingCommand"/> 时触发
     /// </summary>
     /// <param name="value"></param>
-    private void OnAddInk(BoundingBox value)
+    private void OnAddTextSetting(Window value)
     {
-        var bitmap = CropImage(Filepath!,
+        var bitmap = CropImage(Filename!,
             new RectangleF
             {
-                X = value.Left,
-                Y = value.Top,
-                Width = value.Width,
-                Height = value.Height
+                X = (float) value.Left,
+                Y = (float) value.Top,
+                Width = (float) value.Width,
+                Height = (float) value.Height
             });
 
         var color = bitmap.GetPixel(0, 0);
-        value.Ink = new Ink
+        value.Text.Setting = new TextSetting
         {
             Background = Colors.AsString(color)
         };
     }
 
     /// <summary>
-    /// <see cref="RemoveInkCommand"/> 时触发
+    /// <see cref="RemoveTextSettingCommand"/> 时触发
     /// </summary>
     /// <param name="value"></param>
-    private void OnRemoveInk(BoundingBox value)
-        => value.Ink = null;
+    private void OnRemoveTextSetting(Window value)
+        => value.Text.Setting = null;
 
     /// <summary>
     /// <see cref="SaveCommand"/> 时触发
     /// </summary>
     private void OnSave()
     {
+        if (Filename == null) return;
+
+        var graph = new Graph
+        {
+            Filename = Filename,
+            Windows = Windows
+        };
+
+        var path = Filename.Replace(Path.GetFileName(Filename), string.Empty);
+        var project = _projectHandler.Get(path, out var name);
+        if (project != null)
+        {
+            var oldGraph = project.Graphs.FirstOrDefault(g => g.Filename == Filename);
+            if (oldGraph != null)
+            {
+                project.Graphs.Remove(oldGraph);
+            }
+
+            project.Graphs.Add(graph);
+            _projectHandler.Set(project, path, name);
+        }
+        else
+        {
+            _projectHandler.Set(new Project
+            {
+                Graphs = new List<Graph> {graph}
+            }, path, DateTime.Now.ToString("yyyy-MM-dd"));
+        }
     }
 
     /// <summary>
@@ -238,10 +278,10 @@ internal class HandleViewModel : BaseViewModel
     /// </summary>
     private void SetOriginalSize()
     {
-        if (Filepath == null) return;
+        if (Filename == null) return;
 
         // Get image original size
-        var bitmap = new Bitmap(Filepath);
+        var bitmap = new Bitmap(Filename);
         ImgPixelHeight = bitmap.Height;
         ImgPixelWidth = bitmap.Width;
     }
@@ -273,7 +313,7 @@ internal class HandleViewModel : BaseViewModel
 #endif
         if (pushValue is string path)
         {
-            Filepath = path;
+            Filename = path;
             SetOriginalSize();
         }
     }
@@ -284,10 +324,12 @@ internal class HandleViewModel : BaseViewModel
     /// <param name="func"></param>
     internal void DownloadHandler(Func<IEnumerable<(RectangleF, bool)>, IEnumerable<(float, float, Bitmap)>> func)
     {
-        var bitmaps = func(from box in BoundingBoxCollection
-            select (new RectangleF(box.Left, box.Top, box.Width, box.Height), box.Ink != null));
+        var bitmaps = func(from window in Windows
+            select (
+                new RectangleF((float) window.Left, (float) window.Top, (float) window.Width, (float) window.Height),
+                window.Text.Setting != null));
 
-        var source = new Bitmap(Filepath!);
+        var source = new Bitmap(Filename!);
         foreach (var (x, y, bitmap) in bitmaps)
         {
             source.Replace(bitmap, x, y);
@@ -295,7 +337,7 @@ internal class HandleViewModel : BaseViewModel
 
         var dialog = new SaveFileDialog
         {
-            FileName = Path.GetFileName(Filepath),
+            FileName = Path.GetFileName(Filename),
             Filter = "PNG|*.png|JPEG|*.jpg|BMP|*.bmp"
         };
 
@@ -319,7 +361,7 @@ internal class HandleViewModel : BaseViewModel
     /// <summary>
     /// 创建的 Rect
     /// </summary>
-    private BoundingBox? _createdBoundingBox;
+    private Window? _createdBoundingBox;
 
     /// <summary>
     /// 鼠标拖动过程中最后记录的位置
@@ -341,9 +383,9 @@ internal class HandleViewModel : BaseViewModel
     {
         var el = (UIElement) sender;
         var point = Mouse.GetPosition(el);
-        _createdBoundingBox = new BoundingBox {Left = (float) point.X, Top = (float) point.Y};
+        _createdBoundingBox = new Window {Left = (float) point.X, Top = (float) point.Y};
         _dragInProgress = true;
-        BoundingBoxCollection.Add(_createdBoundingBox);
+        Windows.Add(_createdBoundingBox);
 
         _lastPoint = point;
 
@@ -353,7 +395,7 @@ internal class HandleViewModel : BaseViewModel
         // 当一个对象捕获鼠标时，所有与鼠标相关的事件都被视为具有鼠标捕获的对象执行该事件，即使鼠标指针位于另一个对象之上。
         el.CaptureMouse();
 
-        SelectedBoundingBox = _createdBoundingBox;
+        SelectedWindow = _createdBoundingBox;
     }
 
     /// <summary>
@@ -390,8 +432,8 @@ internal class HandleViewModel : BaseViewModel
         if (_createdBoundingBox != null &&
             (_createdBoundingBox.Width <= MinSize || _createdBoundingBox.Height <= MinSize))
         {
-            if (SelectedBoundingBox == _createdBoundingBox) SelectedBoundingBox = null;
-            BoundingBoxCollection.Remove(_createdBoundingBox);
+            if (SelectedWindow == _createdBoundingBox) SelectedWindow = null;
+            Windows.Remove(_createdBoundingBox);
         }
 
         _dragInProgress = false;

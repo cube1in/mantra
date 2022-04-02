@@ -10,7 +10,7 @@ internal class IndexConverter : BaseMultiValueConverter<IndexConverter>
 {
     public override object Convert(object[] values, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (values[0] is ObservableCollection<BoundingBox> array && values[1] is BoundingBox item)
+        if (values[0] is ObservableCollection<Window> array && values[1] is Window item)
         {
             return array.IndexOf(item) + 1;
         }

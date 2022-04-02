@@ -4,8 +4,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 // ReSharper disable once CheckNamespace
 namespace Mantra;
@@ -55,10 +53,7 @@ internal partial class HandlePage
                 if (grid.Name == "ScreenShot" && list[index].Item2)
                 {
                     var item = list[index].Item1;
-                    var renderTargetBitmap = new RenderTargetBitmap((int)item.Width, (int)item.Height, 96, 96,
-                        PixelFormats.Pbgra32);
-                    renderTargetBitmap.Render(grid);
-                    var bitmap = BitmapHelper.BitmapFromSource(renderTargetBitmap);
+                    var bitmap = BitmapHelper.InternalRender(grid, new System.Windows.Size(item.Width, item.Height));
                     bitmaps.Add((item.Left, item.Top, bitmap));
 
                     index++;

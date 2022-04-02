@@ -17,15 +17,10 @@ internal static class JsonSettings
         // 循环序列化
         ReferenceLoopHandling = ReferenceLoopHandling.Error,
 
-        // 蛇形
-        ContractResolver = new DefaultContractResolver {NamingStrategy = new SnakeCaseNamingStrategy()},
+        // 驼峰
+        ContractResolver = new CamelCasePropertyNamesContractResolver(),
 
+        // 转换器
         Converters = new JsonConverter[] {new StringEnumConverter()}
     };
-
-    /// <summary>
-    /// 用于分割组内各段文字的分隔符
-    /// Θ
-    /// </summary>
-    public static char SpecialDelimiter = 'Θ';
 }
