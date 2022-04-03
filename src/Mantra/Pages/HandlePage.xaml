@@ -322,7 +322,7 @@
                             <!-- </Border> -->
 
                             <StackPanel SnapsToDevicePixels="True"
-                                        Visibility="{Binding SelectedWindow.Text.Setting, Converter={local:TextSettingVisibleConverter}, FallbackValue=Hidden}">
+                                        Visibility="{Binding SelectedWindow.Text.Setting, Converter={local:TextSettingVisibleConverter}, FallbackValue=Collapsed}">
                                 <!-- Start: Text Font -->
                                 <Border CornerRadius="5"
                                         Background="{StaticResource BackgroundLightBrush}"

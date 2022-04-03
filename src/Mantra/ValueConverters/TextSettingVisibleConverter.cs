@@ -10,7 +10,7 @@ internal class TextSettingVisibleConverter : BaseValueConverter<TextSettingVisib
 {
     public override object Convert(object? value, Type? targetType, object? parameter, CultureInfo culture)
     {
-        if (value is not TextSetting textSetting) return Visibility.Hidden;
+        if (value is not TextSetting textSetting) return Visibility.Collapsed;
 
         var defaultSetting = new TextSetting();
         var result = textSetting.Foreground == defaultSetting.Foreground &&
@@ -24,8 +24,8 @@ internal class TextSettingVisibleConverter : BaseValueConverter<TextSettingVisib
 
         return parameter switch
         {
-            null => result ? Visibility.Hidden : Visibility.Visible,
-            _ => result ? Visibility.Visible : Visibility.Hidden
+            null => result ? Visibility.Collapsed : Visibility.Visible,
+            _ => result ? Visibility.Visible : Visibility.Collapsed
         };
     }
 

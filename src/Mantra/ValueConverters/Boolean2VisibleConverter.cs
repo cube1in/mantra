@@ -13,8 +13,8 @@ internal class Boolean2VisibleConverter : BaseValueConverter<Boolean2VisibleConv
         {
             return parameter switch
             {
-                null => boolean ? Visibility.Visible : Visibility.Hidden,
-                _ => boolean ? Visibility.Hidden : Visibility.Visible
+                null => boolean ? Visibility.Visible : Visibility.Collapsed,
+                _ => boolean ? Visibility.Collapsed : Visibility.Visible
             };
         }
 
