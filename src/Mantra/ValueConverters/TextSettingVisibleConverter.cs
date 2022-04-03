@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows;
+using Mantra.Core.Models;
 
 // ReSharper disable once CheckNamespace
 namespace Mantra;
 
-internal class InverseBooleanConverter : BaseValueConverter<InverseBooleanConverter>
+internal class TextSettingVisibleConverter : BaseValueConverter<TextSettingVisibleConverter>
 {
     public override object Convert(object? value, Type? targetType, object? parameter, CultureInfo culture)
     {
-        if (value is bool boolean)
+        var result = value as TextSetting == TextSetting.Default;
+        return parameter switch
         {
-            return !boolean;
-        }
-
-        throw new NotSupportedException();
+            null => result ? Visibility.Hidden : Visibility.Visible,
+            _ => result ? Visibility.Visible : Visibility.Hidden
+        };
     }
 
     public override object ConvertBack(object? value, Type? targetType, object? parameter, CultureInfo culture)

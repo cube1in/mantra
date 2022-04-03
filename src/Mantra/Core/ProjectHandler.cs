@@ -12,23 +12,23 @@ internal class ProjectHandler : IProjectHandler
 {
     private const string FileExtension = ".mtproj";
 
-    public void Set(Project project, string path, string name)
+    public void Set(Project project, string path, string projectName)
     {
         var jsonString = JsonConvert.SerializeObject(project, JsonSettings.SerializerSettings);
-        var filename = Path.Combine(path, name + FileExtension);
+        var filename = Path.Combine(path, projectName + FileExtension);
         File.WriteAllText(filename, jsonString);
     }
 
-    public Project? Get(string path, out string name)
+    public Project? Get(string path, out string projectName)
     {
-        name = string.Empty;
+        projectName = string.Empty;
         if (!Directory.Exists(path)) return null;
 
         foreach (var file in Directory.GetFiles(path))
         {
             if (Path.GetExtension(file) == FileExtension)
             {
-                name = Path.GetFileName(file);
+                projectName = Path.GetFileName(file).Replace(FileExtension, string.Empty);
                 var jsonString = File.ReadAllText(file);
                 return JsonConvert.DeserializeObject<Project>(jsonString, JsonSettings.SerializerSettings);
             }

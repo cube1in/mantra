@@ -1,25 +1,22 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Globalization;
-using Mantra.Core.Models;
 
 // ReSharper disable once CheckNamespace
 namespace Mantra;
 
-internal class IndexConverter : BaseMultiValueConverter<IndexConverter>
+internal class Compare2BooleanConverter : BaseMultiValueConverter<Compare2BooleanConverter>
 {
     public override object Convert(object[] values, Type? targetType, object? parameter, CultureInfo culture)
     {
-        if (values[0] is ObservableCollection<Window> array && values[1] is Window item)
+        return parameter switch
         {
-            return array.IndexOf(item) + 1;
-        }
-
-        throw new NotSupportedException();
+            null => values[0] == values[1],
+            _ => values[0] != values[1]
+        };
     }
 
     public override object[] ConvertBack(object value, Type[] targetTypes, object? parameter, CultureInfo culture)
     {
-        throw new NotImplementedException();
+        return Array.Empty<object>();
     }
 }

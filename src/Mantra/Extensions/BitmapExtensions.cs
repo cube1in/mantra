@@ -13,4 +13,9 @@ internal static class BitmapExtensions
 
         return source;
     }
+
+    public static Bitmap Crop(this Bitmap source, Rectangle rect)
+    {
+        return source.Clone(rect, source.PixelFormat);
+    }
 }

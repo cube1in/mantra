@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 using PropertyChanged;
 
 namespace Mantra.Core.Models;
@@ -12,53 +11,70 @@ internal class TextSetting : INotifyPropertyChanged
     /// <summary>
     /// 字体颜色
     /// </summary>
-    public string Foreground { get; set; } = "#000000";
+    public string Foreground { get; set; }
 
     /// <summary>
     /// 背景颜色
     /// </summary>
-    public string Background { get; set; } = "#FFFFFF";
+    public string Background { get; set; }
 
     /// <summary>
     /// 字体大小
     /// </summary>
-    public double FontSize { get; set; } = 15;
+    public double FontSize { get; set; }
 
     /// <summary>
     /// 字体重量
     /// </summary>
-    public string FontWeight { get; set; } = "Regular";
+    public string FontWeight { get; set; }
 
     /// <summary>
     /// 字体
     /// </summary>
-    public string FontFamily { get; set; } = "pack://application:,,,/Fonts/#Comic Sans MS";
+    public string FontFamily { get; set; }
 
     /// <summary>
     /// 方向
     /// 默认水平 Horizontal
     /// Vertical
     /// </summary>
-    public string Orientation { get; set; } = "Horizontal";
+    public string Orientation { get; set; }
 
     /// <summary>
     /// 水平对齐
     /// </summary>
-    public string HorizontalAlignment { get; set; } = "Left";
+    public string HorizontalAlignment { get; set; }
 
     /// <summary>
     /// 垂直对齐
     /// </summary>
-    public string VerticalAlignment { get; set; } = "Top";
+    public string VerticalAlignment { get; set; }
+
+    /// <summary>
+    /// 构造函数
+    /// </summary>
+    public TextSetting()
+    {
+        Foreground = "#000000";
+        Background = "#FFFFFF";
+        FontSize = 15;
+        FontWeight = "Regular";
+        FontFamily = "pack://application:,,,/Fonts/#Comic Sans MS";
+        Orientation = "Horizontal";
+        HorizontalAlignment = "Left";
+        VerticalAlignment = "Top";
+    }
+
+    /// <summary>
+    /// 默认
+    /// </summary>
+    public static readonly TextSetting Default = new();
 
     #region INotifyPropertyChanged
 
+#pragma warning disable CS0067
     public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+#pragma warning disable CS0067
 
     #endregion
 }

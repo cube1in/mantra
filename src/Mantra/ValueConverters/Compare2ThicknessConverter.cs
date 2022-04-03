@@ -1,21 +1,15 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Globalization;
-using Mantra.Core.Models;
+using System.Windows;
 
 // ReSharper disable once CheckNamespace
 namespace Mantra;
 
-internal class IndexConverter : BaseMultiValueConverter<IndexConverter>
+internal class Compare2ThicknessConverter : BaseMultiValueConverter<Compare2ThicknessConverter>
 {
     public override object Convert(object[] values, Type? targetType, object? parameter, CultureInfo culture)
     {
-        if (values[0] is ObservableCollection<Window> array && values[1] is Window item)
-        {
-            return array.IndexOf(item) + 1;
-        }
-
-        throw new NotSupportedException();
+        return values[0] == values[1] ? new Thickness(1) : new Thickness(0);
     }
 
     public override object[] ConvertBack(object value, Type[] targetTypes, object? parameter, CultureInfo culture)

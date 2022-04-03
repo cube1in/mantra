@@ -12,14 +12,14 @@ internal interface IProjectHandler
     /// </summary>
     /// <param name="project"></param>
     /// <param name="path"></param>
-    /// <param name="name"></param>
-    public void Set(Project project, string path, string name);
+    /// <param name="projectName"></param>
+    public void Set(Project project, string path, string projectName);
 
     /// <summary>
     /// 获取项目文件
     /// </summary>
     /// <param name="path"></param>
-    /// <param name="name"></param>
+    /// <param name="projectName"></param>
     /// <returns></returns>
-    public Project? Get(string path, out string name);
+    public Project? Get(string path, out string projectName);
 }

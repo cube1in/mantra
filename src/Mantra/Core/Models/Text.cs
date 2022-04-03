@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 using PropertyChanged;
 
 namespace Mantra.Core.Models;
@@ -13,27 +12,34 @@ internal class Text : INotifyPropertyChanged
     /// 矩形内的源词
     /// 必须具有默认值，否则在传到翻译 api 时会导致插入值错误
     /// </summary>
-    public string OriginalText { get; set; } = "没有识别结果";
+    public string OriginalText { get; set; }
 
     /// <summary>
     /// 矩形内的翻译
     /// 必须具有默认值，否则在传到翻译 api 时会导致插入值错误
     /// </summary>
-    public string TranslatedText { get; set; } = "没有翻译结果";
+    public string TranslatedText { get; set; }
 
     /// <summary>
     /// 文字设置
     /// </summary>
-    public TextSetting? Setting { get; set; }
+    public TextSetting Setting { get; set; }
+
+    /// <summary>
+    /// 构造函数
+    /// </summary>
+    public Text()
+    {
+        OriginalText = "没有识别结果";
+        TranslatedText = "没有翻译结果";
+        Setting = TextSetting.Default;
+    }
 
     #region INotifyPropertyChanged
 
+#pragma warning disable CS0067
     public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+#pragma warning disable CS0067
 
     #endregion
 }

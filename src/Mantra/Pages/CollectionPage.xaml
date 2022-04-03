@@ -76,7 +76,7 @@
 
                     <Rectangle.Fill>
                         <ImageBrush
-                            ImageSource="{Binding Source=media/image_add.png, Converter={local:FilepathToBytesConverter}}"
+                            ImageSource="{Binding Source=media/image_add.png, Converter={local:FilepathConverter}}"
                             Opacity="0.3"
                             Stretch="Fill"
                             Viewport="0.25 0.25 0.5 0.5" />

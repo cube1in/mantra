@@ -1,19 +1,20 @@
 ﻿using System;
+using System.Drawing;
 using System.Globalization;
 
 // ReSharper disable once CheckNamespace
 namespace Mantra;
 
-internal class InverseBooleanConverter : BaseValueConverter<InverseBooleanConverter>
+internal class BitmapConverter : BaseValueConverter<BitmapConverter>
 {
-    public override object Convert(object? value, Type? targetType, object? parameter, CultureInfo culture)
+    public override object? Convert(object? value, Type? targetType, object? parameter, CultureInfo culture)
     {
-        if (value is bool boolean)
+        if (value is Bitmap bitmap)
         {
-            return !boolean;
+            return BitmapHelper.ConvertBitmap(bitmap);
         }
 
-        throw new NotSupportedException();
+        return null;
     }
 
     public override object ConvertBack(object? value, Type? targetType, object? parameter, CultureInfo culture)

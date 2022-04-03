@@ -42,7 +42,7 @@ internal abstract class BaseMultiValueConverter<T> : MarkupExtension, IMultiValu
     /// <param name="parameter"></param>
     /// <param name="culture"></param>
     /// <returns></returns>
-    public abstract object? Convert(object[] values, Type targetType, object? parameter, CultureInfo culture);
+    public abstract object? Convert(object[] values, Type? targetType, object? parameter, CultureInfo culture);
 
     /// <summary>
     /// The method to convert a value back to it's source type

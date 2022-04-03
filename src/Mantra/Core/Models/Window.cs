@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using PropertyChanged;
 
 namespace Mantra.Core.Models;
@@ -43,12 +42,9 @@ internal class Window : INotifyPropertyChanged
 
     #region INotifyPropertyChanged
 
+#pragma warning disable CS0067
     public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+#pragma warning disable CS0067
 
     #endregion
 }

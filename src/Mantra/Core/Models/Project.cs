@@ -9,5 +9,10 @@ internal class Project
 {
     public string Version { get; set; } = "v1.0.0";
 
-    public ICollection<Graph> Graphs { get; set; } = null!;
+    public ICollection<Graph> Graphs { get; set; }
+
+    public Project()
+    {
+        Graphs = new List<Graph>();
+    }
 }

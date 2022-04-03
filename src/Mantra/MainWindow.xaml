@@ -15,12 +15,12 @@
             <ImageBrush TileMode="Tile"
                         ViewportUnits="Absolute"
                         Viewport="0 0 500 500"
-                        ImageSource="{Binding Source=media/emoji-background.png, Converter={local:FilepathToBytesConverter}}" />
+                        ImageSource="{Binding Source=media/emoji-background.png, Converter={local:FilepathConverter}}" />
         </Grid.Background>
 
         <!-- Page Host -->
         <local:PageHost
-            DataContext="{x:Static local:ApplicationViewModel.Current}"
+            DataContext="{x:Static local:Application.Current}"
             CurrentPage="{Binding CurrentPage, Converter={local:ApplicationPageConverter}}"
             PushValue="{Binding PushValue}">
         </local:PageHost>

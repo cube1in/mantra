@@ -85,7 +85,7 @@ internal class CollectionViewModel : BaseViewModel
     /// <param name="item"></param>
     private async Task OnGoToAsync(string item)
     {
-        ApplicationViewModel.Current.GoToPage(ApplicationPage.Handle, item);
+        Application.Current.GoToPage(ApplicationPage.Handle, item);
         await Task.CompletedTask;
     }
 

@@ -26,6 +26,22 @@ namespace Mantra;
 /// </summary>
 internal class HandleViewModel : BaseViewModel
 {
+    private readonly struct InternalProject
+    {
+        public string Path { get; }
+
+        public string ProjectName { get; }
+
+        public Project Project { get; }
+
+        public InternalProject(string path, string projectName, Project project)
+        {
+            Path = path;
+            ProjectName = projectName;
+            Project = project;
+        }
+    }
+
     #region Private Members
 
     /// <summary>
@@ -43,24 +59,24 @@ internal class HandleViewModel : BaseViewModel
     /// </summary>
     private readonly IProjectHandler _projectHandler = new ProjectHandler();
 
+    /// <summary>
+    /// 原图片地址
+    /// </summary>
+    private string _filename = null!;
+
+    /// <summary>
+    /// 项目
+    /// </summary>
+    private InternalProject _internalProject;
+
     #endregion
 
     #region Public Properties
 
     /// <summary>
-    /// 原图片地址
+    /// 图片
     /// </summary>
-    public string? Filename { get; set; }
-
-    /// <summary>
-    /// 图片实际宽度
-    /// </summary>
-    public int ImgPixelWidth { get; set; }
-
-    /// <summary>
-    /// 图片实际高度
-    /// </summary>
-    public int ImgPixelHeight { get; set; }
+    public Bitmap BitmapFile { get; private set; } = null!;
 
     /// <summary>
     /// 原文字区域
@@ -71,6 +87,11 @@ internal class HandleViewModel : BaseViewModel
     /// 选中文字区域
     /// </summary>
     public Window? SelectedWindow { get; set; }
+
+    /// <summary>
+    /// 显示侧边栏
+    /// </summary>
+    public bool SideMenuVisible => SelectedWindow != null;
 
     #endregion
 
@@ -133,13 +154,7 @@ internal class HandleViewModel : BaseViewModel
     /// </summary>
     private async Task OnBatchOCRAsync()
     {
-        if (Filename == null)
-        {
-            MessageBox.Show("图片不存在", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-
-        var boxes = await _computerVision.ReadFileLocalAsync(Filename, "eng");
+        var boxes = await _computerVision.ReadFileLocalAsync(_filename, "eng");
         Windows = new ObservableCollection<Window>(from box in boxes
             select new Window
             {
@@ -154,14 +169,13 @@ internal class HandleViewModel : BaseViewModel
     /// <param name="value"></param>
     private async Task OnSingleOCRAsync(Window value)
     {
-        var bitmap = CropImage(Filename!,
-            new RectangleF
-            {
-                X = (float) value.Left,
-                Y = (float) value.Top,
-                Width = (float) value.Width,
-                Height = (float) value.Height
-            });
+        var bitmap = BitmapFile.Crop(new Rectangle
+        {
+            X = (int) value.Left,
+            Y = (int) value.Top,
+            Width = (int) value.Width,
+            Height = (int) value.Height
+        });
 
         var converter = new ImageConverter();
         var bytes = (byte[]) converter.ConvertTo(bitmap, typeof(byte[]))!;
@@ -206,8 +220,7 @@ internal class HandleViewModel : BaseViewModel
     /// <see cref="SelectWindowCommand"/> 时触发
     /// </summary>
     /// <param name="value"></param>
-    private void OnSelectWindow(Window value)
-        => SelectedWindow = value;
+    private void OnSelectWindow(Window value) => SelectedWindow = value;
 
     /// <summary>
     /// <see cref="AddTextSettingCommand"/> 时触发
@@ -215,14 +228,13 @@ internal class HandleViewModel : BaseViewModel
     /// <param name="value"></param>
     private void OnAddTextSetting(Window value)
     {
-        var bitmap = CropImage(Filename!,
-            new RectangleF
-            {
-                X = (float) value.Left,
-                Y = (float) value.Top,
-                Width = (float) value.Width,
-                Height = (float) value.Height
-            });
+        var bitmap = BitmapFile.Crop(new Rectangle
+        {
+            X = (int) value.Left,
+            Y = (int) value.Top,
+            Width = (int) value.Width,
+            Height = (int) value.Height
+        });
 
         var color = bitmap.GetPixel(0, 0);
         value.Text.Setting = new TextSetting
@@ -235,67 +247,28 @@ internal class HandleViewModel : BaseViewModel
     /// <see cref="RemoveTextSettingCommand"/> 时触发
     /// </summary>
     /// <param name="value"></param>
-    private void OnRemoveTextSetting(Window value)
-        => value.Text.Setting = null;
+    private void OnRemoveTextSetting(Window value) => value.Text.Setting = TextSetting.Default;
 
     /// <summary>
     /// <see cref="SaveCommand"/> 时触发
     /// </summary>
     private void OnSave()
     {
-        if (Filename == null) return;
-
         var graph = new Graph
         {
-            Filename = Filename,
+            Filename = _filename,
             Windows = Windows
         };
 
-        var path = Filename.Replace(Path.GetFileName(Filename), string.Empty);
-        var project = _projectHandler.Get(path, out var name);
-        if (project != null)
+        var project = _internalProject.Project;
+        var oldGraph = project.Graphs.FirstOrDefault(g => g.Filename == _filename);
+        if (oldGraph != null)
         {
-            var oldGraph = project.Graphs.FirstOrDefault(g => g.Filename == Filename);
-            if (oldGraph != null)
-            {
-                project.Graphs.Remove(oldGraph);
-            }
-
-            project.Graphs.Add(graph);
-            _projectHandler.Set(project, path, name);
+            project.Graphs.Remove(oldGraph);
         }
-        else
-        {
-            _projectHandler.Set(new Project
-            {
-                Graphs = new List<Graph> {graph}
-            }, path, DateTime.Now.ToString("yyyy-MM-dd"));
-        }
-    }
 
-    /// <summary>
-    /// Set image original size
-    /// </summary>
-    private void SetOriginalSize()
-    {
-        if (Filename == null) return;
-
-        // Get image original size
-        var bitmap = new Bitmap(Filename);
-        ImgPixelHeight = bitmap.Height;
-        ImgPixelWidth = bitmap.Width;
-    }
-
-    /// <summary>
-    /// 截图
-    /// </summary>
-    /// <param name="path"></param>
-    /// <param name="cropArea"></param>
-    /// <returns></returns>
-    private static Bitmap CropImage(string path, RectangleF cropArea)
-    {
-        var bitmap = new Bitmap(path);
-        return bitmap.Clone(cropArea, bitmap.PixelFormat);
+        project.Graphs.Add(graph);
+        _projectHandler.Set(project, _internalProject.Path, _internalProject.ProjectName);
     }
 
     #endregion
@@ -306,16 +279,39 @@ internal class HandleViewModel : BaseViewModel
     /// 初始化
     /// </summary>
     /// <param name="pushValue"></param>
-    public void Initialize(object? pushValue)
+    internal void Initialize(object? pushValue)
     {
 #if DEBUG
         pushValue ??= @"C:\Users\sou1m\Desktop\Mantra\test.png";
 #endif
-        if (pushValue is string path)
+        if (pushValue is not string filename)
         {
-            Filename = path;
-            SetOriginalSize();
+            throw new ArgumentException("pushValue is not string", $"{pushValue.GetType()}");
         }
+
+        _filename = filename;
+        BitmapFile = new Bitmap(filename);
+
+        // Project
+        var path = filename.Replace(Path.GetFileName(_filename), string.Empty);
+        var project = _projectHandler.Get(path, out var projectName);
+        if (project != null)
+        {
+            // Set Windows
+            var graph = project.Graphs.FirstOrDefault(g => g.Filename == filename);
+            if (graph != null && graph.Windows?.Count() > 0)
+            {
+                Windows = new ObservableCollection<Window>(graph.Windows);
+                SelectedWindow = Windows.First();
+            }
+        }
+        else
+        {
+            project = new Project();
+            projectName = DateTime.Now.ToString("yyyy-MM-dd");
+        }
+
+        _internalProject = new InternalProject(path, projectName, project);
     }
 
     /// <summary>
@@ -327,7 +323,7 @@ internal class HandleViewModel : BaseViewModel
         var windows = (from window in Windows where window.Text.Setting != null select window).ToList();
 
         var index = 0;
-        var source = new Bitmap(Filename!);
+        var source = new Bitmap(_filename);
         foreach (var bitmap in bitmaps)
         {
             source.Replace(bitmap, (int) windows[index].Left, (int) windows[index].Top);
@@ -336,7 +332,7 @@ internal class HandleViewModel : BaseViewModel
 
         var dialog = new SaveFileDialog
         {
-            FileName = Path.GetFileName(Filename),
+            FileName = Path.GetFileName(_filename),
             Filter = "PNG|*.png|JPEG|*.jpg|BMP|*.bmp"
         };
 
@@ -360,7 +356,7 @@ internal class HandleViewModel : BaseViewModel
     /// <summary>
     /// 创建的 Rect
     /// </summary>
-    private Window? _createdBoundingBox;
+    private Window? _createdWindow;
 
     /// <summary>
     /// 鼠标拖动过程中最后记录的位置
@@ -382,9 +378,9 @@ internal class HandleViewModel : BaseViewModel
     {
         var el = (UIElement) sender;
         var point = Mouse.GetPosition(el);
-        _createdBoundingBox = new Window {Left = (float) point.X, Top = (float) point.Y};
+        _createdWindow = new Window {Left = (float) point.X, Top = (float) point.Y};
         _dragInProgress = true;
-        Windows.Add(_createdBoundingBox);
+        Windows.Add(_createdWindow);
 
         _lastPoint = point;
 
@@ -394,7 +390,7 @@ internal class HandleViewModel : BaseViewModel
         // 当一个对象捕获鼠标时，所有与鼠标相关的事件都被视为具有鼠标捕获的对象执行该事件，即使鼠标指针位于另一个对象之上。
         el.CaptureMouse();
 
-        SelectedWindow = _createdBoundingBox;
+        SelectedWindow = _createdWindow;
     }
 
     /// <summary>
@@ -404,7 +400,7 @@ internal class HandleViewModel : BaseViewModel
     /// <param name="e"></param>
     public void MouseMoveHandler(object sender, MouseEventArgs e)
     {
-        if (_dragInProgress && _createdBoundingBox != null)
+        if (_dragInProgress && _createdWindow != null)
         {
             // 查看鼠标移动了多少
             var point = Mouse.GetPosition((Canvas) sender);
@@ -412,8 +408,8 @@ internal class HandleViewModel : BaseViewModel
             var offsetY = point.Y - _lastPoint.Y;
 
             // 更新位置
-            _createdBoundingBox.Width += (float) offsetX;
-            _createdBoundingBox.Height += (float) offsetY;
+            _createdWindow.Width += (float) offsetX;
+            _createdWindow.Height += (float) offsetY;
 
             // 保存鼠标位置
             _lastPoint = point;
@@ -428,15 +424,16 @@ internal class HandleViewModel : BaseViewModel
     public void MouseUpHandler(object sender, MouseButtonEventArgs e)
     {
         // 如果小于 MinSize 将不会被创建
-        if (_createdBoundingBox != null &&
-            (_createdBoundingBox.Width <= MinSize || _createdBoundingBox.Height <= MinSize))
+        if (_createdWindow != null &&
+            (_createdWindow.Width <= MinSize ||
+             _createdWindow.Height <= MinSize))
         {
-            if (SelectedWindow == _createdBoundingBox) SelectedWindow = null;
-            Windows.Remove(_createdBoundingBox);
+            if (SelectedWindow == _createdWindow) SelectedWindow = null;
+            Windows.Remove(_createdWindow);
         }
 
         _dragInProgress = false;
-        _createdBoundingBox = null;
+        _createdWindow = null;
 
         var el = (UIElement) sender;
         // 释放强制捕获的鼠标
