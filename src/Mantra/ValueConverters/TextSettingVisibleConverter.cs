@@ -12,14 +12,15 @@ internal class TextSettingVisibleConverter : BaseValueConverter<TextSettingVisib
     {
         if (value is not TextSetting textSetting) return Visibility.Hidden;
 
-        var result = textSetting.Foreground == "#000000" &&
-                     textSetting.Background == "#FFFFFF" &&
-                     Math.Abs(textSetting.FontSize - 15) < 0.001 &&
-                     textSetting.FontWeight == "Regular" &&
-                     textSetting.FontFamily == "pack://application:,,,/Fonts/#Comic Sans MS" &&
-                     textSetting.Orientation == "Horizontal" &&
-                     textSetting.HorizontalAlignment == "Left" &&
-                     textSetting.VerticalAlignment == "Top";
+        var defaultSetting = new TextSetting();
+        var result = textSetting.Foreground == defaultSetting.Foreground &&
+                     textSetting.Background == defaultSetting.Background &&
+                     Math.Abs(textSetting.FontSize - defaultSetting.FontSize) < 0.001 &&
+                     textSetting.FontWeight == defaultSetting.FontWeight &&
+                     textSetting.FontFamily == defaultSetting.FontFamily &&
+                     textSetting.Orientation == defaultSetting.Orientation &&
+                     textSetting.HorizontalAlignment == defaultSetting.HorizontalAlignment &&
+                     textSetting.VerticalAlignment == defaultSetting.VerticalAlignment;
 
         return parameter switch
         {

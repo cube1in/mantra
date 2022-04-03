@@ -44,7 +44,7 @@ internal class ApplicationViewModel : BaseViewModel
     /// <summary>
     /// The current page of the application
     /// </summary>
-    public ApplicationPage CurrentPage { get; private set; } = ApplicationPage.Handle;
+    public ApplicationPage CurrentPage { get; private set; } = ApplicationPage.Upload;
 
     /// <summary>
     /// Push value to go to page

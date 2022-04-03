@@ -60,11 +60,6 @@ internal class HandleViewModel : BaseViewModel
     private readonly IProjectHandler _projectHandler = new ProjectHandler();
 
     /// <summary>
-    /// 原图片地址
-    /// </summary>
-    private string _filename = null!;
-
-    /// <summary>
     /// 项目
     /// </summary>
     private InternalProject _internalProject;
@@ -72,6 +67,11 @@ internal class HandleViewModel : BaseViewModel
     #endregion
 
     #region Public Properties
+
+    /// <summary>
+    /// 原图片地址
+    /// </summary>
+    public string Filename { get; set; } = null!;
 
     /// <summary>
     /// 图片
@@ -154,7 +154,7 @@ internal class HandleViewModel : BaseViewModel
     /// </summary>
     private async Task OnBatchOCRAsync()
     {
-        var boxes = await _computerVision.ReadFileLocalAsync(_filename, "eng");
+        var boxes = await _computerVision.ReadFileLocalAsync(Filename, "eng");
         Windows = new ObservableCollection<Window>(from box in boxes
             select new Window
             {
@@ -237,7 +237,12 @@ internal class HandleViewModel : BaseViewModel
         });
 
         var color = bitmap.GetPixel(0, 0);
-        value.Text.Setting.Background = Colors.AsString(color);
+        value.Text.Setting = new TextSetting
+        {
+            Background = Colors.AsString(color),
+            // Make sure different to default
+            FontSize = 16
+        };
     }
 
     /// <summary>
@@ -253,12 +258,12 @@ internal class HandleViewModel : BaseViewModel
     {
         var graph = new Graph
         {
-            Filename = _filename,
+            Filename = Filename,
             Windows = Windows
         };
 
         var project = _internalProject.Project;
-        var oldGraph = project.Graphs.FirstOrDefault(g => g.Filename == _filename);
+        var oldGraph = project.Graphs.FirstOrDefault(g => g.Filename == Filename);
         if (oldGraph != null)
         {
             project.Graphs.Remove(oldGraph);
@@ -286,11 +291,11 @@ internal class HandleViewModel : BaseViewModel
             throw new ArgumentException("pushValue is not string", $"{pushValue.GetType()}");
         }
 
-        _filename = filename;
+        Filename = filename;
         BitmapFile = new Bitmap(filename);
 
         // Project
-        var path = filename.Replace(Path.GetFileName(_filename), string.Empty);
+        var path = filename.Replace(Path.GetFileName(Filename), string.Empty);
         var project = _projectHandler.Get(path, out var projectName);
         if (project != null)
         {
@@ -320,7 +325,7 @@ internal class HandleViewModel : BaseViewModel
         var windows = (from window in Windows where window.Text.Setting != null select window).ToList();
 
         var index = 0;
-        var source = new Bitmap(_filename);
+        var source = new Bitmap(Filename);
         foreach (var bitmap in bitmaps)
         {
             source.Replace(bitmap, (int) windows[index].Left, (int) windows[index].Top);
@@ -329,7 +334,7 @@ internal class HandleViewModel : BaseViewModel
 
         var dialog = new SaveFileDialog
         {
-            FileName = Path.GetFileName(_filename),
+            FileName = Path.GetFileName(Filename),
             Filter = "PNG|*.png|JPEG|*.jpg|BMP|*.bmp"
         };
 

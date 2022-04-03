@@ -32,7 +32,7 @@
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            FontSize="16"
-                           Text="File Name" />
+                           Text="{Binding Filename}" />
             </Grid>
             <Separator />
             <StackPanel SnapsToDevicePixels="True" Orientation="Horizontal" Margin="10">
@@ -122,14 +122,14 @@
                                                        IsHitTestVisible="False" />
                                         </Border>
 
-                                        <!-- Remove Text Button -->
-                                        <Button Background="Red"
+                                        <!-- Remove Text Se Button -->
+                                        <Button HorizontalAlignment="Right"
+                                                VerticalAlignment="Bottom"
+                                                Visibility="{Binding Text.Setting, Converter={local:TextSettingVisibleConverter}}"
                                                 Command="{Binding DataContext.RemoveTextSettingCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                                                 CommandParameter="{Binding}"
-                                                Visibility="{Binding Text.Setting, Converter={local:TextSettingVisibleConverter}}"
                                                 Margin="0 0 0 -25"
-                                                HorizontalAlignment="Right"
-                                                VerticalAlignment="Bottom"
+                                                Background="Red"
                                                 Content="X">
                                             <Button.LayoutTransform>
                                                 <ScaleTransform ScaleX="1.5" />
@@ -153,6 +153,9 @@
                                             </Button>
                                             <Button Content="识别文字"
                                                     Command="{Binding DataContext.SingleOCRCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                    CommandParameter="{Binding}" />
+                                            <Button Content="消除原文"
+                                                    Command="{Binding DataContext.AddTextSettingCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                                                     CommandParameter="{Binding}" />
                                         </StackPanel>
                                     </Grid>
@@ -271,52 +274,52 @@
                             </Border>
 
                             <!-- Clean Original Text -->
-                            <Border CornerRadius="5" Background="{StaticResource BackgroundLightBrush}"
-                                    Margin="0 0 0 25">
-
-                                <StackPanel SnapsToDevicePixels="True" Margin="10">
-                                    <!-- Title -->
-                                    <TextBlock HorizontalAlignment="Left"
-                                               VerticalAlignment="Center"
-                                               Text="消除原文"
-                                               FontSize="16"
-                                               FontWeight="Bold"
-                                               Margin="0 0 0 5" />
-
-                                    <Button HorizontalAlignment="Right"
-                                            Style="{StaticResource PrimaryButtonStyle}"
-                                            Content="自动消除"
-                                            ToolTip="自动消除原文"
-                                            Command="{Binding　AddTextSettingCommand}"
-                                            CommandParameter="{Binding SelectedWindow}"
-                                            Margin="0 0 0 5" />
-
-                                    <!-- Slider -->
-                                    <Grid SnapsToDevicePixels="True">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="5*" />
-                                            <ColumnDefinition Width="2*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <!-- IsSnapToTickEnabled="True" -->
-                                        <Slider x:Name="RubberSlider"
-                                                VerticalAlignment="Center"
-                                                Minimum="3"
-                                                Maximum="100"
-                                                TickFrequency="1"
-                                                IsMoveToPointEnabled="True" />
-                                        <Border Grid.Column="2"
-                                                BorderBrush="{StaticResource BorderLightBrush}"
-                                                BorderThickness="1"
-                                                CornerRadius="5">
-                                            <TextBox BorderThickness="1"
-                                                     MaxLines="1"
-                                                     IsEnabled="False"
-                                                     Text="{Binding Value, ElementName=RubberSlider, StringFormat=N0}" />
-                                        </Border>
-                                    </Grid>
-                                </StackPanel>
-                            </Border>
+                            <!-- <Border CornerRadius="5" Background="{StaticResource BackgroundLightBrush}" -->
+                            <!--         Margin="0 0 0 25"> -->
+                            <!-- -->
+                            <!--     <StackPanel SnapsToDevicePixels="True" Margin="10"> -->
+                            <!--         ~1~ Title @1@ -->
+                            <!--         <TextBlock HorizontalAlignment="Left" -->
+                            <!--                    VerticalAlignment="Center" -->
+                            <!--                    Text="消除原文" -->
+                            <!--                    FontSize="16" -->
+                            <!--                    FontWeight="Bold" -->
+                            <!--                    Margin="0 0 0 5" /> -->
+                            <!-- -->
+                            <!--         <Button HorizontalAlignment="Right" -->
+                            <!--                 Style="{StaticResource PrimaryButtonStyle}" -->
+                            <!--                 Content="自动消除" -->
+                            <!--                 ToolTip="自动消除原文" -->
+                            <!--                 Command="{Binding　AddTextSettingCommand}" -->
+                            <!--                 CommandParameter="{Binding SelectedWindow}" -->
+                            <!--                 Margin="0 0 0 5" /> -->
+                            <!-- -->
+                            <!--         ~1~ Slider @1@ -->
+                            <!--         <Grid SnapsToDevicePixels="True"> -->
+                            <!--             <Grid.ColumnDefinitions> -->
+                            <!--                 <ColumnDefinition Width="5*" /> -->
+                            <!--                 <ColumnDefinition Width="2*" /> -->
+                            <!--                 <ColumnDefinition Width="Auto" /> -->
+                            <!--             </Grid.ColumnDefinitions> -->
+                            <!--             ~1~ IsSnapToTickEnabled="True" @1@ -->
+                            <!--             <Slider x:Name="RubberSlider" -->
+                            <!--                     VerticalAlignment="Center" -->
+                            <!--                     Minimum="3" -->
+                            <!--                     Maximum="100" -->
+                            <!--                     TickFrequency="1" -->
+                            <!--                     IsMoveToPointEnabled="True" /> -->
+                            <!--             <Border Grid.Column="2" -->
+                            <!--                     BorderBrush="{StaticResource BorderLightBrush}" -->
+                            <!--                     BorderThickness="1" -->
+                            <!--                     CornerRadius="5"> -->
+                            <!--                 <TextBox BorderThickness="1" -->
+                            <!--                          MaxLines="1" -->
+                            <!--                          IsEnabled="False" -->
+                            <!--                          Text="{Binding Value, ElementName=RubberSlider, StringFormat=N0}" /> -->
+                            <!--             </Border> -->
+                            <!--         </Grid> -->
+                            <!--     </StackPanel> -->
+                            <!-- </Border> -->
 
                             <StackPanel SnapsToDevicePixels="True"
                                         Visibility="{Binding SelectedWindow.Text.Setting, Converter={local:TextSettingVisibleConverter}, FallbackValue=Hidden}">
@@ -438,91 +441,91 @@
                                 </Border>
                                 <!-- End: Text Font -->
 
-                                <!-- Start: HorizontalCharacter Spacing -->
-                                <Border CornerRadius="5"
-                                        Background="{StaticResource BackgroundLightBrush}"
-                                        Margin="0 0 0 25">
-
-                                    <StackPanel SnapsToDevicePixels="True" Margin="10">
-                                        <!-- Title -->
-                                        <TextBlock HorizontalAlignment="Left"
-                                                   VerticalAlignment="Center"
-                                                   Text="字间距设置"
-                                                   FontSize="16"
-                                                   FontWeight="Bold"
-                                                   Margin="0 0 0 5" />
-
-                                        <!-- Slider -->
-                                        <Grid SnapsToDevicePixels="True">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="5*" />
-                                                <ColumnDefinition Width="2*" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-                                            <!-- IsSnapToTickEnabled="True" -->
-                                            <Slider x:Name="HorizontalCharacterSpacingSlider"
-                                                    VerticalAlignment="Center"
-                                                    Minimum="0"
-                                                    Maximum="5"
-                                                    TickFrequency="0.1"
-                                                    IsMoveToPointEnabled="True" />
-                                            <Border Grid.Column="2"
-                                                    BorderBrush="{StaticResource BorderLightBrush}"
-                                                    BorderThickness="1"
-                                                    CornerRadius="5">
-                                                <TextBox BorderThickness="1"
-                                                         MaxLines="1"
-                                                         IsEnabled="False"
-                                                         Text="{Binding Value, ElementName=HorizontalCharacterSpacingSlider, StringFormat=N1}" />
-                                            </Border>
-                                        </Grid>
-
-                                    </StackPanel>
-                                </Border>
-                                <!-- End: HorizontalCharacter Spacing -->
-
-                                <!-- Start: VerticalCharacter Spacing -->
-                                <Border CornerRadius="5"
-                                        Background="{StaticResource BackgroundLightBrush}"
-                                        Margin="0 0 0 25">
-
-                                    <StackPanel SnapsToDevicePixels="True" Margin="10">
-                                        <!-- Title -->
-                                        <TextBlock HorizontalAlignment="Left"
-                                                   VerticalAlignment="Center"
-                                                   Text="行间距设置"
-                                                   FontSize="16"
-                                                   FontWeight="Bold"
-                                                   Margin="0 0 0 5" />
-
-                                        <!-- Slider -->
-                                        <Grid SnapsToDevicePixels="True">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="5*" />
-                                                <ColumnDefinition Width="2*" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-                                            <!-- IsSnapToTickEnabled="True" -->
-                                            <Slider x:Name="VerticalCharacterSpacingSlider"
-                                                    VerticalAlignment="Center"
-                                                    Minimum="0"
-                                                    Maximum="5"
-                                                    TickFrequency="0.1"
-                                                    IsMoveToPointEnabled="True" />
-                                            <Border Grid.Column="2"
-                                                    BorderBrush="{StaticResource BorderLightBrush}"
-                                                    BorderThickness="1"
-                                                    CornerRadius="5">
-                                                <TextBox BorderThickness="1"
-                                                         MaxLines="1"
-                                                         IsEnabled="False"
-                                                         Text="{Binding Value, ElementName=VerticalCharacterSpacingSlider, StringFormat=N1}" />
-                                            </Border>
-                                        </Grid>
-
-                                    </StackPanel>
-                                </Border>
-                                <!-- End: VerticalCharacter Spacing -->
+                                <!-- ~1~ Start: HorizontalCharacter Spacing @1@ -->
+                                <!-- <Border CornerRadius="5" -->
+                                <!--         Background="{StaticResource BackgroundLightBrush}" -->
+                                <!--         Margin="0 0 0 25"> -->
+                                <!-- -->
+                                <!--     <StackPanel SnapsToDevicePixels="True" Margin="10"> -->
+                                <!--         ~1~ Title @1@ -->
+                                <!--         <TextBlock HorizontalAlignment="Left" -->
+                                <!--                    VerticalAlignment="Center" -->
+                                <!--                    Text="字间距设置" -->
+                                <!--                    FontSize="16" -->
+                                <!--                    FontWeight="Bold" -->
+                                <!--                    Margin="0 0 0 5" /> -->
+                                <!-- -->
+                                <!--         ~1~ Slider @1@ -->
+                                <!--         <Grid SnapsToDevicePixels="True"> -->
+                                <!--             <Grid.ColumnDefinitions> -->
+                                <!--                 <ColumnDefinition Width="5*" /> -->
+                                <!--                 <ColumnDefinition Width="2*" /> -->
+                                <!--                 <ColumnDefinition Width="Auto" /> -->
+                                <!--             </Grid.ColumnDefinitions> -->
+                                <!--             ~1~ IsSnapToTickEnabled="True" @1@ -->
+                                <!--             <Slider x:Name="HorizontalCharacterSpacingSlider" -->
+                                <!--                     VerticalAlignment="Center" -->
+                                <!--                     Minimum="0" -->
+                                <!--                     Maximum="5" -->
+                                <!--                     TickFrequency="0.1" -->
+                                <!--                     IsMoveToPointEnabled="True" /> -->
+                                <!--             <Border Grid.Column="2" -->
+                                <!--                     BorderBrush="{StaticResource BorderLightBrush}" -->
+                                <!--                     BorderThickness="1" -->
+                                <!--                     CornerRadius="5"> -->
+                                <!--                 <TextBox BorderThickness="1" -->
+                                <!--                          MaxLines="1" -->
+                                <!--                          IsEnabled="False" -->
+                                <!--                          Text="{Binding Value, ElementName=HorizontalCharacterSpacingSlider, StringFormat=N1}" /> -->
+                                <!--             </Border> -->
+                                <!--         </Grid> -->
+                                <!-- -->
+                                <!--     </StackPanel> -->
+                                <!-- </Border> -->
+                                <!-- ~1~ End: HorizontalCharacter Spacing @1@ -->
+                                <!-- -->
+                                <!-- ~1~ Start: VerticalCharacter Spacing @1@ -->
+                                <!-- <Border CornerRadius="5" -->
+                                <!--         Background="{StaticResource BackgroundLightBrush}" -->
+                                <!--         Margin="0 0 0 25"> -->
+                                <!-- -->
+                                <!--     <StackPanel SnapsToDevicePixels="True" Margin="10"> -->
+                                <!--         ~1~ Title @1@ -->
+                                <!--         <TextBlock HorizontalAlignment="Left" -->
+                                <!--                    VerticalAlignment="Center" -->
+                                <!--                    Text="行间距设置" -->
+                                <!--                    FontSize="16" -->
+                                <!--                    FontWeight="Bold" -->
+                                <!--                    Margin="0 0 0 5" /> -->
+                                <!-- -->
+                                <!--         ~1~ Slider @1@ -->
+                                <!--         <Grid SnapsToDevicePixels="True"> -->
+                                <!--             <Grid.ColumnDefinitions> -->
+                                <!--                 <ColumnDefinition Width="5*" /> -->
+                                <!--                 <ColumnDefinition Width="2*" /> -->
+                                <!--                 <ColumnDefinition Width="Auto" /> -->
+                                <!--             </Grid.ColumnDefinitions> -->
+                                <!--             ~1~ IsSnapToTickEnabled="True" @1@ -->
+                                <!--             <Slider x:Name="VerticalCharacterSpacingSlider" -->
+                                <!--                     VerticalAlignment="Center" -->
+                                <!--                     Minimum="0" -->
+                                <!--                     Maximum="5" -->
+                                <!--                     TickFrequency="0.1" -->
+                                <!--                     IsMoveToPointEnabled="True" /> -->
+                                <!--             <Border Grid.Column="2" -->
+                                <!--                     BorderBrush="{StaticResource BorderLightBrush}" -->
+                                <!--                     BorderThickness="1" -->
+                                <!--                     CornerRadius="5"> -->
+                                <!--                 <TextBox BorderThickness="1" -->
+                                <!--                          MaxLines="1" -->
+                                <!--                          IsEnabled="False" -->
+                                <!--                          Text="{Binding Value, ElementName=VerticalCharacterSpacingSlider, StringFormat=N1}" /> -->
+                                <!--             </Border> -->
+                                <!--         </Grid> -->
+                                <!-- -->
+                                <!--     </StackPanel> -->
+                                <!-- </Border> -->
+                                <!-- ~1~ End: VerticalCharacter Spacing @1@ -->
                             </StackPanel>
                         </StackPanel>
                     </TabItem>
