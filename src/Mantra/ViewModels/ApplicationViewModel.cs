@@ -5,7 +5,7 @@ namespace Mantra;
 /// <summary>
 /// 应用视图模型
 /// </summary>
-internal class Application : BaseViewModel
+internal class ApplicationViewModel : BaseViewModel
 {
     #region Singleton
 
@@ -17,12 +17,12 @@ internal class Application : BaseViewModel
     /// <summary>
     /// 单例实例
     /// </summary>
-    private static Application? _instance;
+    private static ApplicationViewModel? _instance;
 
     /// <summary>
     /// 当前单例
     /// </summary>
-    public static Application Current
+    public static ApplicationViewModel Current
     {
         get
         {
@@ -31,7 +31,7 @@ internal class Application : BaseViewModel
             {
                 lock (CreateLock)
                 {
-                    _instance ??= new Application();
+                    _instance ??= new ApplicationViewModel();
                 }
             }
 

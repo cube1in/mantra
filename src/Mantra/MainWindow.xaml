@@ -20,7 +20,7 @@
 
         <!-- Page Host -->
         <local:PageHost
-            DataContext="{x:Static local:Application.Current}"
+            DataContext="{x:Static local:ApplicationViewModel.Current}"
             CurrentPage="{Binding CurrentPage, Converter={local:ApplicationPageConverter}}"
             PushValue="{Binding PushValue}">
         </local:PageHost>
