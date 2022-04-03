@@ -237,17 +237,14 @@ internal class HandleViewModel : BaseViewModel
         });
 
         var color = bitmap.GetPixel(0, 0);
-        value.Text.Setting = new TextSetting
-        {
-            Background = Colors.AsString(color)
-        };
+        value.Text.Setting.Background = Colors.AsString(color);
     }
 
     /// <summary>
     /// <see cref="RemoveTextSettingCommand"/> 时触发
     /// </summary>
     /// <param name="value"></param>
-    private void OnRemoveTextSetting(Window value) => value.Text.Setting = TextSetting.Default;
+    private void OnRemoveTextSetting(Window value) => value.Text.Setting = new TextSetting();
 
     /// <summary>
     /// <see cref="SaveCommand"/> 时触发

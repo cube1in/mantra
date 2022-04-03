@@ -32,7 +32,7 @@ internal class Text : INotifyPropertyChanged
     {
         OriginalText = "没有识别结果";
         TranslatedText = "没有翻译结果";
-        Setting = TextSetting.Default;
+        Setting = new TextSetting();
     }
 
     #region INotifyPropertyChanged

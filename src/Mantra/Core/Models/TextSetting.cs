@@ -65,11 +65,6 @@ internal class TextSetting : INotifyPropertyChanged
         VerticalAlignment = "Top";
     }
 
-    /// <summary>
-    /// 默认
-    /// </summary>
-    public static readonly TextSetting Default = new();
-
     #region INotifyPropertyChanged
 
 #pragma warning disable CS0067

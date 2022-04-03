@@ -338,7 +338,8 @@
                                         <StackPanel Orientation="Horizontal" Margin="0 0 0 5">
                                             <ComboBox Margin="0 0 20 0 "
                                                       SelectedIndex="0"
-                                                      ToolTip="字体">
+                                                      ToolTip="字体"
+                                                      Width="160">
                                                 <ComboBox.Resources>
                                                     <local:FontFamilyConverter x:Key="Converter" />
                                                 </ComboBox.Resources>
