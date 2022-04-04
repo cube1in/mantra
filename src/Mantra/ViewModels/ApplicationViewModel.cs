@@ -44,7 +44,7 @@ internal class ApplicationViewModel : BaseViewModel
     /// <summary>
     /// The current page of the application
     /// </summary>
-    public ApplicationPage CurrentPage { get; private set; } = ApplicationPage.Handle;
+    public ApplicationCurrentPage CurrentPage { get; private set; } = new(ApplicationPage.Upload, false);
 
     /// <summary>
     /// Push value to go to page
@@ -56,10 +56,11 @@ internal class ApplicationViewModel : BaseViewModel
     /// </summary>
     /// <param name="page">The page to go to</param>
     /// <param name="pushValue">The value push to go to page</param>
-    public void GoToPage(ApplicationPage page, object? pushValue = null)
+    /// <param name="useCache">Indicate is go back</param>
+    public void GoToPage(ApplicationPage page, object? pushValue = null, bool useCache = false)
     {
         // Set the current page
-        CurrentPage = page;
+        CurrentPage = new ApplicationCurrentPage(page, useCache);
 
         // Set push value
         PushValue = pushValue;

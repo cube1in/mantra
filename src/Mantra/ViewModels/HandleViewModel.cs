@@ -26,22 +26,6 @@ namespace Mantra;
 /// </summary>
 internal class HandleViewModel : BaseViewModel
 {
-    private readonly struct InternalProject
-    {
-        public string Path { get; }
-
-        public string ProjectName { get; }
-
-        public Project Project { get; }
-
-        public InternalProject(string path, string projectName, Project project)
-        {
-            Path = path;
-            ProjectName = projectName;
-            Project = project;
-        }
-    }
-
     #region Private Members
 
     /// <summary>
@@ -62,7 +46,7 @@ internal class HandleViewModel : BaseViewModel
     /// <summary>
     /// 项目
     /// </summary>
-    private InternalProject _internalProject;
+    private Project _internalProject = null!;
 
     #endregion
 
@@ -144,6 +128,12 @@ internal class HandleViewModel : BaseViewModel
     /// 保存命令
     /// </summary>
     public ICommand SaveCommand => new Command(OnSave);
+
+    /// <summary>
+    /// 保存命令
+    /// </summary>
+    public ICommand GoBackCommand =>
+        new Command(() => ApplicationViewModel.Current.GoToPage(ApplicationPage.Collection, useCache: true));
 
     #endregion
 
@@ -262,15 +252,14 @@ internal class HandleViewModel : BaseViewModel
             Windows = Windows
         };
 
-        var project = _internalProject.Project;
-        var oldGraph = project.Graphs.FirstOrDefault(g => g.Filename == Filename);
+        var oldGraph = _internalProject.Graphs.FirstOrDefault(g => g.Filename == Filename);
         if (oldGraph != null)
         {
-            project.Graphs.Remove(oldGraph);
+            _internalProject.Graphs.Remove(oldGraph);
         }
 
-        project.Graphs.Add(graph);
-        _projectHandler.Set(project, _internalProject.Path, _internalProject.ProjectName);
+        _internalProject.Graphs.Add(graph);
+        _projectHandler.Set(_internalProject, Settings.ProjectPath, Settings.ProjectName);
     }
 
     #endregion
@@ -295,25 +284,18 @@ internal class HandleViewModel : BaseViewModel
         BitmapFile = new Bitmap(filename);
 
         // Project
-        var path = filename.Replace(Path.GetFileName(Filename), string.Empty);
-        var project = _projectHandler.Get(path, out var projectName);
-        if (project != null)
+        if (_projectHandler.TryGet(Settings.ProjectPath, out var project))
         {
             // Set Windows
             var graph = project.Graphs.FirstOrDefault(g => g.Filename == filename);
-            if (graph != null && graph.Windows?.Count() > 0)
+            if (graph != null && graph.Windows.Any())
             {
                 Windows = new ObservableCollection<Window>(graph.Windows);
                 SelectedWindow = Windows.First();
             }
         }
-        else
-        {
-            project = new Project();
-            projectName = DateTime.Now.ToString("yyyy-MM-dd");
-        }
 
-        _internalProject = new InternalProject(path, projectName, project);
+        _internalProject = project ?? new Project();
     }
 
     /// <summary>
@@ -342,7 +324,7 @@ internal class HandleViewModel : BaseViewModel
         {
             // Or JpegBitmapDecoder, or whichever encoder you want
             var encoder = new PngBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(BitmapHelper.ConvertBitmap(source)));
+            encoder.Frames.Add(BitmapFrame.Create(source.ConvertBitmap()));
             using var stream = dialog.OpenFile();
             encoder.Save(stream);
         }

@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq;
 using Mantra.Core.Abstractions;
 using Mantra.Core.Models;
 using Newtonsoft.Json;
@@ -14,26 +17,41 @@ internal class ProjectHandler : IProjectHandler
 
     public void Set(Project project, string path, string projectName)
     {
-        var jsonString = JsonConvert.SerializeObject(project, JsonSettings.SerializerSettings);
+        var jsonString = JsonConvert.SerializeObject(project, Settings.SerializerSettings);
         var filename = Path.Combine(path, projectName + FileExtension);
+
+        var oldFile = InternalGet(path);
+        if (oldFile != null) File.Delete(oldFile);
+
         File.WriteAllText(filename, jsonString);
     }
 
-    public Project? Get(string path, out string projectName)
+    public Project Get(string path)
     {
-        projectName = string.Empty;
-        if (!Directory.Exists(path)) return null;
-
-        foreach (var file in Directory.GetFiles(path))
+        if (TryGet(path, out var project))
         {
-            if (Path.GetExtension(file) == FileExtension)
-            {
-                projectName = Path.GetFileName(file).Replace(FileExtension, string.Empty);
-                var jsonString = File.ReadAllText(file);
-                return JsonConvert.DeserializeObject<Project>(jsonString, JsonSettings.SerializerSettings);
-            }
+            return project;
         }
 
-        return null;
+        throw new NullReferenceException();
+    }
+
+    public bool TryGet(string path, [NotNullWhen(true)] out Project? project)
+    {
+        project = null;
+        if (!Directory.Exists(path)) return false;
+
+        var file = InternalGet(path);
+        if (file == null) return false;
+
+        var jsonString = File.ReadAllText(file);
+        project = JsonConvert.DeserializeObject<Project>(jsonString, Settings.SerializerSettings);
+
+        return project != null;
+    }
+
+    private string? InternalGet(string path)
+    {
+        return Directory.GetFiles(path).FirstOrDefault(file => Path.GetExtension(file) == FileExtension);
     }
 }

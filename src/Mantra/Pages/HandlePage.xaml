@@ -26,7 +26,8 @@
                 <Button Style="{StaticResource IconTextButtonStyle}"
                         VerticalAlignment="Center"
                         Content="返回"
-                        Tag="{StaticResource FontAwesomeArrowLeftIcon}" />
+                        Tag="{StaticResource FontAwesomeArrowLeftIcon}"
+                        Command="{Binding GoBackCommand}" />
                 <TextBlock Grid.Column="0"
                            Grid.ColumnSpan="2"
                            HorizontalAlignment="Center"
@@ -114,7 +115,7 @@
                                                        Background="{Binding Text.Setting.Background}"
                                                        Foreground="{Binding Text.Setting.Foreground}"
                                                        FontSize="{Binding Text.Setting.FontSize}"
-                                                       FontFamily="{Binding Text.Setting.FontFamily}"
+                                                       FontFamily="{Binding Text.Setting.FontFamily, Converter={local:ResourceConverter}}"
                                                        FontWeight="{Binding Text.Setting.FontWeight}"
                                                        HorizontalAlignment="{Binding Text.Setting.HorizontalAlignment}"
                                                        VerticalAlignment="{Binding Text.Setting.VerticalAlignment}"
@@ -344,7 +345,7 @@
                                                       ToolTip="字体"
                                                       Width="160">
                                                 <ComboBox.Resources>
-                                                    <local:FontFamilyConverter x:Key="Converter" />
+                                                    <local:FontFamilyComboBoxConverter x:Key="Converter" />
                                                 </ComboBox.Resources>
                                                 <ComboBox.SelectedValue>
                                                     <MultiBinding Converter="{StaticResource Converter}">
@@ -355,42 +356,62 @@
                                                     </MultiBinding>
                                                 </ComboBox.SelectedValue>
 
-                                                <ComboBoxItem FontFamily="{StaticResource ComicSansMS}"
+                                                <!-- ReSharper disable MarkupAttributeTypo -->
+                                                <ComboBoxItem Tag="ComicSansMS"
+                                                              FontFamily="{StaticResource ComicSansMS}"
                                                               Content="Comic Sans MS" />
-                                                <ComboBoxItem FontFamily="{StaticResource MicrosoftYaHei}"
+                                                <ComboBoxItem Tag="MicrosoftYaHei"
+                                                              FontFamily="{StaticResource MicrosoftYaHei}"
                                                               Content="MicrosoftYaHei UI" />
-                                                <ComboBoxItem FontFamily="{StaticResource ArialBlack}"
+                                                <ComboBoxItem Tag="ArialBlack"
+                                                              FontFamily="{StaticResource ArialBlack}"
                                                               Content="Arial Black" />
-                                                <ComboBoxItem FontFamily="{StaticResource MVBoli}"
+                                                <ComboBoxItem Tag="MVBoli"
+                                                              FontFamily="{StaticResource MVBoli}"
                                                               Content="MV Boli" />
-                                                <ComboBoxItem FontFamily="{StaticResource AqumClassic}"
+                                                <ComboBoxItem Tag="AqumClassic"
+                                                              FontFamily="{StaticResource AqumClassic}"
                                                               Content="AQUM Classic" />
-                                                <ComboBoxItem FontFamily="{StaticResource AqumSmallCaps}"
+                                                <ComboBoxItem Tag="AqumSmallCaps"
+                                                              FontFamily="{StaticResource AqumSmallCaps}"
                                                               Content="AQUM Small Caps" />
-                                                <ComboBoxItem FontFamily="{StaticResource VersaVersa}"
+                                                <ComboBoxItem Tag="VersaVersa"
+                                                              FontFamily="{StaticResource VersaVersa}"
                                                               Content="Versa Versa" />
-                                                <ComboBoxItem FontFamily="{StaticResource SegoeScript}"
+                                                <ComboBoxItem Tag="SegoeScript"
+                                                              FontFamily="{StaticResource SegoeScript}"
                                                               Content="Segoe Script" />
-                                                <ComboBoxItem FontFamily="{StaticResource PolyRegular}"
+                                                <ComboBoxItem Tag="PolyRegular"
+                                                              FontFamily="{StaticResource PolyRegular}"
                                                               Content="Poly Regular" />
-                                                <ComboBoxItem FontFamily="{StaticResource PolyItalic}"
+                                                <ComboBoxItem Tag="PolyItalic"
+                                                              FontFamily="{StaticResource PolyItalic}"
                                                               Content="Poly Italic" />
-                                                <ComboBoxItem FontFamily="{StaticResource HuaKangYuanTiW5}"
+                                                <ComboBoxItem Tag="HuaKangYuanTiW5"
+                                                              FontFamily="{StaticResource HuaKangYuanTiW5}"
                                                               Content="华康圆体W5" />
-                                                <ComboBoxItem FontFamily="{StaticResource HuaKangYuanTiW3Plus}"
+                                                <ComboBoxItem Tag="HuaKangYuanTiW3Plus"
+                                                              FontFamily="{StaticResource HuaKangYuanTiW3Plus}"
                                                               Content="华康圆体W3" />
-                                                <ComboBoxItem FontFamily="{StaticResource FangZhengKaiTi}"
+                                                <ComboBoxItem Tag="FangZhengKaiTi"
+                                                              FontFamily="{StaticResource FangZhengKaiTi}"
                                                               Content="方正楷体简体" />
-                                                <ComboBoxItem FontFamily="{StaticResource XinHuaSongTi}"
+                                                <ComboBoxItem Tag="XinHuaSongTi"
+                                                              FontFamily="{StaticResource XinHuaSongTi}"
                                                               Content="新华宋体" />
-                                                <ComboBoxItem FontFamily="{StaticResource XinHuaFangSongTi}"
+                                                <ComboBoxItem Tag="XinHuaFangSongTi"
+                                                              FontFamily="{StaticResource XinHuaFangSongTi}"
                                                               Content="新华仿宋体" />
-                                                <ComboBoxItem FontFamily="{StaticResource PangMenZhengDaoXiXianTi}"
+                                                <ComboBoxItem Tag="PangMenZhengDaoXiXianTi"
+                                                              FontFamily="{StaticResource PangMenZhengDaoXiXianTi}"
                                                               Content="旁门正道细线体" />
-                                                <ComboBoxItem FontFamily="{StaticResource BoBoHei}"
+                                                <ComboBoxItem Tag="BoBoHei"
+                                                              FontFamily="{StaticResource BoBoHei}"
                                                               Content="荆南波波黑" />
-                                                <ComboBoxItem FontFamily="{StaticResource FangZhengHeiTiJianTi}"
+                                                <ComboBoxItem Tag="FangZhengHeiTiJianTi"
+                                                              FontFamily="{StaticResource FangZhengHeiTiJianTi}"
                                                               Content="方正黑体简体" />
+                                                <!-- ReSharper restore MarkupAttributeTypo -->
                                             </ComboBox>
 
                                             <TextBox BorderBrush="{StaticResource BorderLightBrush}"

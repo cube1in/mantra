@@ -10,7 +10,23 @@ namespace Mantra;
 
 internal static class BitmapHelper
 {
-    public static BitmapSource ConvertBitmap(Bitmap source)
+    #region Extensions
+
+    public static Bitmap Replace(this Bitmap source, Bitmap replace, int x, int y)
+    {
+        var graphics = Graphics.FromImage(source);
+        graphics.DrawImageUnscaled(replace, x, y);
+        graphics.Dispose();
+
+        return source;
+    }
+
+    public static Bitmap Crop(this Bitmap source, Rectangle rect)
+    {
+        return source.Clone(rect, source.PixelFormat);
+    }
+
+    public static BitmapSource ConvertBitmap(this Bitmap source)
     {
         return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
             source.GetHbitmap(),
@@ -18,6 +34,8 @@ internal static class BitmapHelper
             Int32Rect.Empty,
             BitmapSizeOptions.FromEmptyOptions());
     }
+
+    #endregion
 
     public static Bitmap BitmapFromSource(BitmapSource bitmapSource)
     {

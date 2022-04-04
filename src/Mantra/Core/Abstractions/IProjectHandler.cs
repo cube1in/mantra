@@ -1,4 +1,5 @@
-﻿using Mantra.Core.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+using Mantra.Core.Models;
 
 namespace Mantra.Core.Abstractions;
 
@@ -19,7 +20,14 @@ internal interface IProjectHandler
     /// 获取项目文件
     /// </summary>
     /// <param name="path"></param>
-    /// <param name="projectName"></param>
     /// <returns></returns>
-    public Project? Get(string path, out string projectName);
+    public Project Get(string path);
+
+    /// <summary>
+    /// 获取项目文件
+    /// </summary>
+    /// <param name="path"></param>
+    /// <param name="project"></param>
+    /// <returns></returns>
+    public bool TryGet(string path, [NotNullWhen(true)] out Project? project);
 }

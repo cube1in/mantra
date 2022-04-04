@@ -18,7 +18,6 @@ internal partial class HandlePage
 
     public override void OnApplyTemplate()
     {
-        base.OnApplyTemplate();
         ViewModel.Initialize(PushValue);
     }
 

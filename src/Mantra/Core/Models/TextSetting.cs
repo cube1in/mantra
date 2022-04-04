@@ -59,7 +59,7 @@ internal class TextSetting : INotifyPropertyChanged
         Background = "#FFFFFF";
         FontSize = 15;
         FontWeight = "Regular";
-        FontFamily = "pack://application:,,,/Fonts/#Comic Sans MS";
+        FontFamily = "ComicSansMS";
         Orientation = "Horizontal";
         HorizontalAlignment = "Left";
         VerticalAlignment = "Top";

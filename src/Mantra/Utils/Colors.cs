@@ -17,6 +17,16 @@ internal static class Colors
     }
     
     /// <summary>
+    /// 将 <see cref="string"/> 转为 <see cref="Color"/>
+    /// </summary>
+    /// <param name="color"></param>
+    /// <returns></returns>
+    public static Color AsColor(string color)
+    {
+        return ColorTranslator.FromHtml(color);
+    }
+    
+    /// <summary>
     /// 获取暗色
     /// </summary>
     /// <param name="borderLine">默认低于180</param>

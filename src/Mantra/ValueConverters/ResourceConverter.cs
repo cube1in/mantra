@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Drawing;
 using System.Globalization;
+using System.Windows;
 
 // ReSharper disable once CheckNamespace
 namespace Mantra;
 
-internal class BitmapConverter : BaseValueConverter<BitmapConverter>
+internal class ResourceConverter : BaseValueConverter<ResourceConverter>
 {
     public override object? Convert(object? value, Type? targetType, object? parameter, CultureInfo culture)
     {
-        if (value is Bitmap bitmap)
-        {
-            return bitmap.ConvertBitmap();
-        }
-
-        return null;
+        return value == null ? null : Application.Current.TryFindResource(value);
     }
 
     public override object ConvertBack(object? value, Type? targetType, object? parameter, CultureInfo culture)

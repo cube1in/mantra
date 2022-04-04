@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 // ReSharper disable once CheckNamespace
 namespace Mantra;
 
-internal class FontFamilyConverter : BaseMultiValueConverter<FontFamilyConverter>
+internal class FontFamilyComboBoxConverter : BaseMultiValueConverter<FontFamilyComboBoxConverter>
 {
     private ComboBox _comboBox = null!;
 
@@ -14,6 +16,9 @@ internal class FontFamilyConverter : BaseMultiValueConverter<FontFamilyConverter
         if (values[0] is string str && values[1] is ComboBox comboBox)
         {
             _comboBox = comboBox;
+            var source = (Application.Current.TryFindResource(str) as FontFamily)?.Source;
+            if (source != null) str = source;
+
             foreach (ComboBoxItem item in comboBox.Items)
             {
                 if (item.FontFamily.Source == str)
@@ -32,7 +37,7 @@ internal class FontFamilyConverter : BaseMultiValueConverter<FontFamilyConverter
     {
         if (value is ComboBoxItem item)
         {
-            return new object[] {item.FontFamily.Source, _comboBox};
+            return new[] {item.Tag, _comboBox};
         }
 
         throw new NotSupportedException();

@@ -22,7 +22,6 @@
         <local:PageHost
             DataContext="{x:Static local:ApplicationViewModel.Current}"
             CurrentPage="{Binding CurrentPage, Converter={local:ApplicationPageConverter}}"
-            PushValue="{Binding PushValue}">
-        </local:PageHost>
+            PushValue="{Binding PushValue}" />
     </Grid>
 </Window>

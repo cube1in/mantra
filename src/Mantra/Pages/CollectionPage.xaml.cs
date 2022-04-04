@@ -13,7 +13,6 @@ internal partial class CollectionPage
 
     public override void OnApplyTemplate()
     {
-        base.OnApplyTemplate();
         ViewModel.Initialize(PushValue);
     }
 }

@@ -1,15 +1,34 @@
-﻿using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.IO.Compression;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using Mantra.Core;
+using Mantra.Core.Abstractions;
+using Mantra.Core.Models;
 using Microsoft.Win32;
 using MvvmHelpers.Commands;
+using Ookii.Dialogs.Wpf;
 
 // ReSharper disable once CheckNamespace
 namespace Mantra;
 
 internal class CollectionViewModel : BaseViewModel
 {
+    #region Private Members
+
+    /// <summary>
+    /// 项目处理程序
+    /// </summary>
+    private readonly IProjectHandler _projectHandler = new ProjectHandler();
+
+    #endregion
+
     #region Public Properties
 
     /// <summary>
@@ -24,17 +43,23 @@ internal class CollectionViewModel : BaseViewModel
     /// <summary>
     /// 上传图片命令
     /// </summary>
-    public ICommand UploadCommand => new AsyncCommand(OnUploadAsync);
+    public ICommand UploadCommand => new Command(OnUpload);
 
     /// <summary>
     /// 移除图片命令
     /// </summary>
-    public ICommand RemoveCommand => new AsyncCommand<string>(OnRemoveAsync);
+    public ICommand RemoveCommand => new Command<string>(OnRemove);
+
+    /// <summary>
+    /// 导出命令
+    /// </summary>
+    public ICommand ExportCommand => new Command(OnExport);
 
     /// <summary>
     /// 下一个页面命令
     /// </summary>
-    public ICommand GoToCommand => new AsyncCommand<string>(OnGoToAsync);
+    public ICommand GoToCommand =>
+        new Command<string>(item => ApplicationViewModel.Current.GoToPage(ApplicationPage.Handle, item));
 
     #endregion
 
@@ -43,7 +68,7 @@ internal class CollectionViewModel : BaseViewModel
     /// <summary>
     /// 上传图片时触发
     /// </summary>
-    private async Task OnUploadAsync()
+    private void OnUpload()
     {
         var dialog = new OpenFileDialog
         {
@@ -65,28 +90,79 @@ internal class CollectionViewModel : BaseViewModel
                 ImageCollection.Add(file);
             }
         }
-
-        await Task.CompletedTask;
     }
 
     /// <summary>
-    /// 移除图片时触发
+    /// <see cref="RemoveCommand"/> 时触发
     /// </summary>
     /// <param name="item"></param>
-    private async Task OnRemoveAsync(string item)
+    private void OnRemove(string item) => ImageCollection.Remove(item);
+
+    /// <summary>
+    /// <see cref="ExportCommand"/> 时触发
+    /// </summary>
+    private void OnExport()
     {
-        ImageCollection.Remove(item);
-        await Task.CompletedTask;
+        var dialog = new VistaFolderBrowserDialog();
+
+        if (dialog.ShowDialog() == true)
+        {
+            var path = dialog.SelectedPath;
+            if (_projectHandler.TryGet(Settings.ProjectPath, out var project))
+            {
+                foreach (var graph in project.Graphs)
+                {
+                    var source = new Bitmap(graph.Filename);
+                    foreach (var window in graph.Windows)
+                    {
+                        var border = CreateBorder(window.Text);
+                        var bitmap = BitmapHelper.InternalRender(border,
+                            new System.Windows.Size(window.Width, window.Height));
+
+                        source.Replace(bitmap, (int) window.Left, (int) window.Top);
+                    }
+
+                    var filename = Path.GetFileName(graph.Filename);
+
+                    // Save zip
+                    var fullname = Path.Combine(path, Settings.ProjectName) + ".zip";
+                    using var zip = ZipFile.Open(fullname, ZipArchiveMode.Create);
+
+                    var entry = zip.CreateEntry(filename, CompressionLevel.Optimal);
+                    using var stream = entry.Open();
+                    source.Save(stream, ImageFormat.Png);
+                }
+            }
+        }
     }
 
     /// <summary>
-    /// GoTo时触发
+    /// 创建 <see cref="Border"/>
     /// </summary>
-    /// <param name="item"></param>
-    private async Task OnGoToAsync(string item)
+    /// <param name="text"></param>
+    /// <returns></returns>
+    private static Border CreateBorder(Text text)
     {
-        ApplicationViewModel.Current.GoToPage(ApplicationPage.Handle, item);
-        await Task.CompletedTask;
+        var setting = text.Setting;
+        var converter = new BrushConverter();
+        var background = (SolidColorBrush) converter.ConvertFromString(setting.Background)!;
+        return new Border
+        {
+            SnapsToDevicePixels = true,
+            Background = background,
+            Child = new TextBlock
+            {
+                Text = text.TranslatedText,
+                Background = background,
+                Foreground = (SolidColorBrush) converter.ConvertFromString(setting.Foreground)!,
+                FontSize = setting.FontSize,
+                FontFamily = (System.Windows.Media.FontFamily) Application.Current.FindResource(setting.FontFamily)!,
+                FontWeight = (FontWeight) new FontWeightConverter().ConvertFromString(setting.FontWeight)!,
+                HorizontalAlignment = Enum.Parse<HorizontalAlignment>(setting.HorizontalAlignment),
+                VerticalAlignment = Enum.Parse<VerticalAlignment>(setting.VerticalAlignment),
+                TextWrapping = TextWrapping.Wrap
+            }
+        };
     }
 
     #endregion
