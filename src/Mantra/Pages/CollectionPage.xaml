@@ -7,14 +7,14 @@
                 xmlns:local="clr-namespace:Mantra"
                 d:DataContext="{d:DesignInstance Type=local:CollectionViewModel}"
                 mc:Ignorable="d"
-                Title="ImageListPage"
+                Title="CollectionPage"
                 d:DesignHeight="450"
                 d:DesignWidth="800">
 
     <Grid SnapsToDevicePixels="True" Margin="30">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="50 " />
+            <RowDefinition Height="30 " />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10 0">

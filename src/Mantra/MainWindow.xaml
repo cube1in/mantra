@@ -4,11 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:Mantra"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        Title="MainWindow"
+        Title="Mantra"
         Width="1250"
         Height="750"
         d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
-        mc:Ignorable="d" x:ClassModifier="internal">
+        mc:Ignorable="d" 
+        x:ClassModifier="internal">
     <Grid>
         <!-- Blue background image -->
         <Grid.Background>
