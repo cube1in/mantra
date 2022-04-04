@@ -396,7 +396,7 @@
                                             <TextBox BorderBrush="{StaticResource BorderLightBrush}"
                                                      BorderThickness="1"
                                                      MaxLines="1"
-                                                     local:IsOnlyNumber.Value="True"
+                                                     local:OnlyNumber.Value="True"
                                                      local:MaxNumber.Value="100"
                                                      ToolTip="字体大小"
                                                      Text="{Binding SelectedWindow.Text.Setting.FontSize, UpdateSourceTrigger=PropertyChanged, FallbackValue=15}" />

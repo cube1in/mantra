@@ -6,7 +6,7 @@ using System.Windows.Input;
 // ReSharper disable once CheckNamespace
 namespace Mantra;
 
-internal class IsOnlyNumber : BaseAttachedProperty<IsOnlyNumber, bool>
+internal class OnlyNumber : BaseAttachedProperty<OnlyNumber, bool>
 {
     protected override void OnValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
     {
@@ -46,7 +46,7 @@ internal class MaxNumber : BaseAttachedProperty<MaxNumber, int>
 
     private void TxtInput(object sender, TextCompositionEventArgs e)
     {
-        if (int.TryParse(((TextBox)e.OriginalSource).Text + e.Text, out var number))
+        if (int.TryParse(((TextBox) e.OriginalSource).Text + e.Text, out var number))
         {
             e.Handled = number > _maxNumber;
         }
