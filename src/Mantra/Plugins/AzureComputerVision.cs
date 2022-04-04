@@ -17,7 +17,7 @@ internal class AzureComputerVision : IComputerVision
 
     static AzureComputerVision()
     {
-        const string path = @"C:\Users\sou1m\Documents\azure.json";
+        var path = Path.Combine(AppContext.BaseDirectory, "azure.json");
         if (!File.Exists(path)) throw new FileNotFoundException();
         var jo = JObject.Parse(File.ReadAllText(path));
         var subscriptionKey = jo["ComputerVision"]!["SubscriptionKey"]!.Value<string>()!;

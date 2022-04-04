@@ -65,7 +65,7 @@ internal class BaiduTranslatorText : ITranslatorText
 
     static BaiduTranslatorText()
     {
-        const string path = @"C:\Users\sou1m\Documents\baidu_translator.json";
+        var path = Path.Combine(AppContext.BaseDirectory, "baidu_translator.json");
         if (!File.Exists(path)) throw new FileNotFoundException();
 
         var jo = JObject.Parse(File.ReadAllText(path));
