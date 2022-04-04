@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using Mantra.Core;
 using Mantra.Core.Abstractions;
-using Mantra.Core.Models;
 using Microsoft.Win32;
 using MvvmHelpers.Commands;
 using Ookii.Dialogs.Wpf;
@@ -115,8 +112,12 @@ internal class CollectionViewModel : BaseViewModel
                     var source = new Bitmap(graph.Filename);
                     foreach (var window in graph.Windows)
                     {
-                        var border = CreateBorder(window.Text);
-                        var bitmap = BitmapHelper.InternalRender(border,
+                        // var border = CreateBorder(window.Text);
+                        var textPadding = new TextPadding
+                        {
+                            Text = window.Text
+                        };
+                        var bitmap = BitmapHelper.InternalRender(textPadding,
                             new System.Windows.Size(window.Width, window.Height));
 
                         source.Replace(bitmap, (int) window.Left, (int) window.Top);
@@ -131,38 +132,30 @@ internal class CollectionViewModel : BaseViewModel
                     var entry = zip.CreateEntry(filename, CompressionLevel.Optimal);
                     using var stream = entry.Open();
                     source.Save(stream, ImageFormat.Png);
+                    
+                    // Open folder
+                    OpenFolder(path);
                 }
             }
         }
     }
 
     /// <summary>
-    /// 创建 <see cref="Border"/>
+    /// 打开目录
     /// </summary>
-    /// <param name="text"></param>
-    /// <returns></returns>
-    private static Border CreateBorder(Text text)
+    /// <param name="folderPath"></param>
+    private void OpenFolder(string folderPath)
     {
-        var setting = text.Setting;
-        var converter = new BrushConverter();
-        var background = (SolidColorBrush) converter.ConvertFromString(setting.Background)!;
-        return new Border
+        if (Directory.Exists(folderPath))
         {
-            SnapsToDevicePixels = true,
-            Background = background,
-            Child = new TextBlock
+            var startInfo = new ProcessStartInfo
             {
-                Text = text.TranslatedText,
-                Background = background,
-                Foreground = (SolidColorBrush) converter.ConvertFromString(setting.Foreground)!,
-                FontSize = setting.FontSize,
-                FontFamily = (System.Windows.Media.FontFamily) Application.Current.FindResource(setting.FontFamily)!,
-                FontWeight = (FontWeight) new FontWeightConverter().ConvertFromString(setting.FontWeight)!,
-                HorizontalAlignment = Enum.Parse<HorizontalAlignment>(setting.HorizontalAlignment),
-                VerticalAlignment = Enum.Parse<VerticalAlignment>(setting.VerticalAlignment),
-                TextWrapping = TextWrapping.Wrap
-            }
-        };
+                Arguments = folderPath,
+                FileName = "explorer.exe"
+            };
+
+            Process.Start(startInfo);
+        }
     }
 
     #endregion

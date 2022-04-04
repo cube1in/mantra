@@ -40,9 +40,9 @@ internal partial class HandlePage
     {
         if (FindName("CanvasItemsControl") is not ItemsControl itemsControl) return;
 
-        var bitmaps = (from border in itemsControl.GetVisualDescendents<Border>()
-                where border.Name == "ScreenShot" && border.IsVisible
-                select BitmapHelper.InternalRender(border, new Size(border.ActualWidth, border.ActualHeight)))
+        var bitmaps = (from textPadding in itemsControl.GetVisualDescendents<TextPadding>()
+                where textPadding.Name == "TextPadding" && textPadding.IsVisible
+                select BitmapHelper.InternalRender(textPadding, new Size(textPadding.ActualWidth, textPadding.ActualHeight)))
             .ToList();
 
         ViewModel.DownloadHandler(bitmaps);

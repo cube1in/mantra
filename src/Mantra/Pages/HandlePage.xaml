@@ -106,22 +106,8 @@
                                                           CommandParameter="{Binding}"
                                                           GroupName="ResizableContainer">
                                     <Grid SnapsToDevicePixels="True">
-                                        <!-- Text -->
-                                        <Border x:Name="ScreenShot" SnapsToDevicePixels="True"
-                                                Background="{Binding Text.Setting.Background}"
-                                                IsHitTestVisible="False"
-                                                Visibility="{Binding Text.Setting, Converter={local:TextSettingVisibleConverter}}">
-                                            <TextBlock Text="{Binding Text.TranslatedText}"
-                                                       Background="{Binding Text.Setting.Background}"
-                                                       Foreground="{Binding Text.Setting.Foreground}"
-                                                       FontSize="{Binding Text.Setting.FontSize}"
-                                                       FontFamily="{Binding Text.Setting.FontFamily, Converter={local:ResourceConverter}}"
-                                                       FontWeight="{Binding Text.Setting.FontWeight}"
-                                                       HorizontalAlignment="{Binding Text.Setting.HorizontalAlignment}"
-                                                       VerticalAlignment="{Binding Text.Setting.VerticalAlignment}"
-                                                       TextWrapping="Wrap"
-                                                       IsHitTestVisible="False" />
-                                        </Border>
+                                        <!-- Text Padding -->
+                                        <local:TextPadding x:Name="TextPadding" Text="{Binding Text}" />
 
                                         <!-- Remove Text Se Button -->
                                         <Button HorizontalAlignment="Right"
