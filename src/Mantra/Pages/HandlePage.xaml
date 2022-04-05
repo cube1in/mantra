@@ -98,7 +98,9 @@
                                                           GroupName="ResizableContainer">
                                     <Grid SnapsToDevicePixels="True">
                                         <!-- Text Padding -->
-                                        <local:TextPadding x:Name="TextPadding" Text="{Binding Text}" />
+                                        <local:TextPadding x:Name="TextPadding"
+                                                           Visibility="{Binding Text.Setting, Converter={local:TextSettingVisibleConverter}}"
+                                                           Text="{Binding Text}" />
 
                                         <!-- Remove Text Se Button -->
                                         <Button HorizontalAlignment="Right"

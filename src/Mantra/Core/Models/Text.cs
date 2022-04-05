@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using Mantra.Core.Abstractions;
 using PropertyChanged;
 
 namespace Mantra.Core.Models;
 
 [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
 [AddINotifyPropertyChangedInterface]
-internal class Text : INotifyPropertyChanged
+internal class Text : INotifyPropertyChanged, ICloneable<Text>
 {
     /// <summary>
     /// 矩形内的源词
@@ -42,4 +43,6 @@ internal class Text : INotifyPropertyChanged
 #pragma warning disable CS0067
 
     #endregion
+
+    public Text Clone() => (Text) MemberwiseClone();
 }

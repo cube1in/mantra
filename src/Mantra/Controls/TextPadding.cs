@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -14,7 +15,7 @@ internal class TextPadding : Border
     /// </summary>
     public static readonly DependencyProperty TextProperty =
         DependencyProperty.Register(nameof(Text), typeof(Text), typeof(TextPadding),
-            new PropertyMetadata(OnTextPropertyChanged));
+            new PropertyMetadata(default, OnTextPropertyChanged));
 
     /// <summary>
     /// 文字
@@ -41,9 +42,11 @@ internal class TextPadding : Border
             var background = (SolidColorBrush) converter.ConvertFromString(setting.Background)!;
 
             padding.SnapsToDevicePixels = true;
+            padding.IsHitTestVisible = false;
             padding.Background = background;
             padding.Child = new TextBlock
             {
+                IsHitTestVisible = false,
                 Text = text.TranslatedText,
                 Background = background,
                 Foreground = (SolidColorBrush) converter.ConvertFromString(setting.Foreground)!,
@@ -54,6 +57,19 @@ internal class TextPadding : Border
                 VerticalAlignment = Enum.Parse<VerticalAlignment>(setting.VerticalAlignment),
                 TextWrapping = TextWrapping.Wrap
             };
+
+            setting.PropertyChanged += padding.SettingOnPropertyChanged;
+        }
+    }
+
+    private void SettingOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (sender is TextSetting setting)
+        {
+            setting.PropertyChanged -= SettingOnPropertyChanged;
+            var clone = Text.Clone();
+            clone.Setting = setting;
+            SetValue(TextProperty, clone);
         }
     }
 }
